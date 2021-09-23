@@ -69,7 +69,7 @@ def setDefaults():
 
     **PROPAGATE** - *Propagate datablock information.*
 
-    >>> nagare_flow.setDefaults()
+    >>> nagare.setDefaults()
 
     """
 
@@ -85,7 +85,7 @@ def setStrict(val="1"):
     :param val: Sets strict mode on or off.
     :type val: bool
 
-    >>> nagare_flow.setStrict(True)
+    >>> nagare.setStrict(True)
 
     """
 
@@ -105,7 +105,7 @@ def setPropagate(val="1"):
     :param val: Sets datablock propagation on or off.
     :type val: int
 
-    >>> nagare_flow.setPropagate(True)
+    >>> nagare.setPropagate(True)
 
     """
 
@@ -126,7 +126,7 @@ def setLanguage(lang_str="py"):
     :param lang_str: the language to be used. Valid: py, jsx, lua.
     :type lang_str: str
 
-    >>> nagare_flow.setLanguage("jsx")
+    >>> nagare.setLanguage("jsx")
 
     """
 
@@ -153,10 +153,10 @@ class Editor(editor):
     :param datablock: Serializable datablock (ideally).
     :type datablock: dict
 
-    >>> nagare_flow.Editor("maya","py",datablock_dict)
-    >>> nagare_flow.Editor("max","py",self.data)
-    >>> nagare_flow.Editor("ae","jsx",datablock)
-    >>> nagare_flow.Editor("fusion","lua",datablock)
+    >>> nagare.Editor("maya","py",datablock_dict)
+    >>> nagare.Editor("max","py",self.data)
+    >>> nagare.Editor("ae","jsx",datablock)
+    >>> nagare.Editor("fusion","lua",datablock)
 
     """
 
@@ -195,8 +195,8 @@ class Player(app_py):
     :param datablock: Serializable datablock (ideally).
     :type datablock: dict
 
-    >>> nagare_flow.Player(r"C:\tests\test_graph.json", datablock)
-    >>> nagare_flow.Player(self.json_graph, self.datablock)
+    >>> nagare.Player(r"C:\tests\test_graph.json", datablock)
+    >>> nagare.Player(self.json_graph, self.datablock)
 
     """
 
@@ -271,7 +271,7 @@ class Viewer(app_py):
     :param score_json: Full path of JSON score extracted from graph_json.
     :type score_json: str
 
-    >>> nagare_flow.Viewer(r"C:\graphs\ae_build.json", r"C:\score.json")
+    >>> nagare.Viewer(r"C:\graphs\ae_build.json", r"C:\score.json")
 
     """
 
@@ -310,8 +310,8 @@ class Viewer(app_py):
 
 
 if __name__ == "__main__":
-    # Editor(language="jsx",graph_file="C:/repo/nagare_flow/graphs/tester_jsx_backup.json")
-    Editor()
-    # Player()
-    # Viewer(r"C:/repo/nagare_flow/graphs/tester_jsx.json",r"C:\repo\_tmp\batman.json")
+    # Editor(language="jsx",graph_file="C:/repo/nagare/graphs/tester_jsx_backup.json")
+    # Editor()
+    Player()
+    # Viewer(r"C:/repo/nagare/graphs/tester_jsx.json",r"C:\repo\_tmp\batman.json")
     pass

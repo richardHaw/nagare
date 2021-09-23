@@ -66,7 +66,7 @@ def getDescription(mod_path,folder_name,module_name):
 
     - Example::
 
-        getDescription(r"C:\nagare_flow\modules","maya2018","saveFile")
+        getDescription(r"C:\nagare\modules","maya2018","saveFile")
 
     :notes: Keep the description simple.
     """
@@ -112,7 +112,7 @@ def getIconPath(mod_path,folder_name,module_name):
 
     - Example::
 
-        getIconPath(r"C:\nagare_flow\modules","maya2018","saveFile")
+        getIconPath(r"C:\nagare\modules","maya2018","saveFile")
 
     :notes: Keep the icon's size small, ideally height should be 32px.
     """

@@ -18,7 +18,7 @@
                 "y": 211.60928347016593, 
                 "x": 513.4726705529674, 
                 "class": "widgets.itemNode", 
-                "icon": "C:\\repo\\nagare_flow\\framework\\app_py\\ui\\icons\\node.png"
+                "icon": "C:\\repo\\nagare\\framework\\app_py\\ui\\icons\\node.png"
             }
         ], 
         "command": null, 

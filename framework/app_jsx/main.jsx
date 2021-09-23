@@ -205,8 +205,8 @@ catch(e){
             py_nfo.push('for i in sys.path: print(i)');
         }
 
-        py_nfo.push("import nagare_flow");
-        py_nfo.push('nagare_flow.Viewer(r\"' + this.graph_path + '"\, r\"' + score_path + '\")');
+        py_nfo.push("import nagare");
+        py_nfo.push('nagare.Viewer(r\"' + this.graph_path + '"\, r\"' + score_path + '\")');
         const py_bat = io_utils.writeFile(pybat_path,py_nfo.join("\n"));
 
         // vbs
@@ -393,7 +393,7 @@ catch(e){
 
 
 /*
-// @include "C:/repo/nagare_flow/framework/app_jsx/main.jsx";
+// @include "C:/repo/nagare/framework/app_jsx/main.jsx";
 
 var test_block = {
     what: "This is Haw-dini (on Javascript!!!)",
@@ -402,7 +402,7 @@ var test_block = {
     who: "Richard Haw"
     }
 
-var session = CreateNagare("C:/repo/nagare_flow/graphs/tester_jsx.json",test_block,"C:/repo/nagare_flow/batman.bat");
+var session = CreateNagare("C:/repo/nagare/graphs/tester_jsx.json",test_block,"C:/repo/nagare/batman.bat");
 session.setDebug(true);
 session.run();
 session.show();

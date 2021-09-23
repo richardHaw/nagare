@@ -80,8 +80,8 @@ def setup():
     title_template = "Nagare {} (Alpha, Python-{})"
     lang = "py"
     pyver = str(sys.version_info[0])
-    # test_json = os.path.join(nagare_root,"graphs","tester_{}.json".format(lang))
-    test_json = os.path.abspath(os.path.join(nagare_root,"framework","new.json"))
+    test_json = os.path.join(nagare_root,"graphs","tester_{}.json".format(lang))
+    # test_json = os.path.abspath(os.path.join(nagare_root,"framework","new.json"))
 
     envs = [
             "NAGARE_FRAMEWORK_ROOT",
@@ -114,7 +114,7 @@ def setup():
              "1", # NAGARE_STRICT
              "1", # NAGARE_PROPAGATE
              pyver, # NAGARE_PYVER
-             "nagare_flow", # NAGARE_LOG
+             "nagare", # NAGARE_LOG
              title_template.format("Editor",pyver), # NAGARE_EDITOR_TITLE
              title_template.format("Viewer",pyver), # NAGARE_VIEWER_TITLE
              ]
@@ -123,7 +123,7 @@ def setup():
         if not os.environ.get(e,None):
             os.environ[e] = nulls[envs.index(e)]
 
-    # might be better at config or nagare_flow's init
+    # might be better at config or nagare's init
     TEST_BLOCK.update({"what" : "This is Hawdini",
                        "where" : "Made in Japan",
                        "when" : "On my spare time",

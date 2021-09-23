@@ -1,4 +1,4 @@
-//@include "C:/repo/nagare_flow/thirdparty/json2.js";
+//@include "C:/repo/nagare/thirdparty/json2.js";
 
 (function (){
     $.global.debugDatablock = {};
