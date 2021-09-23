@@ -1,0 +1,20 @@
+(function (){
+    $.global.invokeSkip = {};
+
+    function main(data_block){
+        /*
+        Invoking Skip so down-stream graph won't be calculated
+
+        Return "skip"
+        */
+
+        LOG("invokeSkip.jsx");
+        LOG("WARNING: Simulating a skip.");
+
+        const skip_obj = new ResultObj();
+        skip_obj.setStatus("skip");
+        skip_obj.addMessage("This is an example skip node...");
+        return skip_obj;
+    }
+    $.global.invokeSkip.main = main;
+})()

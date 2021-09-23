@@ -1,0 +1,26 @@
+<!DOCTYPE RCC><RCC version="1.0">
+
+<qresource>
+    <file>icons/align.png</file>
+    <file>icons/clear.png</file>
+    <file>icons/erase.png</file>
+    <file>icons/find.png</file>
+    <file>icons/json.png</file>
+    <file>icons/log.png</file>
+    <file>icons/next.png</file>
+    <file>icons/node.png</file>
+    <file>icons/open.png</file>
+    <file>icons/reset.png</file>
+    <file>icons/run.png</file>
+    <file>icons/save.png</file>
+    <file>icons/stop.png</file>
+    <file>icons/tree.png</file>
+    <file>icons/branch.png</file>
+    <file>icons/group.png</file>
+    <file>icons/zoom.png</file>
+    <file>icons/icon.png</file>
+</qresource>
+</RCC>
+
+<!-- pyside2-rcc icons.qrc -o icons.py -->
+<!-- pyside2-rcc "icons.qrc" -o "icons.py" -->

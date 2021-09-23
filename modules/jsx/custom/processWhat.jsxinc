@@ -1,0 +1,20 @@
+(function (){
+    $.global.processWhat = new Object();
+
+    function main(data_block){
+        /*
+        Test for processing "what" in data_block.
+        Return data_block
+        */
+
+        if (! data_block.what){
+            return;
+        }
+
+        LOG("processWhat.jsx");
+        LOG(data_block.what);
+
+        return data_block;
+    }
+    $.global.processWhat.main = main;
+})()

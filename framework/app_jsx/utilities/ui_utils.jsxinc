@@ -1,0 +1,99 @@
+﻿/*
+MIT License
+
+Copyright (c) 2021 richardHaw
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+
+(function(){
+    $.global.ui_utils = new Object();
+
+
+    function Win(nameStr, titleStr, typeStr, initParams){
+        defaults = function(){
+            const contructor = {resizeable:true,
+                                closeButton:true,
+                                minimizeButton:false,
+                                maximizeButton:false,
+                                borderless:false,
+                                independent:false}
+            return contructor;
+        }
+        Win.defaults = defaults
+
+        typeStr = (typeStr !== undefined) ? typeStr : "palette"; // dialog, window, palette
+        initParams = (initParams !== undefined) ? initParams : defaults();
+
+        this.init_width = 300;
+        this.init_height = 100;
+
+        const win = new Window(typeStr, "", undefined, initParams);
+
+        win.text = titleStr;
+        win.name = nameStr;
+        win.orientation = "row";
+        win.alignChildren = ["top","fill"];
+        win.alignment = ["fill","fill"];
+        win.spacing = 5;
+        win.margin = 5;
+
+        // resize
+        if (initParams.resizeable === true){
+            win.onResizing = win.onResize = function(){
+                this.layout.resize();
+
+                if (win.size.width < init_width && win.size.height < init_height){
+                    win.size = {width: init_width, height: init_height};
+                    this.layout.resize();
+                }
+
+            }
+        }
+
+        win.onShow = function(){
+            init_width = this.size.width;
+            init_height = this.size.height;
+            this.minimumSize = this.size;
+            this.layout.resize();
+        }
+
+        return win;
+    }
+    $.global.ui_utils.Win = Win;
+
+
+    function multiline(parentWidget,text,read_only){
+        const out = parentWidget.add("edittext",
+                                    undefined,
+                                    text,
+                                    {multiline:true,
+                                    scrolling:true,
+                                    readonly:read_only})
+
+        out.alignment = ["fill", "fill"];
+        // out.minimumSize = [300, 200];
+        out.active = true;
+        return out;
+    }
+    $.global.ui_utils.multiline = multiline;
+
+})();
+

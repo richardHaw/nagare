@@ -1,0 +1,20 @@
+(function (){
+    $.global.processWhere = {};
+
+    function main(data_block){
+        /*
+        Test for processing "where" in data_block.
+        Return data_block
+        */
+
+        if (! data_block.where){
+            return;
+        }
+
+        LOG("processWhere.jsx");
+        LOG(data_block.where);
+
+        return data_block;
+    }
+    $.global.processWhere.main = main;
+})()

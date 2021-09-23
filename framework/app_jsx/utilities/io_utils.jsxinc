@@ -1,0 +1,85 @@
+/*
+MIT License
+
+Copyright (c) 2021 richardHaw
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+// @include "C:/repo/nagare_flow/thirdparty/json2.js";
+
+
+(function(){
+    $.global.io_utils = new Object();
+
+
+    function writeFile(filepath,data_string){
+        var new_file = new File(filepath);
+        var file_pointer = new_file.open("w");
+
+        new_file.encoding = "UTF-8";
+
+        if (file_pointer){
+            new_file.write(data_string);
+            new_file.close();
+        }
+
+        file_pointer = undefined;
+        return new_file
+    }
+    $.global.io_utils.writeFile = writeFile;
+
+
+    function parseJson(json_filepath){
+        var file_obj = new File(json_filepath);
+
+        if (!file_obj.exists){
+            LOG("Failed to read: ",json_filepath)
+            return null;
+        }
+
+        file_obj.open();
+
+        var raw_read = file_obj.read();
+        file_obj.close();
+        file_obj = null;
+
+        const no_space = raw_read.replace(/\r?\n/g, '');
+        const out_obj = JSON.parse(no_space);
+
+        // done
+        return out_obj;
+    }
+    $.global.io_utils.parseJson = parseJson;
+
+
+    function saveJson(filepath,data_serialized){
+        const new_file = writeFile(filepath,data_serialized);
+
+        return new_file;
+    }
+    $.global.io_utils.saveJson = saveJson;
+
+
+    function safePath(orig_path){
+        return orig_path.replace(/\\/g, "/");
+    }
+    $.global.io_utils.safePath = safePath;
+
+})();

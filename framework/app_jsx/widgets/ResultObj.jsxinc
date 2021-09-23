@@ -1,0 +1,134 @@
+/*
+MIT License
+
+Copyright (c) 2021 richardHaw
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+
+(function(){
+    function ResultObj(){
+        this._errors = new Array();
+        this._messages = new Array();
+        this._status = "error";
+    }
+    $.global.ResultObj = ResultObj;
+
+
+    ResultObj.prototype.addError = function(new_error){
+        this._errors.push(this._getErrorTuple(new_error));
+    }
+
+
+    ResultObj.prototype.appendErrors = function(new_errors){
+        for (var e = 0; e < new_errors.length; e++){
+            this.addError(new_errors[e]);
+        }
+    }
+
+
+    ResultObj.prototype.getErrors = function(){
+        const out = new Array();
+
+        for (var e = 0; e < this._errors.length; e++){
+            out.push(this._getErrorDict(this._errors[e]));
+        }
+
+        return out;
+    }
+
+
+    ResultObj.prototype.addMessage = function(msg_str){
+        this._messages.push(" - " + String(msg_str));
+    }
+
+
+    ResultObj.prototype.appendMessages = function(new_messages){
+        for (var n = 0; n < new_messages.length; n++){
+            this.addMessage(new_messages[n]);
+        }
+    }
+
+
+    ResultObj.prototype.getMessages = function(){
+        return this._messages;
+    }
+
+
+    ResultObj.prototype.getStatus = function(){
+        return this._status;
+    }
+
+
+    ResultObj.prototype.setStatus = function(new_status){
+        if (this._status == new_status){
+            return;
+        }
+
+        if (new_status != "skip" && new_status != "error"){
+            throw new Error("Invalid status: " + new_status);
+        }
+        this._status = new_status;
+    }
+
+
+    ResultObj.prototype._getErrorDict = function(err_tup){
+        if (err_tup.length != 3){
+            throw new Error("Must exactly be 3 items.");
+        }
+
+        const out = new Object();
+        out.item = err_tup[0];
+        out.type = err_tup[1];
+        out.reason = err_tup[2];
+        return out;
+    }
+
+
+    ResultObj.prototype._getErrorTuple = function(error_dict){
+        const _a = error_dict.item;
+        const _b = error_dict.type;
+        const _c = error_dict.reason;
+        const out = new Array();
+
+        if (_a === undefined){
+            throw new Error("Item not specified in error");
+        }
+        out.push(String(_a));
+
+
+        if (_b === undefined){
+            out.push("");
+        }
+        else {
+            out.push(_b);
+        }
+
+        if (_c === undefined){
+            out.push("");
+        }
+        else {
+            out.push(_c);
+        }
+
+        return out;
+    }
+
+})();

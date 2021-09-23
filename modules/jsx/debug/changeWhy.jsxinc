@@ -1,0 +1,18 @@
+(function (){
+    $.global.changeWhy = {};
+
+    function main(data_block){
+        /*
+        Test for changing "why" value in data_block.
+        Return data_block
+        */
+
+        data_block.why = "Helping people bring out the best in themselves.";
+
+        LOG("changeWhy.jsx");
+        LOG(data_block.why);
+
+        return data_block;
+    }
+    $.global.changeWhy.main = main;
+})()

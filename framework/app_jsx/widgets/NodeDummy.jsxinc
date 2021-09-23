@@ -1,0 +1,69 @@
+/*
+MIT License
+
+Copyright (c) 2021 richardHaw
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+
+(function(){
+    function NodeDummy(obj_data){
+        this.obj_data = obj_data;
+        this.name = obj_data.name;
+        this.uuid = obj_data.uuid;
+        this.error = false;
+        this.skip = false;
+        this.dirty = false;
+        this.messages = new Array();
+
+        // extended
+        this.class_name = obj_data.class;
+        this.description = obj_data.description;
+        this.command = obj_data.command;
+        this.x = obj_data.x;
+        this.y = obj_data.y;
+        this.out_nodes = obj_data.out_nodes;
+        this.in_node = obj_data.in_node;
+        this.state_label = null;
+        this._errors_list = new Array();
+    }
+    $.global.NodeDummy = NodeDummy;
+
+
+    NodeDummy.prototype.setErrors = function(new_errors){
+        this._errors_list = new_errors;
+    }
+
+    NodeDummy.prototype.getErrors = function(){
+        return this._errors_list;
+    }
+
+    NodeDummy.prototype.addMessage = function(msg_str){
+        this.messages.push(" - " + String(msg_str));
+    }
+
+
+    NodeDummy.prototype.appendMessages = function(new_messages){
+        for (var n = 0; n < new_messages.length; n++){
+            this.addMessage(new_messages[n]);
+        }
+    }
+
+})();

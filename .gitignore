@@ -1,0 +1,15 @@
+docs/
+/projects/*
+/docs/*
+/graphs/*
+/_tmp/*
+/log/*
+*.wpr
+*.log
+*.pyc
+*.psd
+thirdparty/json2.js
+batman.bat
+batman.vbs
+batman.py
+batman.json

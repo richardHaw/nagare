@@ -1,0 +1,87 @@
+/*
+MIT License
+
+Copyright (c) 2021 richardHaw
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+
+(function(){
+    function TreeDummy(){
+        this.STRICT = true;
+        this.PROPAGATE = true;
+        this.NODES_ALL = new Array();
+
+        this.DATABLOCK = new Object;
+        this.MOD_ROOT = io_utils.safePath(NAGARE_ROOT + "/modules");
+    }
+    $.global.TreeDummy = TreeDummy;
+
+
+    TreeDummy.prototype.extractScore = function(to_string){
+        const out = new Array();
+
+        for (var e = 0; e < this.NODES_ALL.length; e++){
+            var curr = this.NODES_ALL[e]
+            var dummy = new Object();
+
+            // copy
+            dummy.name = curr.name;
+            dummy.uuid = curr.uuid;
+            dummy.error = curr.error;
+            dummy.skip = curr.skip;
+            dummy.dirty = curr.dirty;
+            dummy.messages = curr.messages;
+            dummy.errors = curr.getErrors();
+
+            // add
+            out.push(dummy);
+        }
+
+        // done
+        if (to_string){
+            return JSON.stringify(out,null,4);
+        }
+        return out;
+    }
+
+
+    TreeDummy.prototype.failedNodes = function(){
+        const out = new Array();
+
+        // return if nothing
+        if (! this.NODES_ALL.length){
+            // LOG("No nodes processed yet...");
+            return out;
+        }
+
+        // parse
+        for (var f = 0; f < this.NODES_ALL.length; f++){
+            if (this.NODES_ALL[f].error){
+                out.push(this.NODES_ALL[f]);
+            }
+        }
+
+        // done
+        return out;
+    }
+
+    // done
+})();

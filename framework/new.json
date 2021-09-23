@@ -1,0 +1,31 @@
+{
+    "nodes": {
+        "in_node": null, 
+        "description": "Starter Spawn", 
+        "uuid": "4d1ce131-1c5c-11ec-ab0a-7066557c66ea", 
+        "name": "Start", 
+        "out_nodes": [
+            {
+                "in_node": {
+                    "name": "Start", 
+                    "uuid": "4d1ce131-1c5c-11ec-ab0a-7066557c66ea"
+                }, 
+                "description": "Prints data_block.\n\nReturn data_block", 
+                "uuid": "56197280-1c5c-11ec-a2eb-7066557c66ea", 
+                "name": "printDatablock01", 
+                "out_nodes": [], 
+                "command": "py.basic.printDatablock", 
+                "y": 211.60928347016593, 
+                "x": 513.4726705529674, 
+                "class": "widgets.itemNode", 
+                "icon": "C:\\repo\\nagare_flow\\framework\\app_py\\ui\\icons\\node.png"
+            }
+        ], 
+        "command": null, 
+        "y": 206.69864684293535, 
+        "x": 307.33618043701756, 
+        "class": "widgets.startNode", 
+        "icon": null
+    }, 
+    "groups": []
+}

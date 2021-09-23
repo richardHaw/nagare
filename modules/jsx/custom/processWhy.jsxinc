@@ -1,0 +1,40 @@
+(function (){
+    $.global.processWhy = new Object();
+
+    function main(data_block){
+        /*
+        Test for processing "why" in data_block.
+        Return data_block
+        */
+
+        if (! data_block.why){
+            const err = new ResultObj();
+
+            err.addError(
+                        {item:"broken_node",
+                        type:"mesh",
+                        reason:"this is a dummy error1, example of full error"}
+                        );
+
+            err.addError({item:"missing_object",
+                        reason:"you can just add item and no type or reason"}
+                        );
+
+            err.addError({item:"no_type",
+                        reason:"this one has no type"}
+                        );
+
+            err.addError({item:"item_only_specified"});
+
+            err.addMessage("You can use the errors for selection, repair, etc");
+
+            return err;
+        }
+
+        LOG("processWhy.jsx");
+        LOG(data_block.why);
+
+        return data_block;
+    }
+    $.global.processWhy.main = main;
+})()
