@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 MIT License
 
@@ -311,7 +313,7 @@ class Viewer(app_py):
 
 if __name__ == "__main__":
     # Editor(language="jsx",graph_file="C:/repo/nagare/graphs/tester_jsx_backup.json")
-    # Editor()
-    Player()
+    Editor()
+    # Player()
     # Viewer(r"C:/repo/nagare/graphs/tester_jsx.json",r"C:\repo\_tmp\batman.json")
     pass

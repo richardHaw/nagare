@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 MIT License
 
@@ -27,6 +29,7 @@ from __future__ import print_function
 import os
 import sys
 import uuid
+import ctypes
 
 from random import randrange
 from traceback import print_exc
@@ -274,6 +277,7 @@ class Spawn(object):
         if len(_node_data.get("out_nodes")) < 1:
             pprint(_node_data)
             self._feedback("No nodes saved...",2)
+            self._alert("No nodes saved...","Warning")
             return
 
         _gp_data = sceneUtils.getGroups(self.ui.scene)
@@ -282,6 +286,7 @@ class Spawn(object):
         sceneUtils.write(_tj,_out_data)
         self._setTree(_tj)
         self._feedback("Saved to: {}".format(self.tree_json))
+        self._alert("Saved successfully...")
 
 
     def clearTree(self):
@@ -314,6 +319,7 @@ class Spawn(object):
     def _setTree(self,json_path):
         if not os.path.isfile(json_path):
             self._feedback("Not found: {}".format(json_path),2)
+            self._alert("Invalid file...","Warning")
             return
 
         self.tree_json = json_path
@@ -391,6 +397,7 @@ class Spawn(object):
             self._feedback("Opening log: {}".format(self.log_file))
         else:
             self._feedback("Log not found: {}".format(self.log_file),1)
+            self._alert("No logs found...")
 
 
     def setupLog(self):
@@ -483,6 +490,7 @@ class Spawn(object):
 
         if len(_widgets) < 2:
             self._feedback("Select more than 1 node to group...",1)
+            self._alert("Selected more nodes...","Nagare Alert")
             return
 
         widgets.groupNode(self.ui.scene,_widgets)
@@ -544,6 +552,7 @@ class Spawn(object):
         self.ui.info_txt.setText(feed_text)
         self.ui.info_txt.setStyleSheet(colors[level])
 
+
     def _notify(self,title,msg):
         """
         Show a notification on the tray.
@@ -558,7 +567,21 @@ class Spawn(object):
 
         """
 
-        self.ui.tray.showMessage(title, msg)
+        self.ui.tray.showMessage(title,msg)
+
+
+    def _alert(self,text,title="Nagare Alert",style=0):
+        """
+        0 : OK
+        1 : OK | Cancel
+        2 : Abort | Retry | Ignore
+        3 : Yes | No | Cancel
+        4 : Yes | No
+        5 : Retry | Cancel 
+        6 : Cancel | Try Again | Continue
+        """
+
+        return ctypes.windll.user32.MessageBoxA(0,text,title,style)
 
 
     @Slot(QTreeWidgetItem,int)
