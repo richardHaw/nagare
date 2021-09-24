@@ -393,7 +393,7 @@ catch(e){
 
 
 /*
-// @include "C:/repo/nagare/framework/app_jsx/main.jsx";
+// @include "C:/repo/nagare/core/app_jsx/main.jsx";
 
 var test_block = {
     what: "This is Haw-dini (on Javascript!!!)",

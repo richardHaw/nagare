@@ -28,11 +28,11 @@ print("Starting Nagare...")
 
 import os
 import sys
-from framework import configs
-from framework.app_py.editor import Spawn as editor
-from framework.app_py.viewer import Spawn as viewer
-from framework.app_py.utilities import nodeUtils
-from framework.app_py.main import Spawn as app_py
+from core import configs
+from core.app_py.editor import Spawn as editor
+from core.app_py.viewer import Spawn as viewer
+from core.app_py.utilities import nodeUtils
+from core.app_py.main import Spawn as app_py
 from PySide2.QtWidgets import QApplication
 
 

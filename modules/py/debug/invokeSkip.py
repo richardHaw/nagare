@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 import os, logging
-from framework import resultObj
+from core import resultObj
 
 
 def main(data_block={}):

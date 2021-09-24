@@ -81,7 +81,7 @@ def setup():
     lang = "py"
     pyver = str(sys.version_info[0])
     test_json = os.path.join(nagare_root,"graphs","tester_{}.json".format(lang))
-    # test_json = os.path.abspath(os.path.join(nagare_root,"framework","new.json"))
+    # test_json = os.path.abspath(os.path.join(nagare_root,"core","new.json"))
 
     envs = [
             "NAGARE_FRAMEWORK_ROOT",
