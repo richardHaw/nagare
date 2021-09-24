@@ -37,7 +37,7 @@ from PySide2.QtWidgets import (QMenu,
                                QVBoxLayout,
                                QTreeWidget,
                                QSystemTrayIcon)
-import icons
+from widgets import icons
 import widgets
 
 

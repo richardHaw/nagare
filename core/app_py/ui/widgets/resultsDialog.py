@@ -40,6 +40,7 @@ from PySide2.QtCore import Qt
 from tableModel import Spawn as tableModel
 from tableView import Spawn as tableView
 from collapseGroup import Spawn as collapseGroup
+GLOBAL_CSS = os.getenv("NAGARE_GLOBAL_CSS")
 
 
 class Spawn(QDialog):
@@ -52,17 +53,17 @@ class Spawn(QDialog):
 
         self.node_name = node_name
         self.errors_list = self._processErrors(errors_list)
-        self.desc = ""
         self.message = ""
         self.status = status
         self.headers = ["Item","Type","Reason"]
+        self._desc = ""
 
-        self.setModal(True)
         self._setup()
         self.setMessage(msg)
         self.setDesc(desc)
-        self.setStyleSheet(os.getenv("NAGARE_GLOBAL_CSS"))
         self.resize(600,800)
+        self.setStyleSheet(GLOBAL_CSS)
+        self.setModal(True)
         self.exec_()
 
 
@@ -199,8 +200,8 @@ class Spawn(QDialog):
 
 
     def setDesc(self,strings):
-        self.desc = strings
-        self._desc_txt.setPlainText(self.desc)
+        self._desc = strings
+        self._desc_txt.setPlainText(self._desc)
 
 
     def setMessage(self,msg_str):
@@ -235,11 +236,22 @@ if __name__ == "__main__":
     from PySide2.QtWidgets import QApplication
     top_app = QApplication(sys.argv)
 
-    errs = [("babalu_layer_longName","LayerItem","Not found"),
-            ("baba_comp","CompItem","Incomplete items, missing layers"),
-            ("baba_foot","FootageItem","File not found"),
-            ("baba_folder","FolderItem","Japanese name, should be ASCII only"),
+    GLOBAL_CSS = "QDialog {background-color: pink} "
+    GLOBAL_CSS+="QLineEdit {background-color: slate; color: silver; border: none} "
+    GLOBAL_CSS+="QToolButton {background-color: dimgrey; border: none} "
+    GLOBAL_CSS+="QToolButton::hover {background-color: slategrey; border: none} "
+    GLOBAL_CSS+="QMenuBar {border: none} "
+    GLOBAL_CSS+="QTreeWidget {background-color: #505050; color: silver; border: none} "
+    GLOBAL_CSS+="QTreeWidget::item:hover {background-color:slategrey;} "
+    GLOBAL_CSS+="QHeaderView::section {background-color: dimgrey; border: none} "
+    GLOBAL_CSS+="QGroupBox::indicator:unchecked {image: url(icons/group_collapse_close.png);} "
+    GLOBAL_CSS+="QGroupBox::indicator:checked {image: url(icons/group_collapse_open.png);} "
+
+    errs = [{"item":"babalu_layer_longName","type":"LayerItem","reason":"Not found"},
+            {"item":"baba_comp","type":"CompItem","reason":"Incomplete items, missing layers"},
+            {"item":"baba_foot","type":"FootageItem","reason":"File not found"},
+            {"item":"baba_folder","type":"FolderItem","reason":"Japanese name, should be ASCII only"},
             ]
 
-    sp = Spawn("babalu","my description",errs)
+    sp = Spawn("babalu","error","my description","",errs)
     sys.exit(0)

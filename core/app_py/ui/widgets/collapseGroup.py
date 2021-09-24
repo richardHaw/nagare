@@ -58,11 +58,11 @@ class Spawn(QGroupBox):
         if self.isChecked():
             self.setMaximumHeight(self._orig_height)
             _new_height = _win_height+(self._orig_height-self._label_height)
-            self.newTitle(self.title_text)
+            self.newTitle("{} - ".format(self.title_text))
         else:
             self._orig_height = self.height()
             self.setMaximumHeight(self._label_height)
-            self.newTitle(self.title_text + " (collapsed)")
+            self.newTitle("{} + ".format(self.title_text))
             _new_height = _win_height-(self._orig_height+self._label_height)
 
         _win.resize(_win_width,_new_height)

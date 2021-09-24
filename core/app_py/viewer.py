@@ -36,8 +36,8 @@ from PySide2.QtWidgets import (QMenu,
                                QVBoxLayout,
                                QSystemTrayIcon)
 
-from ui import icons
 from ui import widgets
+from ui.widgets import icons
 from utilities import sceneUtils
 
 

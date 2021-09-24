@@ -71,12 +71,12 @@ def setup():
     global_css+="QTreeWidget {background-color: #505050; color: silver; border: none} "
     global_css+="QTreeWidget::item:hover {background-color:slategrey;} "
     global_css+="QHeaderView::section {background-color: dimgrey; border: none} "
-    global_css+="QGroupBox::indicator:unchecked {image: url(..\\ui\\icons\\group_collapse_close.png);} "
-    global_css+="QGroupBox::indicator:checked {image: url((..\\ui\\icons\\group_collapse_open.png);} "
+    # global_css+="QGroupBox::indicator:unchecked {image: url(icons/group_collapse_close.png);} "
+    # global_css+="QGroupBox::indicator:checked {image: url(icons/group_collapse_open.png);} "
 
     fw_root = os.path.dirname(os.path.dirname(__file__))
     nagare_root = os.path.dirname(fw_root)
-    icons_root = os.path.join(fw_root,"app_py","ui","icons")
+    icons_root = os.path.join(fw_root,"app_py","ui","widgets","icons")
     title_template = "Nagare {} (Alpha, Python-{})"
     lang = "py"
     pyver = str(sys.version_info[0])
