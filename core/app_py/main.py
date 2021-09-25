@@ -86,7 +86,7 @@ class Spawn(object):
                                      "{}.log".format(logUtils.timeStamp(),
                                                      os.environ["NAGARE_LANGUAGE"]))
         self.log_obj = logUtils.getLogger(os.environ["NAGARE_LOG"],
-                                           self.log_file)
+                                          self.log_file)
         self.log_obj.propagate = True
 
         self.log_obj.info("Running JSON: {}".format(json_path))

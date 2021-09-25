@@ -396,7 +396,7 @@ class Spawn(object):
 
             self._feedback("Opening log: {}".format(self.log_file))
         else:
-            self._feedback("Log not found: {}".format(self.log_file),1)
+            self._feedback("Log not found: {}".format(self.log_file),2)
             self._alert("No logs found...")
 
 
@@ -445,6 +445,7 @@ class Spawn(object):
         Plays self.tree_json for debug purposes.
         """
 
+        self.setupLog()
         _dummy = app_py()
         _dummy.strict = self.strict
         _dummy.propagate = self.propagate
@@ -547,6 +548,9 @@ class Spawn(object):
         colors = ["background-color: slate; color: silver",
                   "background-color: #fdd835; color: black",
                   "background-color: #ff5252; color: black"]
+
+        if level > len(colors):
+            level = len(colors);
 
         print(feed_text)
         self.ui.info_txt.setText(feed_text)

@@ -221,7 +221,7 @@ class Player(app_py):
                            "uuid":_n.uuid}
 
             _node = nodeUtils.getPointer(_dummy_dict,
-                                          self.player.scene)
+                                         self.player.scene)
             _msg = "\n".join(_n.messages)
             _node.desc = _n.description
             _node.setErrors(_n.getErrors())
@@ -313,7 +313,7 @@ class Viewer(app_py):
 
 if __name__ == "__main__":
     # Editor(language="jsx",graph_file="C:/repo/nagare/graphs/tester_jsx_backup.json")
-    Editor()
-    # Player()
+    # Editor()
+    Player()
     # Viewer(r"C:/repo/nagare/graphs/tester_jsx.json",r"C:\repo\_tmp\batman.json")
     pass

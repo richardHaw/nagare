@@ -57,7 +57,7 @@ def getLogger(name = os.environ["NAGARE_LOG"], log_name = None):
         if not os.path.isdir(os.path.dirname(log_path)):
             os.makedirs(os.path.dirname(log_path))
         handler = logging.FileHandler(log_path)
-        print("Log:", log_path)
+        print("Log:",log_path)
     else:
         handler = logging.StreamHandler()
 
