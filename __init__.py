@@ -35,6 +35,7 @@ from core.app_py.editor import Spawn as editor
 from core.app_py.viewer import Spawn as viewer
 from core.app_py.utilities import nodeUtils
 from core.app_py.main import Spawn as app_py
+
 from PySide2.QtWidgets import QApplication
 
 
@@ -186,8 +187,8 @@ class Editor(editor):
 
         # done
         self._app.exec_()
-        del self._app
-        # sys.exit(0)
+        # del self._app
+        sys.exit(0)
 
 
 class Player(app_py):
@@ -250,8 +251,8 @@ class Player(app_py):
 
         # done
         self._app.exec_()
-        del self._app
-        # sys.exit(0)
+        # del self._app
+        sys.exit(0)
 
 
     def _openLog(self):
@@ -325,8 +326,8 @@ class Viewer(app_py):
 
         # done
         self._app.exec_()
-        del self._app
-        # sys.exit(0)
+        # del self._app
+        sys.exit(0)
 
 
 if __name__ == "__main__":

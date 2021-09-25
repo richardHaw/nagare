@@ -76,14 +76,19 @@ def setup():
     # global_css+="QGroupBox::indicator:unchecked {image: url(icons/group_collapse_close.png);} "
     # global_css+="QGroupBox::indicator:checked {image: url(icons/group_collapse_open.png);} "
 
-    fw_root = os.path.dirname(os.path.dirname(__file__))
-    nagare_root = os.path.dirname(fw_root)
-    icons_root = os.path.join(fw_root,"app_py","ui","widgets","icons")
+    core_root = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    nagare_root = os.path.abspath(os.path.dirname(core_root))
+    icons_root = os.path.join(core_root,"app_py","ui","widgets","icons")
     title_template = "Nagare {} (Alpha, Python-{})"
     lang = "py"
     pyver = str(sys.version_info[0])
     test_json = os.path.join(nagare_root,"graphs","tester_{}.json".format(lang))
     # test_json = os.path.abspath(os.path.join(nagare_root,"core","new.json"))
+
+    for p in [core_root,nagare_root]:
+        if p not in sys.path:
+            sys.path.append(p)
+            print("Added to sys: {}".format(p))
 
     envs = [
             "NAGARE_FRAMEWORK_ROOT",
@@ -104,7 +109,7 @@ def setup():
             ]
 
     nulls = [
-             fw_root, # NAGARE_FRAMEWORK_ROOT
+             core_root, # NAGARE_FRAMEWORK_ROOT
              nagare_root, # NAGARE_ROOT
              os.path.abspath(os.path.join(nagare_root,"modules",lang)), # NAGARE_MOD_PATH
              os.path.abspath(os.path.join(nagare_root,"log")), # NAGARE_LOG_PATH
@@ -125,11 +130,11 @@ def setup():
         if not os.environ.get(e,None):
             os.environ[e] = nulls[envs.index(e)]
 
-    # might be better at config or nagare's init
+    # just for testing
     TEST_BLOCK.update({"what" : "This is Hawdini",
                        "where" : "Made in Japan",
                        "when" : "On my spare time",
-                       #"why" : "To make a better world",
+                       # "why" : "To make a better world",
                        "who" : "Richard Haw"})
 
     print("Configs initiated...")
