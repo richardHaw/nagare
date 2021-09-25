@@ -41,9 +41,9 @@ from PySide2.QtGui import (QPen,
 
 from PySide2.QtWidgets import QGraphicsEllipseItem
 
-from socketNode import Spawn as socketNode
-from clickLabel import Spawn as clickLabel
-from modalTextEdit import Spawn as modalTextEdit
+from .socketNode import Spawn as socketNode
+from .clickLabel import Spawn as clickLabel
+from .modalTextEdit import Spawn as modalTextEdit
 
 
 class Spawn(QGraphicsEllipseItem):

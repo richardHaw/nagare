@@ -38,9 +38,9 @@ from PySide2.QtGui import (QColor,
 
 from PySide2.QtWidgets import QGraphicsScene
 
-from itemNode import Spawn as itemNode
-from startNode import Spawn as startNode
-from groupNode import Spawn as groupNode
+from .itemNode import Spawn as itemNode
+from .startNode import Spawn as startNode
+from .groupNode import Spawn as groupNode
 
 
 class Spawn(QGraphicsScene):

@@ -30,7 +30,7 @@ from __future__ import print_function
 from PySide2.QtCore import (Qt,
                             QPoint)
 
-from itemNode import Spawn as itemNode
+from .itemNode import Spawn as itemNode
 from PySide2.QtWidgets import QGraphicsView
 
 

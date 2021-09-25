@@ -39,9 +39,9 @@ from PySide2.QtWidgets import (QLabel,
                                QPlainTextEdit)
 from PySide2.QtCore import Qt
 
-from tableModel import Spawn as tableModel
-from tableView import Spawn as tableView
-from collapseGroup import Spawn as collapseGroup
+from .tableModel import Spawn as tableModel
+from .tableView import Spawn as tableView
+from .collapseGroup import Spawn as collapseGroup
 GLOBAL_CSS = os.getenv("NAGARE_GLOBAL_CSS")
 
 

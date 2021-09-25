@@ -38,9 +38,9 @@ from PySide2.QtWidgets import (QMenu,
                                QVBoxLayout,
                                QSystemTrayIcon)
 
-from ui import widgets
-from ui.widgets import icons
-from utilities import sceneUtils
+from .ui import widgets
+from .ui.widgets import icons
+from .utilities import sceneUtils
 
 
 class Spawn(QDialog):

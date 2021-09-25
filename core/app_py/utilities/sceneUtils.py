@@ -32,7 +32,7 @@ import uuid
 import json
 
 from ..ui import widgets
-import nodeUtils
+from . import nodeUtils
 from PySide2.QtWidgets import QFileDialog
 
 

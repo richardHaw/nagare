@@ -28,6 +28,7 @@ from __future__ import division
 from __future__ import print_function
 
 import os
+from sys import version_info
 
 from PySide2.QtGui import QIcon
 from PySide2.QtWidgets import (QMenu,
@@ -39,8 +40,8 @@ from PySide2.QtWidgets import (QMenu,
                                QVBoxLayout,
                                QTreeWidget,
                                QSystemTrayIcon)
-from widgets import icons
-import widgets
+
+from .widgets import *
 
 
 class Spawn(QDialog):
@@ -102,8 +103,8 @@ class Spawn(QDialog):
         _main_layout = QHBoxLayout(self)
         _main_layout.setMenuBar(self.main_menu)
 
-        self.scene = widgets.graphicsScene()
-        self.view = widgets.graphicsView(self.scene)
+        self.scene = graphicsScene()
+        self.view = graphicsView(self.scene)
         self.view.setSceneRect(100,50,self.winW,self.winH)
         _central_layout = QVBoxLayout()
 
@@ -111,62 +112,62 @@ class Spawn(QDialog):
         _top_layout = QHBoxLayout(self)
 
         # file IO buttons
-        self.open_btn = widgets.buttonTool(self._getIcon("open.png"),
-                                           "Open",
-                                           _top_layout)
+        self.open_btn = buttonTool(self._getIcon("open.png"),
+                                   "Open",
+                                   _top_layout)
 
-        self.save_btn = widgets.buttonTool(self._getIcon("save.png"),
-                                           "Save",
-                                           _top_layout)
+        self.save_btn = buttonTool(self._getIcon("save.png"),
+                                   "Save",
+                                   _top_layout)
 
         # playing button
-        widgets.separator(False,_top_layout)
+        separator(False,_top_layout)
 
         self.strict_icon1 = self._getIcon("next.png")
         self.strict_icon2 = self._getIcon("stop.png")
 
-        self.strict_btn = widgets.buttonTool(self.strict_icon1,
-                                             "Stop on Error",
-                                             _top_layout)
+        self.strict_btn = buttonTool(self.strict_icon1,
+                                     "Stop on Error",
+                                     _top_layout)
 
         self.propagate_icon1 = self._getIcon("tree.png")
         self.propagate_icon2 = self._getIcon("branch.png")
 
-        self.propagate_btn = widgets.buttonTool(self.propagate_icon1,
-                                                "Propagate Datablock",
-                                                _top_layout)
+        self.propagate_btn = buttonTool(self.propagate_icon1,
+                                        "Propagate Datablock",
+                                        _top_layout)
 
         # graph buttons
-        widgets.separator(False,_top_layout)
+        separator(False,_top_layout)
 
-        self.zoom_btn = widgets.buttonTool(self._getIcon("zoom.png"),
-                                           "Zoom Extents",
-                                           _top_layout)
+        self.zoom_btn = buttonTool(self._getIcon("zoom.png"),
+                                   "Zoom Extents",
+                                   _top_layout)
 
-        self.align_btn = widgets.buttonTool(self._getIcon("align.png"),
-                                            "Align",
-                                            _top_layout)
+        self.align_btn = buttonTool(self._getIcon("align.png"),
+                                    "Align",
+                                    _top_layout)
 
-        self.group_btn = widgets.buttonTool(self._getIcon("group.png"),
-                                            "Group Selected Nodes",
-                                            _top_layout)
+        self.group_btn = buttonTool(self._getIcon("group.png"),
+                                    "Group Selected Nodes",
+                                    _top_layout)
 
-        self.reset_btn = widgets.buttonTool(self._getIcon("reset.png"),
-                                            "Reset",
-                                            _top_layout)
+        self.reset_btn = buttonTool(self._getIcon("reset.png"),
+                                    "Reset",
+                                    _top_layout)
 
-        self.clear_btn = widgets.buttonTool(self._getIcon("clear.png"),
-                                            "Clear",
-                                            _top_layout)
+        self.clear_btn = buttonTool(self._getIcon("clear.png"),
+                                    "Clear",
+                                    _top_layout)
 
         # search
         self.find_txt = QLineEdit()
         self.find_txt.setToolTip("Search node by name.")
         _top_layout.addWidget(self.find_txt)
 
-        self.erase_btn = widgets.buttonTool(self._getIcon("erase.png"),
-                                            "Clear search field",
-                                            _top_layout)
+        self.erase_btn = buttonTool(self._getIcon("erase.png"),
+                                    "Clear search field",
+                                    _top_layout)
 
         _central_layout.addLayout(_top_layout)
 
@@ -179,9 +180,9 @@ class Spawn(QDialog):
         _central_layout.addLayout(_bottom_layout)
 
         # run buttons
-        self.run_btn = widgets.buttonTool(self._getIcon("run.png"),
-                                          "Run graph",
-                                          _bottom_layout)
+        self.run_btn = buttonTool(self._getIcon("run.png"),
+                                  "Run graph",
+                                  _bottom_layout)
 
         # feedback
         self.info_txt = QLineEdit("Ready...")
@@ -190,9 +191,9 @@ class Spawn(QDialog):
         _bottom_layout.addWidget(self.info_txt)
 
         # log button
-        self.log_btn = widgets.buttonTool(self._getIcon("log.png"),
-                                          "Open log",
-                                          _bottom_layout)
+        self.log_btn = buttonTool(self._getIcon("log.png"),
+                                  "Open log",
+                                  _bottom_layout)
 
         # module tree
         self.module_tree = QTreeWidget()

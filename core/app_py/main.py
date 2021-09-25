@@ -33,9 +33,9 @@ import importlib
 
 from traceback import format_exc
 from pprint import (pprint,pformat)
-from resultObj import Spawn as result_obj
-from nodeDummy import Spawn as node_dummy
-from utilities import logUtils
+from .resultObj import Spawn as result_obj
+from .nodeDummy import Spawn as node_dummy
+from .utilities import logUtils
 
 
 class Spawn(object):

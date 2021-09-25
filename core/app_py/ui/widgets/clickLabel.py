@@ -30,7 +30,8 @@ from PySide2.QtGui import (QFont,
                            QColor)
 
 from PySide2.QtWidgets import QGraphicsTextItem
-from inputText import Spawn as inputText
+from .inputText import Spawn as inputText
+
 
 class Spawn(QGraphicsTextItem):
     """

@@ -39,13 +39,23 @@ from PySide2.QtCore import (Qt,Slot)
 from PySide2.QtWidgets import (QAction,
                                QApplication,
                                QTreeWidgetItem)
-from ui import widgets
-from main import Spawn as app_py
-from ui.interface import Spawn as interface
 
-from utilities import (nodeUtils,
-                       logUtils,
-                       sceneUtils)
+if sys.version_info[0] > 2:
+    from .ui import widgets
+    from .main import Spawn as app_py
+    from .ui.interface import Spawn as interface
+
+    from .utilities import (nodeUtils,
+                            logUtils,
+                            sceneUtils)
+else:
+    from ui import widgets
+    from main import Spawn as app_py
+    from ui.interface import Spawn as interface
+
+    from utilities import (nodeUtils,
+                           logUtils,
+                           sceneUtils)
 
 
 class Spawn(object):

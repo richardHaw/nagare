@@ -39,7 +39,7 @@ from PySide2.QtGui import (QPen,
                            QPainterPath)
 
 from PySide2.QtWidgets import QGraphicsEllipseItem
-from wireNode import Spawn as wireNode
+from .wireNode import Spawn as wireNode
 
 
 class Spawn(QGraphicsEllipseItem):

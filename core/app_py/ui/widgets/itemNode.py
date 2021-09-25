@@ -41,9 +41,9 @@ from PySide2.QtWidgets import (QGraphicsRectItem,
                                QGraphicsTextItem,
                                QGraphicsPixmapItem)
 
-from resultsDialog import Spawn as resultsDialog
-from clickLabel import Spawn as clickLabel
-from socketNode import Spawn as socketNode
+from .resultsDialog import Spawn as resultsDialog
+from .clickLabel import Spawn as clickLabel
+from .socketNode import Spawn as socketNode
 
 
 class Spawn(QGraphicsRectItem):

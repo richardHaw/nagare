@@ -30,11 +30,21 @@ print("Starting Nagare...")
 
 import os
 import sys
-from core import configs
-from core.app_py.editor import Spawn as editor
-from core.app_py.viewer import Spawn as viewer
-from core.app_py.utilities import nodeUtils
-from core.app_py.main import Spawn as app_py
+
+
+if sys.version_info[0] > 2:
+    from .core import configs
+    from .core.app_py.editor import Spawn as editor
+    from .core.app_py.viewer import Spawn as viewer
+    from .core.app_py.utilities import nodeUtils
+    from .core.app_py.main import Spawn as app_py
+else:
+    from core import configs
+    from core.app_py.editor import Spawn as editor
+    from core.app_py.viewer import Spawn as viewer
+    from core.app_py.utilities import nodeUtils
+    from core.app_py.main import Spawn as app_py
+
 
 from PySide2.QtWidgets import QApplication
 
@@ -332,7 +342,7 @@ class Viewer(app_py):
 
 if __name__ == "__main__":
     # Editor(language="jsx",graph_file="C:/repo/nagare/graphs/tester_jsx_backup.json")
-    # Editor()
-    Player()
+    Editor()
+    # Player()
     # Viewer(r"C:/repo/nagare/graphs/tester_jsx.json",r"C:\repo\_tmp\batman.json")
     pass

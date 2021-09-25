@@ -35,7 +35,7 @@ from PySide2.QtGui import (QColor,
 
 from PySide2.QtCore import QRectF
 from PySide2.QtWidgets import QGraphicsRectItem
-from clickLabel import Spawn as clickLabel
+from .clickLabel import Spawn as clickLabel
 
 
 class Spawn(QGraphicsRectItem):
