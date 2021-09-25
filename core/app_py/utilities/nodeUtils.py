@@ -165,9 +165,16 @@ def getPointer(node_data,scene_obj):
 
         # UUID is buggy for now
         nd_uuid = node_data["uuid"]
-        if not isinstance(nd_uuid, str)\
-           and not isinstance(nd_uuid, unicode)\
-           and not isinstance(nd_uuid, uuid.UUID):
+
+        if sys.version_info[0] > 2:
+            bad_t = not isinstance(nd_uuid,str)\
+                and not isinstance(nd_uuid,uuid.UUID)
+        else:
+            bad_t = not isinstance(nd_uuid,str)\
+                and not isinstance(nd_uuid,unicode)\
+                and not isinstance(nd_uuid,uuid.UUID)
+
+        if bad_t:
             raise TypeError("Not a str, unicode or uuid.UUID",
                             nd_uuid,
                             type(nd_uuid))

@@ -31,6 +31,7 @@ print("Starting Nagare...")
 import os
 import sys
 
+from PySide2.QtWidgets import QApplication
 
 if sys.version_info[0] > 2:
     from .core import configs
@@ -44,9 +45,6 @@ else:
     from core.app_py.viewer import Spawn as viewer
     from core.app_py.utilities import nodeUtils
     from core.app_py.main import Spawn as app_py
-
-
-from PySide2.QtWidgets import QApplication
 
 
 def setDefaults():

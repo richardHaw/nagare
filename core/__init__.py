@@ -24,11 +24,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import sys
 
-if sys.version_info[0] > 2:
-    from .app_py.nodeDummy import Spawn as nodeDummy
-    from .app_py.resultObj import Spawn as resultObj
-else:
-    from app_py.nodeDummy import Spawn as nodeDummy
-    from app_py.resultObj import Spawn as resultObj
+from .app_py.nodeDummy import Spawn as nodeDummy
+from .app_py.resultObj import Spawn as resultObj

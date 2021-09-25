@@ -40,22 +40,14 @@ from PySide2.QtWidgets import (QAction,
                                QApplication,
                                QTreeWidgetItem)
 
-if sys.version_info[0] > 2:
-    from .ui import widgets
-    from .main import Spawn as app_py
-    from .ui.interface import Spawn as interface
-
-    from .utilities import (nodeUtils,
-                            logUtils,
-                            sceneUtils)
-else:
-    from ui import widgets
-    from main import Spawn as app_py
-    from ui.interface import Spawn as interface
-
-    from utilities import (nodeUtils,
-                           logUtils,
-                           sceneUtils)
+from .ui.widgets import startNode
+from .ui.widgets import itemNode
+from .ui.widgets import groupNode
+from .main import Spawn as app_py
+from .ui.interface import Spawn as interface
+from .utilities import (nodeUtils,
+                        logUtils,
+                        sceneUtils)
 
 
 class Spawn(object):
@@ -434,7 +426,7 @@ class Spawn(object):
         _g = sceneUtils.buildGraph(self.ui.scene,
                                    self.tree_json,
                                    self.data_block)
-        if not isinstance(_g,widgets.startNode):
+        if not isinstance(_g,startNode):
             self.clearTree()
             self._feedback(_g,2)
             return
@@ -497,14 +489,14 @@ class Spawn(object):
 
         _widgets = [_s for _s in\
                     sceneUtils.getSelected(self.ui.scene)\
-                    if isinstance(_s,widgets.itemNode)]
+                    if isinstance(_s,itemNode)]
 
         if len(_widgets) < 2:
             self._feedback("Select more than 1 node to group...",1)
             self._alert("Selected more nodes...","Nagare Alert")
             return
 
-        widgets.groupNode(self.ui.scene,_widgets)
+        groupNode(self.ui.scene,_widgets)
         self._feedback("Grouped {} nodes...".format(len(_widgets)))
 
 
@@ -526,7 +518,7 @@ class Spawn(object):
             return
 
         _gps = [g for g in self.ui.scene.items()\
-                if isinstance(g,widgets.groupNode)]
+                if isinstance(g,groupNode)]
 
         if not is_all:
             for _sl in _sels:
@@ -595,7 +587,10 @@ class Spawn(object):
         6 : Cancel | Try Again | Continue
         """
 
-        return ctypes.windll.user32.MessageBoxA(0,text,title,style)
+        if sys.version_info[0] > 2:
+            return ctypes.windll.user32.MessageBoxW(0,text,title,style)
+        else:
+            return ctypes.windll.user32.MessageBoxA(0,text,title,style)
 
 
     @Slot(QTreeWidgetItem,int)
@@ -626,11 +621,11 @@ class Spawn(object):
         _desc = nodeUtils.getDescription(self.modules_dir,_fol_name,_text)
         _icon = nodeUtils.getIconPath(self.modules_dir,_fol_name,_text)
 
-        new_node = widgets.itemNode(_name,
-                                    self.ui.winW/2+randrange(-50,50),
-                                    self.ui.winH/2+randrange(-50,50),
-                                    self.ui.scene,
-                                    _desc)
+        new_node = itemNode(_name,
+                            self.ui.winW/2+randrange(-50,50),
+                            self.ui.winH/2+randrange(-50,50),
+                            self.ui.scene,
+                            _desc)
 
         new_node.command = "{}.{}.{}".format(self.language,
                                              _fol_name,
