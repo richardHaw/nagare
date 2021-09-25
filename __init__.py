@@ -135,8 +135,8 @@ def setLanguage(lang_str="py"):
     os.environ["NAGARE_LANGUAGE"] = lang_str
 
     NAGARE_MOD_PATH = os.path.join(os.environ["NAGARE_ROOT"],
-                               "modules",
-                               os.environ["NAGARE_LANGUAGE"])
+                                   "modules",
+                                   os.environ["NAGARE_LANGUAGE"])
     os.environ["NAGARE_MOD_PATH"] = os.path.abspath(NAGARE_MOD_PATH)
 
 
@@ -171,7 +171,12 @@ class Editor(editor):
         if language != os.environ["NAGARE_LANGUAGE"]:
             setLanguage(language)
 
-        _top_app = QApplication(sys.argv)
+        self._app = None
+        if not QApplication.instance():
+            self._app = QApplication(sys.argv)
+        else:
+            self._app = QApplication.instance()
+
         super(Editor,self).__init__(software,
                                     language,
                                     graph_file,
@@ -180,8 +185,9 @@ class Editor(editor):
         print("Editor",software,language,graph_file)
 
         # done
-        _top_app.exec_()
-        sys.exit(0)
+        self._app.exec_()
+        del self._app
+        # sys.exit(0)
 
 
 class Player(app_py):
@@ -206,7 +212,12 @@ class Player(app_py):
                  json_file=os.environ["NAGARE_DEFAULT_JSON"],
                  datablock=configs.TEST_BLOCK):
 
-        _top_app = QApplication(sys.argv)
+        self._app = None
+        if not QApplication.instance():
+            self._app = QApplication(sys.argv)
+        else:
+            self._app = QApplication.instance()
+
         super(Player,self).__init__()
 
         self.strict = eval(os.environ["NAGARE_STRICT"])
@@ -214,7 +225,7 @@ class Player(app_py):
         _copy_block = datablock.copy()
         self.runJson(json_file,_copy_block)
         self.player = viewer(json_file)
-        self.player.log_btn.clicked.connect(self.openLog)
+        self.player.log_btn.clicked.connect(self._openLog)
 
         for _n in self.nodes_all:
             _dummy_dict = {"name":_n.name,
@@ -238,11 +249,12 @@ class Player(app_py):
         self.player.feedback("Ran: {}".format(json_file))
 
         # done
-        _top_app.exec_()
-        sys.exit(0)
+        self._app.exec_()
+        del self._app
+        # sys.exit(0)
 
 
-    def openLog(self):
+    def _openLog(self):
         """
         Opens the log.txt file if self.log_file is a valid file in drive.
         """
@@ -277,19 +289,24 @@ class Viewer(app_py):
 
     """
 
-    def __init__(self, graph_json, score_json):
-        for j in (graph_json, score_json):
+    def __init__(self, graph_json,score_json):
+        for j in (graph_json,score_json):
             if not os.path.exists(j):
                 raise IOError("Not found: {}".format(j))
 
-        _top_app = QApplication(sys.argv)
+        self._app = None
+        if not QApplication.instance():
+            self._app = QApplication(sys.argv)
+        else:
+            self._app = QApplication.instance()
+
         super(Viewer,self).__init__()
 
         self.player = viewer(graph_json)
         _score_data = self.getDataFromJson(score_json)
 
         for _score in _score_data:
-            _node = nodeUtils.getPointer(_score, self.player.scene)
+            _node = nodeUtils.getPointer(_score,self.player.scene)
 
             if not _node:
                 raise RuntimeError("Failed to find node pointer:",
@@ -307,8 +324,9 @@ class Viewer(app_py):
                 _node.setDirty()
 
         # done
-        _top_app.exec_()
-        sys.exit(0)
+        self._app.exec_()
+        del self._app
+        # sys.exit(0)
 
 
 if __name__ == "__main__":
