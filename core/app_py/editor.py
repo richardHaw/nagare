@@ -112,7 +112,7 @@ class Spawn(object):
         self.language = language
         self.tree_json = tree_json
         self.data_block = data_block
-        self.modules_dir = os.environ["NAGARE_MOD_PATH"]
+        self.modules_roots = os.environ["NAGARE_MOD_PATH"].split(";")
         self.title_text = os.environ["NAGARE_EDITOR_TITLE"]
         self.starter = None
         self.log_dir = os.environ["NAGARE_LOG_PATH"]
@@ -217,48 +217,56 @@ class Spawn(object):
             custom nodes folder ("maya2018_ModelCheck")
         """
 
-        ext_map = {"py":["py"],
+        ext_map = {"py":["py","pyc"],
                    "jsx":["jsxbin","jsxinc"]}
 
-        if not os.path.isdir(self.modules_dir):
-            raise RuntimeError("No modules folder:",self.modules_dir)
-        print("Searching modules in ",self.modules_dir)
-
-        _CBD = ["custom","basic","debug"]
-        _cat_count = 1
-
-        for _cat in os.listdir(self.modules_dir):
-            _cat_dir = os.path.join(self.modules_dir, _cat)
-            if not os.path.isdir(_cat_dir):
+        for _mroot in self.modules_roots:
+            if not os.path.isdir(_mroot):
                 continue
-            if not _cat in _CBD and not _cat.startswith(self.software):
-                continue
+            print("Searching modules in {}".format(_mroot))
 
-            _tree_tit = "{}: {} nodes".format(str(_cat_count).zfill(2), _cat)
-            _tree_cat = QTreeWidgetItem(self.ui.module_tree,[_tree_tit])
-            _tree_cat.setExpanded(True)
+            _cat_count = 1
+            for _cat in os.listdir(_mroot):
+                _cat_dir = os.path.join(_mroot,_cat)
 
-            for _cat_mod in os.listdir(_cat_dir):
-                if not _cat_mod.split(".")[-1] in ext_map[self.language]:
+                if not os.path.isdir(_cat_dir) or _cat.startswith("_"):
                     continue
 
-                if _cat_mod.startswith("__"):
+                _mfiles = os.listdir(_cat_dir)
+                if len(_mfiles) < 1:
                     continue
 
-                _cat_name = _cat_mod.split(".")[0]
-                _branch = QTreeWidgetItem(_tree_cat,[_cat_name])
+                print(" {} ".format(_cat).center(88,"="))
+                _tree_tit = "{}: {} nodes".format(str(_cat_count).zfill(2),_cat)
+                _branch = QTreeWidgetItem(self.ui.module_tree,
+                                          [_tree_tit])
+                _branch.setExpanded(True)
+                _added = list()
 
-                _tt = nodeUtils.getDescription(self.modules_dir,
-                                               _cat,
-                                               _cat_name)
+                for _leaf_file in _mfiles:
+                    _leaf_name = _leaf_file.split(".")[0]
+                    _leaf_ext = _leaf_file.split(".")[-1]
 
-                _branch.setToolTip(0,_tt)
-                _tree_cat.addChild(_branch)
-                print("- Loaded",_cat_mod)
-            _cat_count+=1
+                    if _leaf_file.startswith("_") or _leaf_name in _added:
+                        continue
+
+                    if not _leaf_ext in ext_map[self.language]:
+                        continue
+                    
+                    _leaf_node = QTreeWidgetItem(_branch,[_leaf_name])
+                    _leaf_path = os.path.abspath(os.path.join(_cat_dir,_leaf_file))
+                    _leaf_tt = nodeUtils.getDescription(_leaf_path)
+
+                    _leaf_node.setToolTip(0,_leaf_tt)
+                    _leaf_node.setWhatsThis(0,_leaf_path)
+                    _branch.addChild(_leaf_node)
+                    _added.append(_leaf_name)
+                    print("- Loaded",_leaf_file)
+                _cat_count+=1
 
         self.ui.module_tree.itemClicked.connect(self._clicker)
-        self.ui.module_tree.setHeaderLabels(["{} Modules".format(self.software).title()])
+        _title = ["{} Modules".format(self.software).title()]
+        self.ui.module_tree.setHeaderLabels(_title)
 
 
     def show(self):
@@ -601,12 +609,11 @@ class Spawn(object):
         Spawn names are unique.
         """
 
-        _text =  tree_item.text(column)
         _par = tree_item.parent()
-
         if not _par:
             return
 
+        _text =  tree_item.text(column)
         if _text[0].isdigit():
             return
 
@@ -618,8 +625,10 @@ class Spawn(object):
             _counter+=1
             _name = _text+str(_counter).zfill(2)
 
-        _desc = nodeUtils.getDescription(self.modules_dir,_fol_name,_text)
-        _icon = nodeUtils.getIconPath(self.modules_dir,_fol_name,_text)
+        _whats_this = tree_item.whatsThis(0)
+
+        _desc = nodeUtils.getDescription(_whats_this)
+        _icon = nodeUtils.getIconPath(_whats_this)
 
         new_node = itemNode(_name,
                             self.ui.winW/2+randrange(-50,50),

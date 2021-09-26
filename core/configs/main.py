@@ -77,15 +77,15 @@ def setup():
     # global_css+="QGroupBox::indicator:checked {image: url(icons/group_collapse_open.png);} "
 
     core_root = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-    nagare_root = os.path.abspath(os.path.dirname(core_root))
+    nr_root = os.path.abspath(os.path.dirname(core_root))
     icons_root = os.path.join(core_root,"app_py","ui","widgets","icons")
     title_template = "Nagare {} (Alpha, Python-{})"
     lang = "py"
     pyver = str(sys.version_info[0])
-    test_json = os.path.join(nagare_root,"graphs","tester_{}.json".format(lang))
-    # test_json = os.path.abspath(os.path.join(nagare_root,"core","new.json"))
+    test_json = os.path.join(nr_root,"graphs","tester_{}.json".format(lang))
+    # test_json = os.path.abspath(os.path.join(nr_root,"core","new.json"))
 
-    for p in [core_root,nagare_root]:
+    for p in [core_root,nr_root]:
         if p not in sys.path:
             sys.path.append(p)
             print("Added to sys: {}".format(p))
@@ -110,9 +110,9 @@ def setup():
 
     nulls = [
              core_root, # NAGARE_FRAMEWORK_ROOT
-             nagare_root, # NAGARE_ROOT
-             os.path.abspath(os.path.join(nagare_root,"modules",lang)), # NAGARE_MOD_PATH
-             os.path.abspath(os.path.join(nagare_root,"log")), # NAGARE_LOG_PATH
+             nr_root, # NAGARE_ROOT
+             os.path.abspath(os.path.join(nr_root,"modules",lang))+";", # NAGARE_MOD_PATH
+             os.path.abspath(os.path.join(nr_root,"log")), # NAGARE_LOG_PATH
              icons_root, # NAGARE_ICONS_PATH
              os.path.join(icons_root,"node.png"), # NAGARE_DEFAULT_ICON
              test_json, # NAGARE_DEFAULT_JSON

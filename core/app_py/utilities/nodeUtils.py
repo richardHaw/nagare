@@ -47,7 +47,7 @@ NAGARE_LOG = logging.getLogger(os.environ["NAGARE_LOG"])
 NAGARE_LOG.propagate = True
 
 
-def getDescription(mod_path,folder_name,module_name):
+def getDescription(mod_path):
     """
     Looks for a txt file with the same name as the module.
     The txt file should be in a directory called "descriptions".
@@ -73,12 +73,10 @@ def getDescription(mod_path,folder_name,module_name):
     :notes: Keep the description simple.
     """
 
-    _desc = os.path.join(mod_path,
-                         folder_name,
-                         module_name)
+    _desc = mod_path
+    module_name = os.path.basename(mod_path).split(".")[0]
 
-    _desc_path = os.path.join(mod_path,
-                              folder_name,
+    _desc_path = os.path.join(os.path.dirname(mod_path),
                               "descriptions",
                               "{}.txt".format(module_name))
 
@@ -91,7 +89,7 @@ def getDescription(mod_path,folder_name,module_name):
     return _desc.strip("\n")
 
 
-def getIconPath(mod_path,folder_name,module_name):
+def getIconPath(mod_path):
     """
     Looks for a png file with the same name as the module.
     The png file should be in a directory called "icons".
@@ -119,13 +117,14 @@ def getIconPath(mod_path,folder_name,module_name):
     :notes: Keep the icon's size small, ideally height should be 32px.
     """
 
-    _icon_path = os.path.join(mod_path,
-                              folder_name,
+    mod_parent = os.path.dirname(mod_path)
+    module_name = os.path.basename(mod_path).split(".")[0]
+
+    _icon_path = os.path.join(mod_parent,
                               "icons",
                               "{}.png".format(module_name))
 
-    _branch_path = os.path.join(mod_path,
-                                folder_name,
+    _branch_path = os.path.join(mod_parent,
                                 "icons",
                                 "_default.png")
 
