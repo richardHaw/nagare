@@ -111,7 +111,7 @@ def setup():
     nulls = [
              core_root, # NAGARE_FRAMEWORK_ROOT
              nr_root, # NAGARE_ROOT
-             os.path.abspath(os.path.join(nr_root,"modules",lang))+";", # NAGARE_MOD_PATH
+             os.path.abspath(os.path.join(nr_root,"modules")), # NAGARE_MOD_PATH
              os.path.abspath(os.path.join(nr_root,"log")), # NAGARE_LOG_PATH
              icons_root, # NAGARE_ICONS_PATH
              os.path.join(icons_root,"node.png"), # NAGARE_DEFAULT_ICON

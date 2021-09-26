@@ -174,7 +174,7 @@ class Editor(editor):
     def __init__(self,
                  software="generic",
                  language=os.environ["NAGARE_LANGUAGE"],
-                 graph_file = os.environ["NAGARE_DEFAULT_JSON"],
+                 graph_file=os.environ["NAGARE_DEFAULT_JSON"],
                  datablock=configs.TEST_BLOCK):
 
         if language != os.environ["NAGARE_LANGUAGE"]:
@@ -339,8 +339,11 @@ class Viewer(app_py):
 
 
 if __name__ == "__main__":
+    os.environ["NAGARE_MOD_PATH"] = r"C:\repo\_dummy"
+    print(os.getenv("NAGARE_MOD_PATH"))
+
     # Editor(language="jsx",graph_file="C:/repo/nagare/graphs/tester_jsx_backup.json")
-    Editor()
+    Editor(graph_file=r"C:/repo/nagare/graphs/xxx.json")
     # Player()
     # Viewer(r"C:/repo/nagare/graphs/tester_jsx.json",r"C:\repo\_tmp\batman.json")
     pass

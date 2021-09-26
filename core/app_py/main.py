@@ -100,7 +100,7 @@ class Spawn(object):
         self.log_obj = None
 
 
-    def _recurser(self, node_data, data_block):
+    def _recurser(self,node_data,data_block):
         """
         Recurses the next set of data.
 
@@ -146,20 +146,21 @@ class Spawn(object):
             return
 
         # recurse with commands
-        module_str = "modules.{}".format(_dummy.command)
-        _exception_msg = "No Exception message..."
+        _ex_msgs = ["No Exception message..."]
 
         try:
-            _proc_mod = importlib.import_module(module_str)
+            _proc_mod = importlib.import_module(_dummy.command)
             _run_result = _proc_mod.main(_copy_block)
             del(_proc_mod)
         except Exception as err:
             self.log_obj.info("="*88)
-            _err_msg = "Failed module: {}".format(module_str)
-            _exception_msg = str(format_exc())
-            self.log_obj.error("="*88)
+            _err_msg = "Failed module: {}".format(_dummy.command)
+            _err_for = str(format_exc())
+            _ex_msgs = [_err_msg]
+            _ex_msgs.append(_err_for)
             self.log_obj.error(_err_msg)
-            self.log_obj.error(_exception_msg)
+            self.log_obj.error(_err_for)
+            self.log_obj.error("="*88)
 
         # used for safety
         if not "resultObj" in repr(_run_result)\
@@ -169,9 +170,10 @@ class Spawn(object):
             _tp = "{} returned {}".format(_dummy.name,str(type(_run_result)))
             _run_result = result_obj("error")
             _run_result.addMessage(_tp)
-            _run_result.addMessage("Exception: {}".format(_exception_msg))
             _run_result.addMessage(pformat(_copy_block,indent=4))
             _run_result.addMessage("Created new error instance.")
+            for e in _ex_msgs:
+                _run_result.addMessage(e)
 
         # after running, add to nodes
         self.nodes_all.append(_dummy)

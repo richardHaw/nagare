@@ -112,7 +112,7 @@ class Spawn(object):
         self.language = language
         self.tree_json = tree_json
         self.data_block = data_block
-        self.modules_roots = os.environ["NAGARE_MOD_PATH"].split(";")
+        self.modules_root = os.environ["NAGARE_MOD_PATH"]
         self.title_text = os.environ["NAGARE_EDITOR_TITLE"]
         self.starter = None
         self.log_dir = os.environ["NAGARE_LOG_PATH"]
@@ -122,6 +122,10 @@ class Spawn(object):
         self.propagate = True
 
         self.ui = interface(parent)
+
+        if self.modules_root not in sys.path:
+            sys.path.append(self.modules_root)
+
         self._initUi()
 
 
@@ -220,49 +224,48 @@ class Spawn(object):
         ext_map = {"py":["py","pyc"],
                    "jsx":["jsxbin","jsxinc"]}
 
-        for _mroot in self.modules_roots:
-            if not os.path.isdir(_mroot):
+        if not os.path.isdir(self.modules_root):
+            raise IOError("No module path: ".format(self.modules_root))
+        print("Searching modules in {}".format(self.modules_root))
+
+        _cat_count = 1
+        for _cat in os.listdir(self.modules_root):
+            _cat_dir = os.path.join(self.modules_root,_cat)
+
+            if not os.path.isdir(_cat_dir) or _cat.startswith("_"):
                 continue
-            print("Searching modules in {}".format(_mroot))
 
-            _cat_count = 1
-            for _cat in os.listdir(_mroot):
-                _cat_dir = os.path.join(_mroot,_cat)
+            _mfiles = os.listdir(_cat_dir)
+            if len(_mfiles) < 1:
+                continue
 
-                if not os.path.isdir(_cat_dir) or _cat.startswith("_"):
+            print(" {} ".format(_cat).center(88,"="))
+            _tree_tit = "{}: {} nodes".format(str(_cat_count).zfill(2),_cat)
+            _branch = QTreeWidgetItem(self.ui.module_tree,
+                                      [_tree_tit])
+            _branch.setExpanded(True)
+            _added = list()
+
+            for _leaf_file in _mfiles:
+                _leaf_name = _leaf_file.split(".")[0]
+                _leaf_ext = _leaf_file.split(".")[-1]
+
+                if _leaf_file.startswith("_") or _leaf_name in _added:
                     continue
 
-                _mfiles = os.listdir(_cat_dir)
-                if len(_mfiles) < 1:
+                if not _leaf_ext in ext_map[self.language]:
                     continue
+                
+                _leaf_node = QTreeWidgetItem(_branch,[_leaf_name])
+                _leaf_path = os.path.abspath(os.path.join(_cat_dir,_leaf_file))
+                _leaf_tt = nodeUtils.getDescription(_leaf_path)
 
-                print(" {} ".format(_cat).center(88,"="))
-                _tree_tit = "{}: {} nodes".format(str(_cat_count).zfill(2),_cat)
-                _branch = QTreeWidgetItem(self.ui.module_tree,
-                                          [_tree_tit])
-                _branch.setExpanded(True)
-                _added = list()
-
-                for _leaf_file in _mfiles:
-                    _leaf_name = _leaf_file.split(".")[0]
-                    _leaf_ext = _leaf_file.split(".")[-1]
-
-                    if _leaf_file.startswith("_") or _leaf_name in _added:
-                        continue
-
-                    if not _leaf_ext in ext_map[self.language]:
-                        continue
-                    
-                    _leaf_node = QTreeWidgetItem(_branch,[_leaf_name])
-                    _leaf_path = os.path.abspath(os.path.join(_cat_dir,_leaf_file))
-                    _leaf_tt = nodeUtils.getDescription(_leaf_path)
-
-                    _leaf_node.setToolTip(0,_leaf_tt)
-                    _leaf_node.setWhatsThis(0,_leaf_path)
-                    _branch.addChild(_leaf_node)
-                    _added.append(_leaf_name)
-                    print("- Loaded",_leaf_file)
-                _cat_count+=1
+                _leaf_node.setToolTip(0,_leaf_tt)
+                _leaf_node.setWhatsThis(0,_leaf_path)
+                _branch.addChild(_leaf_node)
+                _added.append(_leaf_name)
+                print("- Loaded",_leaf_file)
+            _cat_count+=1
 
         self.ui.module_tree.itemClicked.connect(self._clicker)
         _title = ["{} Modules".format(self.software).title()]
@@ -609,15 +612,10 @@ class Spawn(object):
         Spawn names are unique.
         """
 
-        _par = tree_item.parent()
-        if not _par:
-            return
-
         _text =  tree_item.text(column)
         if _text[0].isdigit():
             return
 
-        _fol_name = _par.text(column).strip("1234567890: ").replace(" nodes","")
         _counter = 1
         _name = _text+str(_counter).zfill(2)
 
@@ -636,9 +634,8 @@ class Spawn(object):
                             self.ui.scene,
                             _desc)
 
-        new_node.command = "{}.{}.{}".format(self.language,
-                                             _fol_name,
-                                             _text)
+        _fol_name = os.path.basename(os.path.dirname(_whats_this))
+        new_node.command = "{}.{}".format(_fol_name,_text)
         new_node.changeIcon(_icon)
         self._feedback("Created: {}".format(_name))
 
