@@ -31,6 +31,16 @@ SOFTWARE.
 
         this.DATABLOCK = new Object;
         this.MOD_ROOT = io_utils.safePath(NAGARE_ROOT + "/modules");
+
+        var custom_mod_root = $.getenv("NAGARE_MOD_PATH");
+        if (custom_mod_root !== null){
+            var cus_fol = new Folder(custom_mod_root.split("\\").join("/"));
+            if (! cus_fol.exists){
+                throw new Error("Invalid modules root: " + cus_fol.fsName);
+            }
+            this.MOD_ROOT = cus_fol.fsName;
+        }
+        else {alert(custom_mod_root)}
     }
     $.global.TreeDummy = TreeDummy;
 

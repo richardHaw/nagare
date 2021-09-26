@@ -293,10 +293,11 @@ catch(e){
         const mod_split = _dummy.command.split(".");
         const mod_name = mod_split[mod_split.length - 1];
         const module_str = mod_split.join("/");
-        const mod_path = (Spawn_obj.MOD_ROOT + "/" + module_str + ".jsxinc");
 
         // find module
-        const mod_file = new File(mod_path);
+        const mod_file = new File(Spawn_obj.MOD_ROOT + "/" + module_str + ".jsxinc");
+        const mod_path = mod_file.fsName.split("\\").join("/");
+
         if (mod_file.exists){
             LOG(mod_name+" --> MODULE: " + mod_path);
         }
@@ -323,6 +324,7 @@ catch(e){
             _run_result = new ResultObj();
             _run_result.setStatus("error");
             _run_result.addMessage("Failed module: " + module_str);
+            _run_result.addMessage("Path: " + mod_path);
             _run_result.addMessage("@ Error (exception): " + _dummy.name);
             _run_result.addMessage(_exception_msg);
         }
