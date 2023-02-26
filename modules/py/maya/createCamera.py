@@ -11,7 +11,7 @@ def main(data_block={}):
     _log.write(__name__)
     _log.write("Creating a camera...")
 
-    cmds.select(cl = True)
+    cmds.select(clear=True)
     cmds.camera()
 
     return data_block

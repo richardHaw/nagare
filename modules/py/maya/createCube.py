@@ -12,6 +12,6 @@ def main(data_block={}):
     _log.write(__name__)
     _log.write("Creating a cube named {}.".format(data_block["user"]))
 
-    cmds.polyCube(n = data_block["user"])
+    cmds.polyCube(name=data_block["user"])
 
     return data_block

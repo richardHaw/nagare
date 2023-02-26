@@ -76,8 +76,7 @@ class Spawn(QGraphicsEllipseItem):
     def __str__(self):
         return __name__
 
-
-    def __init__(self,name,posX=0,posY=0,scene=None):
+    def __init__(self, name, posX=0, posY=0, scene=None):
         super(Spawn,self).__init__()
         self.setAcceptHoverEvents(True)
         self.hovered = False
@@ -96,7 +95,7 @@ class Spawn(QGraphicsEllipseItem):
         self.error = False
         self.plug_out = None
         self.plug_in = None
-        self.node_out = list()
+        self.nodes_out = list()
         self.node_in = None
         self.label = None
         self.icon_path = None
@@ -104,12 +103,10 @@ class Spawn(QGraphicsEllipseItem):
 
         self._setup()
 
-
-        if not self.scene is None:
+        if self.scene is not None:
             self.scene.addItem(self)
 
         self.translate()
-
 
     def _setup(self):
         """
@@ -134,36 +131,34 @@ class Spawn(QGraphicsEllipseItem):
         self.pen_hovered = QPen(self.bg_hovered)
         self.pen_hovered.setWidthF(3.0)
 
-        self.setRect(0,0,self.width,self.width)
+        self.setRect(0, 0, self.width, self.width)
         self.setFlag(self.ItemIsMovable)
         self.setFlag(self.ItemIsSelectable)
         self.setToolTip(self.desc)
 
-        self.plug_out = socketNode(self,"out")
+        self.plug_out = socketNode(self, "out")
         self.plug_in = None
 
-        self.label = clickLabel(self.name,self)
-        self.label.setFont(QFont("Arial Black",10))
+        self.label = clickLabel(self.name, self)
+        self.label.setFont(QFont("Arial Black", 10))
         self.label.setDefaultTextColor(QColor("#000000"))
-
 
     def translate(self):
         """
         Retranslates the widget.
         """
 
-        self.setX(self.posX-self.width*0.5)
-        self.setY(self.posY-self.width*0.5)
+        self.setX(self.posX-self.width * 0.5)
+        self.setY(self.posY-self.width * 0.5)
 
-
-    def paint(self,painter,QStyleOptionGraphicsItem,widget=None):
+    def paint(self, painter, QStyleOptionGraphicsItem, widget=None):
         """
         :meta private:
         """
 
-        painter.setRenderHints(QPainter.Antialiasing|
-                               QPainter.TextAntialiasing|
-                               QPainter.SmoothPixmapTransform|
+        painter.setRenderHints(QPainter.Antialiasing |
+                               QPainter.TextAntialiasing |
+                               QPainter.SmoothPixmapTransform |
                                QPainter.HighQualityAntialiasing,
                                True)
 
@@ -185,7 +180,6 @@ class Spawn(QGraphicsEllipseItem):
             painter.setPen(self.pen_default if not self.isSelected() else self.pen_selected)
             painter.drawPath(path_outline.simplified())
 
-
     def drawMe(self):
         """
         Call this to update this object.
@@ -198,28 +192,25 @@ class Spawn(QGraphicsEllipseItem):
             if line.target:
                 line.pointB = line.target.getCenter()
 
-
-    def hoverEnterEvent(self,event):
+    def hoverEnterEvent(self, event):
         """
         :meta private:
         """
 
-        QGraphicsEllipseItem.hoverEnterEvent(self,event)
+        QGraphicsEllipseItem.hoverEnterEvent(self, event)
         self.hovered = True
         self.update()
 
-
-    def hoverLeaveEvent(self,event):
+    def hoverLeaveEvent(self, event):
         """
         :meta private:
         """
 
-        QGraphicsEllipseItem.hoverLeaveEvent(self,event)
+        QGraphicsEllipseItem.hoverLeaveEvent(self, event)
         self.hovered = False
         self.update()
 
-
-    def mouseMoveEvent(self,event):
+    def mouseMoveEvent(self, event):
         """
         :meta private:
         """
@@ -236,20 +227,18 @@ class Spawn(QGraphicsEllipseItem):
 
         self.drawMe()
 
-
-    def mouseReleaseEvent(self,event):
+    def mouseReleaseEvent(self, event):
         """
         :meta private:
         """
 
-        super(Spawn,self).mouseReleaseEvent(event)
+        super(Spawn, self).mouseReleaseEvent(event)
         posi = event.pos()
         posi = self.mapToScene(posi)
         self.posX = posi.x()
         self.posY = posi.y()
 
-
-    def mouseDoubleClickEvent(self,event):
+    def mouseDoubleClickEvent(self, event):
         """
         :meta private:
         """
@@ -271,25 +260,23 @@ class Spawn(QGraphicsEllipseItem):
             print("Failed to convert string to dict.")
             return
 
-        if not type(out_dict) is dict or out_dict is None:
+        if type(out_dict) is not dict or out_dict is None:
             print("Failed to turn data to type dict.")
             return
 
         if self.data_block == out_dict:
             return
 
-        print("-"*88)
+        print("-" * 88)
         self.data_block = out_dict
         pprint(self.data_block)
 
-
-    def setUUID(self,new_uuid):
+    def setUUID(self, new_uuid):
         """
         uuid setter
         """
 
         self.uuid = uuid.UUID(new_uuid)
-
 
     def getInfoDict(self):
         """
@@ -299,7 +286,4 @@ class Spawn(QGraphicsEllipseItem):
         :rtype: dict
         """
 
-        out = {"name" : self.name,
-               "uuid" : self.uuid}
-
-        return out
+        return {"name": self.name, "uuid": self.uuid}

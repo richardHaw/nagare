@@ -29,13 +29,8 @@ from __future__ import print_function
 
 import uuid
 
-from PySide2.QtCore import (Qt,
-                            QRect)
-
-from PySide2.QtGui import (QColor,
-                           QBrush,
-                           QPainter)
-
+from PySide2.QtCore import Qt
+from PySide2.QtGui import (QColor, QBrush)
 from PySide2.QtWidgets import QGraphicsScene
 
 from .itemNode import Spawn as itemNode
@@ -58,26 +53,23 @@ class Spawn(QGraphicsScene):
         graphicsScene()
     """
 
-    def __init__(self,mode="editor"):
-        super(Spawn,self).__init__()
+    def __init__(self, mode="editor"):
+        super(Spawn, self).__init__()
 
-        _grid_color = QColor(25,25,25,150)
-        self.setBackgroundBrush(QBrush(_grid_color,
-                                       Qt.CrossPattern))
+        _grid_color = QColor(25, 25, 25, 150)
+        self.setBackgroundBrush(QBrush(_grid_color, Qt.CrossPattern))
         self.setMode(mode)
 
-
-    def setMode(self,mode):
-        _modes = ["editor","player","viewer"]
+    def setMode(self, mode):
+        _modes = ["editor", "player", "viewer"]
         if mode not in _modes:
             print("Valid modes: {}".format((",".join(_modes))))
             raise ValueError("Invalid mode: {}".format(mode))
 
         self.editable = mode == "editor"
-        self.mode = mode;
+        self.mode = mode
 
-
-    def keyPressEvent(self,event):
+    def keyPressEvent(self, event):
         """
         :meta private:
         """
@@ -86,26 +78,23 @@ class Spawn(QGraphicsScene):
             return
 
         # delete selected
-        if event.key() in (Qt.Key_Delete,Qt.Key_Backspace):
+        if event.key() in (Qt.Key_Delete, Qt.Key_Backspace):
             for _w in self.selectedItems():
-                if isinstance(_w,itemNode):
+                if isinstance(_w, itemNode):
                     for _out_w in _w.plug_out.out_wires:
                         _w.scene.removeItem(_out_w)
 
-                    _in_wire =_w.plug_in.in_wire
+                    _in_wire = _w.plug_in.in_wire
                     if _in_wire:
-                        _in_wire.removeFromSocket(_w.scene,
-                                                  _in_wire,
-                                                  _in_wire.target)
+                        _in_wire.removeFromSocket(_w.scene, _in_wire, _in_wire.target)
                     _w.scene.removeItem(_w)
-                elif isinstance(_w,groupNode):
+                elif isinstance(_w, groupNode):
                     _w.unparentChildren()
                     _w.scene.removeItem(_w)
                     self.clearSelection()
 
                     for _it in _w.group_widgets:
                         _it.setSelected(True)
-
 
     def resetToStarter(self):
         """
@@ -121,8 +110,8 @@ class Spawn(QGraphicsScene):
 
         self.clear()
         _starter = startNode("Start",
-                             self.sceneRect().width()/2,
-                             self.sceneRect().height()/2,
+                             self.sceneRect().width() / 2,
+                             self.sceneRect().height() / 2,
                              self)
         _starter.uuid = uuid.uuid1()
         return _starter

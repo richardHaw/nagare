@@ -34,9 +34,8 @@ class Spawn(QGroupBox):
     def __str__(self):
         return __name__
 
-
-    def __init__(self,title_text,label_height=20):
-        super(Spawn,self).__init__()
+    def __init__(self, title_text, label_height=20):
+        super(Spawn, self).__init__()
 
         self.title_text = title_text
 
@@ -50,7 +49,6 @@ class Spawn(QGroupBox):
         self.setAlignment(Qt.AlignAbsolute)
         self.toggled.connect(self._resizer)
 
-
     def _resizer(self):
         _win = self.window()
         _win_width = _win.size().width()
@@ -59,22 +57,20 @@ class Spawn(QGroupBox):
 
         if self.isChecked():
             self.setMaximumHeight(self._orig_height)
-            _new_height = _win_height+(self._orig_height-self._label_height)
+            _new_height = _win_height + (self._orig_height - self._label_height)
             self.newTitle("{} - ".format(self.title_text))
         else:
             self._orig_height = self.height()
             self.setMaximumHeight(self._label_height)
             self.newTitle("{} + ".format(self.title_text))
-            _new_height = _win_height-(self._orig_height+self._label_height)
+            _new_height = _win_height - (self._orig_height + self._label_height)
 
-        _win.resize(_win_width,_new_height)
+        _win.resize(_win_width, _new_height)
 
-
-    def setLabelHeight(self,new_hgt):
+    def setLabelHeight(self, new_hgt):
         self._label_height = new_hgt
         self._resizer()
 
-
-    def newTitle(self,new_title):
+    def newTitle(self, new_title):
         self._title_formatted = "{} ".format(new_title)
         self.setTitle(self._title_formatted)

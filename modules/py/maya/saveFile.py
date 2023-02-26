@@ -10,15 +10,14 @@ def main(data_block={}):
     return data_block
     """
 
-    _mf = data_block.get("new_file","")
-
+    _mf = data_block.get("new_file", "")
     _log = data_block["logger"]
     _log.write(__name__)
     _log.write("Saving: {}".format(_mf))
 
     try:
-        cmds.file(rn = _mf)
-        cmds.file(s = True, f = True)
+        cmds.file(rename=_mf)
+        cmds.file(save=True, force=True)
     except:
         print_exc()
         return

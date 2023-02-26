@@ -28,11 +28,8 @@ from __future__ import division
 from __future__ import print_function
 
 import uuid
-import random
 
-from PySide2.QtGui import (QColor,
-                           QBrush)
-
+from PySide2.QtGui import (QColor, QBrush)
 from PySide2.QtCore import QRectF
 from PySide2.QtWidgets import QGraphicsRectItem
 from .clickLabel import Spawn as clickLabel
@@ -59,14 +56,13 @@ class Spawn(QGraphicsRectItem):
     def __str__(self):
         return __name__
 
-
-    def __init__(self,scene,group_widgets,name="New Group"):
-        super(Spawn,self).__init__()
+    def __init__(self, scene, group_widgets, name="New Group"):
+        super(Spawn, self).__init__()
 
         self.scene = scene
         self.group_widgets = group_widgets
         self.name = name
-        self._default_rgba = (160,200,200,150)
+        self._default_rgba = (160, 200, 200, 150)
         self.label = None
         self.width = 0
         self.height = 0
@@ -76,7 +72,6 @@ class Spawn(QGraphicsRectItem):
         self.setFlag(self.ItemIsSelectable)
         self.parentWidgetsList(self.group_widgets)
         self._setup()
-
 
     def _setup(self):
         """
@@ -88,10 +83,9 @@ class Spawn(QGraphicsRectItem):
         self.setZValue(-2)
 
         self.setupBgColor(self._default_rgba)
-        self.label = clickLabel(self.name,self)
+        self.label = clickLabel(self.name, self)
 
-
-    def mouseMoveEvent(self,event):
+    def mouseMoveEvent(self, event):
         """
         :meta private:
         """
@@ -99,10 +93,9 @@ class Spawn(QGraphicsRectItem):
         if not self.scene.editable:
             return
 
-        super(Spawn,self).mouseMoveEvent(event)
+        super(Spawn, self).mouseMoveEvent(event)
 
-
-    def parentWidgetsList(self,widgets_list):
+    def parentWidgetsList(self, widgets_list):
         """
         Parents the node_items in widgets_list to this widget.
 
@@ -116,7 +109,6 @@ class Spawn(QGraphicsRectItem):
         for _wd in widgets_list:
             _wd.setParentItem(self)
 
-
     def unparentChildren(self):
         """
         Unparents all children.
@@ -126,8 +118,7 @@ class Spawn(QGraphicsRectItem):
             _gp.setParentItem(None)
             _gp.drawMe()
 
-
-    def setupBgColor(self,rgba_tuple):
+    def setupBgColor(self, rgba_tuple):
         """
         Changes the color of the QGraphicsRectItem.
 
@@ -141,7 +132,6 @@ class Spawn(QGraphicsRectItem):
         _bg_brush = QBrush(_bg_color)
         self.setBrush(_bg_brush)
 
-
     def rebuildRect(self):
         """
         Retranslates the rect and repositions the label.
@@ -154,7 +144,6 @@ class Spawn(QGraphicsRectItem):
 
         if self.label:
             self.label.reposition()
-
 
     @staticmethod
     def mergeRectsList(widgets_list):
@@ -178,7 +167,7 @@ class Spawn(QGraphicsRectItem):
             _wd1 = widgets_list[_counter]
 
             try:
-                _wd2 = widgets_list[_counter+1]
+                _wd2 = widgets_list[_counter + 1]
             except IndexError:
                 break
 
@@ -193,10 +182,9 @@ class Spawn(QGraphicsRectItem):
                            _wd2.height)
 
             out = _bbx1.united(_bbx2)
-            _counter+=1
+            _counter += 1
 
         return out
-
 
     @staticmethod
     def getBogusBBox(widgets_list):
@@ -215,24 +203,21 @@ class Spawn(QGraphicsRectItem):
         _factor_x = 1.1
         _factor_y = 1.2
 
-        widgets_list.sort(key = lambda wid: wid.x())
-        _bogus_x = Spawn.mergeRectsList([widgets_list[0],
-                                         widgets_list[-1]])
+        widgets_list.sort(key=lambda wid: wid.x())
+        _bogus_x = Spawn.mergeRectsList([widgets_list[0], widgets_list[-1]])
 
-        widgets_list.sort(key = lambda wid: wid.y())
-        _bogus_y = Spawn.mergeRectsList([widgets_list[0],
-                                         widgets_list[-1]])
-
+        widgets_list.sort(key=lambda wid: wid.y())
+        _bogus_y = Spawn.mergeRectsList([widgets_list[0], widgets_list[-1]])
         _bogus_xy = _bogus_x.united(_bogus_y)
 
         _offset_w = _bogus_xy.width()*_factor_x
         _offset_h = _bogus_xy.height()*_factor_y
-        _offset_x = (_offset_w-_bogus_xy.width())/2
-        _offset_y = (_offset_h-_bogus_xy.height())/2
+        _offset_x = (_offset_w-_bogus_xy.width()) / 2
+        _offset_y = (_offset_h-_bogus_xy.height()) / 2
 
         _bogus_bb = QRectF(_bogus_xy.x()-_offset_x,
                            _bogus_xy.y()-_offset_y,
                            _offset_w,
                            _offset_h)
-        # done
+
         return _bogus_bb

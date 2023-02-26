@@ -26,6 +26,7 @@ SOFTWARE.
 
 from __future__ import division
 from __future__ import print_function
+from datetime import datetime
 
 from PySide2.QtCore import (Qt,
                             QRect,
@@ -64,11 +65,10 @@ class Spawn(QGraphicsEllipseItem):
     def __str__(self):
         return __name__
 
-
-    def __init__(self,parent,socketType):
+    def __init__(self, parent, socketType):
         self.parent = parent
         self.socketType = socketType
-        super(Spawn,self).__init__(self.parent)
+        super(Spawn, self).__init__(self.parent)
 
         self.hovered = False
         self.new_line = None
@@ -78,7 +78,6 @@ class Spawn(QGraphicsEllipseItem):
 
         self._setup()
 
-
     def _setup(self):
         """
         Creates and arranges the elements.
@@ -87,25 +86,25 @@ class Spawn(QGraphicsEllipseItem):
         self.setAcceptHoverEvents(True)
 
         _socket_size = 20
-        _socket_center = _socket_size*0.5
-        _socket_color = QColor(240,180,0)
+        _socket_center = _socket_size * 0.5
+        _socket_color = QColor(240, 180, 0)
 
         self.bg_brush = QBrush()
         self.bg_brush.setStyle(Qt.SolidPattern)
         self.bg_brush.setColor(_socket_color)
 
-        self.sel_brush_color = QColor(255,120,180)
+        self.sel_brush_color = QColor(255, 120, 180)
         self.sel_brush = QBrush()
         self.sel_brush.setStyle(Qt.SolidPattern)
         self.sel_brush.setColor(self.sel_brush_color)
 
-        self.pen_color = QColor(20,20,20)
+        self.pen_color = QColor(20, 20, 20)
         self.pen = QPen()
         self.pen.setStyle(Qt.SolidLine)
         self.pen.setWidth(1)
         self.pen.setColor(self.pen_color)
 
-        self.selPen_color = QColor(0,50,50)
+        self.selPen_color = QColor(0, 50, 50)
         self.selPen = QPen()
         self.selPen.setStyle(Qt.SolidLine)
         self.selPen.setWidth(1)
@@ -116,16 +115,15 @@ class Spawn(QGraphicsEllipseItem):
 
         if self.socketType == "out":
             if "widgets.itemNode" in self.parent.__str__():
-                _socket_posX = self.parent.width-_socket_center
+                _socket_posX = self.parent.width - _socket_center
             elif "widgets.startNode" in self.parent.__str__():
-                _socket_posX = self.parent.width-_socket_center
-                _socket_posY = self.parent.width*0.5-_socket_center
+                _socket_posX = self.parent.width - _socket_center
+                _socket_posY = self.parent.width * 0.5 - _socket_center
 
         self.rect = QRect(int(_socket_posX),
                           int(_socket_posY),
                           int(_socket_size),
                           int(_socket_size))
-
 
     def shape(self):
         """
@@ -136,7 +134,6 @@ class Spawn(QGraphicsEllipseItem):
         path.addEllipse(self.boundingRect())
         return path
 
-
     def boundingRect(self):
         """
         :meta private:
@@ -144,15 +141,14 @@ class Spawn(QGraphicsEllipseItem):
 
         return QRect(self.rect)
 
-
-    def paint(self,painter,option,widget):
+    def paint(self, painter, option, widget):
         """
         :meta private:
         """
 
-        painter.setRenderHints(QPainter.Antialiasing|
-                               QPainter.TextAntialiasing|
-                               QPainter.SmoothPixmapTransform|
+        painter.setRenderHints(QPainter.Antialiasing |
+                               QPainter.TextAntialiasing |
+                               QPainter.SmoothPixmapTransform |
                                QPainter.HighQualityAntialiasing,
                                True)
 
@@ -168,28 +164,25 @@ class Spawn(QGraphicsEllipseItem):
 
         painter.drawEllipse(self.rect)
 
-
-    def hoverEnterEvent(self,event):
+    def hoverEnterEvent(self, event):
         """
         :meta private:
         """
 
-        QGraphicsEllipseItem.hoverEnterEvent(self,event)
+        QGraphicsEllipseItem.hoverEnterEvent(self, event)
         self.hovered = True
         self.update()
 
-
-    def hoverLeaveEvent(self,event):
+    def hoverLeaveEvent(self, event):
         """
         :meta private:
         """
 
-        QGraphicsEllipseItem.hoverLeaveEvent(self,event)
+        QGraphicsEllipseItem.hoverLeaveEvent(self, event)
         self.hovered = False
         self.update()
 
-
-    def mousePressEvent(self,event):
+    def mousePressEvent(self, event):
         """
         :meta private:
         """
@@ -202,20 +195,19 @@ class Spawn(QGraphicsEllipseItem):
         if self.socketType == "out":
             rect = self.boundingRect()
 
-            pointA = QPointF(rect.x()+rect.width()/2,
-                             rect.y()+rect.height()/2)
+            pointA = QPointF(rect.x()+rect.width() / 2,
+                             rect.y()+rect.height() / 2)
 
             pointA = self.mapToScene(pointA)
             pointB = self.mapToScene(event.pos())
 
-            self.new_line = wireNode(pointA,pointB)
+            self.new_line = wireNode(pointA, pointB)
             self.out_wires.append(self.new_line)
             self.scene().addItem(self.new_line)
         else:
-            super(Spawn,self).mousePressEvent(event)
+            super(Spawn, self).mousePressEvent(event)
 
-
-    def mouseMoveEvent(self,event):
+    def mouseMoveEvent(self, event):
         """
         :meta private:
         """
@@ -223,43 +215,45 @@ class Spawn(QGraphicsEllipseItem):
         if not self.scene().editable:
             return
 
-        self._item_under = self.scene().itemAt(event.scenePos().toPoint(),
-                                               QTransform())
+        self._item_under = self.scene().itemAt(event.scenePos().toPoint(), QTransform())
 
         if self.socketType == "out":
             pointB = self.mapToScene(event.pos())
             self.new_line.pointB = pointB
-        else:
-            super(Spawn,self).mouseMoveEvent(event)
+            return
 
+        super(Spawn, self).mouseMoveEvent(event)
 
-    def mouseReleaseEvent(self,event):
+    def mouseReleaseEvent(self, event):
         """
         :meta private:
         """
 
-        # this used to be declared here as a private variable
-        #_item_under = self.scene().itemAt(event.scenePos().toPoint(),
-                                          #QTransform())
-
+        _under_type = self._item_under.socketType
         if not type(self._item_under) is Spawn:
             self.killWire(self.new_line)
+            print(datetime.now(), "Dropped under a non-socket.")
             return
 
-        if self._item_under.socketType == "out":
+        if _under_type == "out":
             self.killWire(self.new_line)
+            print(datetime.now(), "Dropped under an out-socket.")
             return
 
-        if self._item_under.socketType == "in"\
-           and self._item_under.parentItem().plug_in.in_wire:
-            self.killWire(self._item_under.parentItem().plug_in.in_wire)
+        if _under_type == "in":
+            _in = self._item_under.parentItem().plug_in.in_wire
+            if _in:
+                self.killWire(_in)
+                print(datetime.now(), "Killed old wire.", _in)
 
-        if self.socketType == "out"\
-           and self._item_under.socketType == "in":
-            Spawn.connectWire(self.new_line,self,self._item_under)
-        # else:
-            # super(Spawn,self).mouseReleaseEvent(event)
+        if self.socketType == "out" and _under_type == "in":
+            Spawn.connectWire(self.new_line, self, self._item_under)
+            print(datetime.now(), "Connected new wire.")
 
+            if not self._item_under.parentItem().node_in:
+                raise RuntimeError("Connection failed!")
+
+        super(Spawn, self).mouseReleaseEvent(event)
 
     def getCenter(self):
         """
@@ -267,38 +261,34 @@ class Spawn(QGraphicsEllipseItem):
         """
 
         rect = self.boundingRect()
-
-        center = QPointF(rect.x()+rect.width()*0.5,
-                         rect.y()+rect.height()*0.5)
-
+        center = QPointF(rect.x() + rect.width() * 0.5, rect.y() + rect.height() * 0.5)
         center = self.mapToScene(center)
         return center
 
-
-    def killWire(self,no_wire):
+    def killWire(self, kill_this_wire):
         """
         Call this to kill a wire connected to this socket.
 
         **parameters**, **types**, **return** and **return types**
 
-        :param no_wire: Object pointer of the wire to be deleted.
-        :type no_wire: object
+        :param kill_this_wire: Object pointer of the wire to be deleted.
+        :type kill_this_wire: object
 
         - Example::
 
             socketNode.killWire(self.wire_to_kill)
         """
 
+        if kill_this_wire in self.out_wires:
+            self.out_wires.remove(kill_this_wire)
+
+        self.scene().removeItem(kill_this_wire)
+        print(kill_this_wire)
+        print(datetime.now(), "Remove wire from scene", kill_this_wire)
+
         self.in_wire = None
 
-        if no_wire:
-            self.scene().removeItem(no_wire)
-
-        if no_wire in self.out_wires:
-            self.out_wires.remove(no_wire)
-
-
-    def _setParentNodeIn(self,node_to):
+    def _setParentNodeIn(self, node_to):
         """
         :meta private:
         """
@@ -306,8 +296,7 @@ class Spawn(QGraphicsEllipseItem):
         node_info = node_to.getInfoDict()
         self.parentItem().node_in = node_info
 
-
-    def _setParentNodeOut(self,node_to):
+    def _setParentNodeOut(self, node_to):
         """
         :meta private:
         """
@@ -315,28 +304,23 @@ class Spawn(QGraphicsEllipseItem):
         node_info = node_to.getInfoDict()
         parent_node = self.parent
 
-        if node_info not in parent_node.node_out:
-            parent_node.node_out.append(node_info)
+        if node_info not in parent_node.nodes_out:
+            parent_node.nodes_out.append(node_info)
 
-
-    def _isNodeItem(self,node_pointer):
+    def _isNodeItem(self, node_pointer):
         """
         :meta private:
         """
 
         _node_type = str(type(node_pointer))
 
-        if not "widgets.itemNode" in _node_type\
-            and not "widgets.startNode" in _node_type:
+        if "widgets.itemNode" not in _node_type and "widgets.startNode" not in _node_type:
+            raise TypeError("Not a node item ({}): {}".format(_node_type, node_pointer))
 
-            e = "Not a node item ({}): {}".format(_node_type,
-                                                  node_pointer)
-            raise TypeError(e)
         return node_pointer
 
-
     @staticmethod
-    def connectWire(wire_obj,connect_from,connect_to):
+    def connectWire(wire_obj, connect_from, connect_to):
         """
         Sets up wire connections and setup in/out connection info.
 
@@ -366,7 +350,7 @@ class Spawn(QGraphicsEllipseItem):
         wire_obj.target = connect_to
         old_wire = connect_to.parentItem().plug_in.in_wire
         connect_to.parentItem().plug_in.in_wire = wire_obj
-        connect_to.parentItem().node_in = True
+        connect_to.parentItem().node_in = connect_from.parentItem()
         wire_obj.pointB = connect_to.getCenter()
 
         # put here for now
@@ -378,4 +362,3 @@ class Spawn(QGraphicsEllipseItem):
 
         if old_wire in old_wire.source.out_wires:
             old_wire.source.out_wires.remove(old_wire)
-

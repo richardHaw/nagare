@@ -11,14 +11,14 @@ def main(data_block={}):
     return data_block
     """
 
-    _mf = data_block.get("maya_file","")
+    _mf = data_block.get("maya_file", "")
 
     _log = data_block["logger"]
     _log.write(__name__)
     _log.write("Opening: {}".format(_mf))
 
     try:
-        cmds.file(_mf, o = True, f = True)
+        cmds.file(_mf, open=True, force=True)
     except:
         print_exc()
         return

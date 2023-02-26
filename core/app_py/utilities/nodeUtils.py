@@ -269,7 +269,7 @@ def printTree(node_obj):
             out_dict["in_node"]["uuid"] = str(tmp_id)
 
     # run out-nodes
-    for nd_out in node_obj.node_out:
+    for nd_out in node_obj.nodes_out:
         next_node = getPointer(nd_out,node_obj.scene)
         if not next_node:
             e = " - Out-node not found",nd_out.get("name","")

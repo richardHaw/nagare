@@ -40,8 +40,7 @@ class Spawn(object):
     def __str__(self):
         return __name__
 
-
-    def __init__(self,obj_data):
+    def __init__(self, obj_data):
         self.obj_data = obj_data
 
         self.name = obj_data["name"]
@@ -61,10 +60,8 @@ class Spawn(object):
         self._errors_list = list()
         self.messages = list()
 
-
-    def setErrors(self,errors):
+    def setErrors(self, errors):
         self._errors_list = errors
-
 
     def getErrors(self):
         return self._errors_list

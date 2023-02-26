@@ -12,7 +12,7 @@ def main(data_block={}):
     _log.write(__name__)
     _log.write("Creating a joinnt...")
 
-    cmds.select(cl = True)
+    cmds.select(cler=True)
     cmds.joint()
 
     return data_block

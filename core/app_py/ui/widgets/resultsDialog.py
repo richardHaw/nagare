@@ -28,7 +28,6 @@ import os
 
 from PySide2.QtWidgets import (QLabel,
                                QDialog,
-                               QGroupBox,
                                QLineEdit,
                                QSizePolicy,
                                QHeaderView,
@@ -49,25 +48,23 @@ class Spawn(QDialog):
     def __str__(self):
         return __name__
 
-
-    def __init__(self,node_name,status,desc="none",msg="",errors_list=[]):
-        super(Spawn,self).__init__()
+    def __init__(self, node_name, status, desc="none", msg="", errors_list=[]):
+        super(Spawn, self).__init__()
 
         self.node_name = node_name
         self.errors_list = self._processErrors(errors_list)
         self.message = ""
         self.status = status
-        self.headers = ["Item","Type","Reason"]
+        self.headers = ["Item", "Type", "Reason"]
         self._desc = ""
 
         self._setup()
         self.setMessage(msg)
         self.setDesc(desc)
-        self.resize(600,800)
+        self.resize(600, 800)
         self.setStyleSheet(GLOBAL_CSS)
         self.setModal(True)
         self.exec_()
-
 
     def _setup(self):
         self.setWindowTitle("{}'s details".format(self.node_name))
@@ -78,7 +75,7 @@ class Spawn(QDialog):
         # information
         _info_box = collapseGroup("Information:")
         _info_box.setCheckable(False)
-        _info_box.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
+        _info_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         _main_layout.addWidget(_info_box)
 
         _spec_layout = QVBoxLayout()
@@ -106,7 +103,7 @@ class Spawn(QDialog):
         _module_lbl.setFixedWidth(85)
         _module_layout.addWidget(_module_lbl)
 
-        _module_txt = QLineEdit(self.node_name+".py")
+        _module_txt = QLineEdit(self.node_name + ".py")
         _module_txt.setToolTip("Source absolute URI")
         _module_txt.setMinimumWidth(100)
         _module_layout.addWidget(_module_txt)
@@ -125,7 +122,7 @@ class Spawn(QDialog):
         self.status_txt.setEnabled(False)
         _status_layout.addWidget(self.status_txt)
 
-        _spacer1 = QSpacerItem(10,0,vData=QSizePolicy.Minimum)
+        _spacer1 = QSpacerItem(10, 0, vData=QSizePolicy.Minimum)
         _spec_layout.addItem(_spacer1)
 
         # description
@@ -164,9 +161,9 @@ class Spawn(QDialog):
         self.tableView = tableView(self.tableModel)
         self.tableView.setMaximumHeight(300)
         _hori_head = self.tableView.horizontalHeader()
-        _hori_head.setSectionResizeMode(0,QHeaderView.Fixed)
-        _hori_head.setSectionResizeMode(1,QHeaderView.Fixed)
-        _hori_head.setSectionResizeMode(2,QHeaderView.Stretch)
+        _hori_head.setSectionResizeMode(0, QHeaderView.Fixed)
+        _hori_head.setSectionResizeMode(1, QHeaderView.Fixed)
+        _hori_head.setSectionResizeMode(2, QHeaderView.Stretch)
 
         _table_layout = QVBoxLayout()
         _table_layout.addWidget(self.tableView)
@@ -178,8 +175,8 @@ class Spawn(QDialog):
         _button_box.setCheckable(False)
         _main_layout.addWidget(_button_box)
 
-        _spacer2 = QSpacerItem(10,0,vData=QSizePolicy.Minimum)
-        _spacer3 = QSpacerItem(10,0,vData=QSizePolicy.Minimum)
+        _spacer2 = QSpacerItem(10, 0, vData=QSizePolicy.Minimum)
+        _spacer3 = QSpacerItem(10, 0, vData=QSizePolicy.Minimum)
 
         self.button = QPushButton("Accept")
         self.button.clicked.connect(self.dummy)
@@ -191,44 +188,36 @@ class Spawn(QDialog):
         _button_layout.addItem(_spacer3)
         _button_box.setLayout(_button_layout)
 
-
     def dummy(self):
-        self.resize(self.size().width(),0)
+        self.resize(self.size().width(), 0)
 
-
-    def setMemo(self,text_lines):
+    def setMemo(self, text_lines):
         for t in text_lines:
             self._message_txt.insertPlainText(t)
 
-
-    def setDesc(self,strings):
+    def setDesc(self, strings):
         self._desc = strings
         self._desc_txt.setPlainText(self._desc)
 
-
-    def setMessage(self,msg_str):
+    def setMessage(self, msg_str):
         self.message = msg_str
         self._message_txt.setPlainText(self.message)
 
-
-    def _processErrors(self,raw_errors):
+    def _processErrors(self, raw_errors):
         safe_errors = list()
 
         if len(raw_errors) < 1:
-            return [("","","")]
+            return [("", "", "")]
 
         for e in raw_errors:
-            _a = e.get("item",None)
-            _b = e.get("type","")
-            _c = e.get("reason","")
+            _a = e.get("item", None)
+            _b = e.get("type", "")
+            _c = e.get("reason", "")
 
             if _a is None:
                 raise KeyError("Item not specified in error")
 
-            safe_errors.append((str(_a),
-                                str(_b),
-                                str(_c))
-                               )
+            safe_errors.append((str(_a), str(_b), str(_c)))
 
         return safe_errors
 
@@ -239,21 +228,21 @@ if __name__ == "__main__":
     top_app = QApplication(sys.argv)
 
     GLOBAL_CSS = "QDialog {background-color: pink} "
-    GLOBAL_CSS+="QLineEdit {background-color: slate; color: silver; border: none} "
-    GLOBAL_CSS+="QToolButton {background-color: dimgrey; border: none} "
-    GLOBAL_CSS+="QToolButton::hover {background-color: slategrey; border: none} "
-    GLOBAL_CSS+="QMenuBar {border: none} "
-    GLOBAL_CSS+="QTreeWidget {background-color: #505050; color: silver; border: none} "
-    GLOBAL_CSS+="QTreeWidget::item:hover {background-color:slategrey;} "
-    GLOBAL_CSS+="QHeaderView::section {background-color: dimgrey; border: none} "
-    GLOBAL_CSS+="QGroupBox::indicator:unchecked {image: url(icons/group_collapse_close.png);} "
-    GLOBAL_CSS+="QGroupBox::indicator:checked {image: url(icons/group_collapse_open.png);} "
+    GLOBAL_CSS += "QLineEdit {background-color: slate; color: silver; border: none} "
+    GLOBAL_CSS += "QToolButton {background-color: dimgrey; border: none} "
+    GLOBAL_CSS += "QToolButton::hover {background-color: slategrey; border: none} "
+    GLOBAL_CSS += "QMenuBar {border: none} "
+    GLOBAL_CSS += "QTreeWidget {background-color: #505050; color: silver; border: none} "
+    GLOBAL_CSS += "QTreeWidget::item:hover {background-color:slategrey;} "
+    GLOBAL_CSS += "QHeaderView::section {background-color: dimgrey; border: none} "
+    GLOBAL_CSS += "QGroupBox::indicator:unchecked {image: url(icons/group_collapse_close.png);} "
+    GLOBAL_CSS += "QGroupBox::indicator:checked {image: url(icons/group_collapse_open.png);} "
 
-    errs = [{"item":"babalu_layer_longName","type":"LayerItem","reason":"Not found"},
-            {"item":"baba_comp","type":"CompItem","reason":"Incomplete items, missing layers"},
-            {"item":"baba_foot","type":"FootageItem","reason":"File not found"},
-            {"item":"baba_folder","type":"FolderItem","reason":"Japanese name, should be ASCII only"},
+    errs = [{"item": "babalu_layer_longName", "type": "LayerItem", "reason": "Not found"},
+            {"item": "baba_comp", "type": "CompItem", "reason": "Incomplete items, missing layers"},
+            {"item": "baba_foot", "type": "FootageItem", "reason": "File not found"},
+            {"item": "baba_folder", "type": "FolderItem",  "reason": "Japanese name, should be ASCII only"},
             ]
 
-    sp = Spawn("babalu","error","my description","",errs)
+    sp = Spawn("babalu", "error", "my description", "", errs)
     sys.exit(0)

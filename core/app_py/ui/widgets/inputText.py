@@ -26,8 +26,7 @@ SOFTWARE.
 
 from __future__ import print_function
 
-from PySide2.QtWidgets import (QInputDialog,
-                               QLineEdit)
+from PySide2.QtWidgets import (QInputDialog, QLineEdit)
 
 
 class Spawn(QInputDialog):
@@ -43,18 +42,17 @@ class Spawn(QInputDialog):
     :type def_txt: str
     """
 
-    def __init__(self,show_text="Enter text",def_txt=""):
-        super(Spawn,self).__init__()
+    def __init__(self, show_text="Enter text", def_txt=""):
+        super(Spawn, self).__init__()
 
         self.show_text = show_text
         self.def_txt = def_txt
 
-        self.text,self.ok = self.getText(self,
-                                         "Haw-dini Dialog",
-                                         "{}:".format(self.show_text),
-                                         QLineEdit.Normal,
-                                         self.def_txt)
-
+        self.text, self.ok = self.getText(self,
+                                          "Haw-dini Dialog",
+                                          "{}:".format(self.show_text),
+                                          QLineEdit.Normal,
+                                          self.def_txt)
 
     def out(self):
         """

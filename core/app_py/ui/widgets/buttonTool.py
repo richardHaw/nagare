@@ -30,9 +30,8 @@ class Spawn(QToolButton):
     def __str__(self):
         return __name__
 
-
-    def __init__(self,icon_path,tip_text,parent_layout=None):
-        super(Spawn,self).__init__()
+    def __init__(self, icon_path, tip_text, parent_layout=None):
+        super(Spawn, self).__init__()
 
         self.setToolTip(tip_text)
         self.setAutoRaise(True)

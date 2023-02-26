@@ -14,7 +14,7 @@ def main(data_block={}):
     _log.write("Opening a new Maya scene...")
 
     try:
-        cmds.file(new = True, f = True)
+        cmds.file(new=True, force=True)
     except:
         print_exc()
         return

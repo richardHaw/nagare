@@ -66,26 +66,26 @@ def setup():
     global TEST_BLOCK
 
     global_css = "QDialog {background-color: dimgrey} "
-    global_css+="QLineEdit {background-color: slate; color: silver; border: none} "
-    global_css+="QToolButton {background-color: dimgrey; border: none} "
-    global_css+="QToolButton::hover {background-color: slategrey; border: none} "
-    global_css+="QMenuBar {border: none} "
-    global_css+="QTreeWidget {background-color: #505050; color: silver; border: none} "
-    global_css+="QTreeWidget::item:hover {background-color:slategrey;} "
-    global_css+="QHeaderView::section {background-color: dimgrey; border: none} "
-    # global_css+="QGroupBox::indicator:unchecked {image: url(icons/group_collapse_close.png);} "
-    # global_css+="QGroupBox::indicator:checked {image: url(icons/group_collapse_open.png);} "
+    global_css += "QLineEdit {background-color: slate; color: silver; border: none} "
+    global_css += "QToolButton {background-color: dimgrey; border: none} "
+    global_css += "QToolButton::hover {background-color: slategrey; border: none} "
+    global_css += "QMenuBar {border: none} "
+    global_css += "QTreeWidget {background-color: #505050; color: silver; border: none} "
+    global_css += "QTreeWidget::item:hover {background-color:slategrey;} "
+    global_css += "QHeaderView::section {background-color: dimgrey; border: none} "
+    # global_css += "QGroupBox::indicator:unchecked {image: url(icons/group_collapse_close.png);} "
+    # global_css += "QGroupBox::indicator:checked {image: url(icons/group_collapse_open.png);} "
 
     core_root = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
     nr_root = os.path.abspath(os.path.dirname(core_root))
-    icons_root = os.path.join(core_root,"app_py","ui","widgets","icons")
+    icons_root = os.path.join(core_root, "app_py", "ui", "widgets", "icons")
     title_template = "Nagare {} (Alpha, Python-{})"
     lang = "py"
     pyver = str(sys.version_info[0])
-    test_json = os.path.join(nr_root,"graphs","tester_{}.json".format(lang))
-    # test_json = os.path.abspath(os.path.join(nr_root,"core","new.json"))
+    test_json = os.path.join(nr_root, "graphs", "tester_{}.json".format(lang))
+    # test_json = os.path.abspath(os.path.join(nr_root, "core", "new.json"))
 
-    for p in [core_root,nr_root]:
+    for p in [core_root, nr_root]:
         if p not in sys.path:
             sys.path.append(p)
             print("Added to sys: {}".format(p))
@@ -109,21 +109,21 @@ def setup():
             ]
 
     nulls = [
-             core_root, # NAGARE_FRAMEWORK_ROOT
-             nr_root, # NAGARE_ROOT
-             os.path.abspath(os.path.join(nr_root,"modules")), # NAGARE_MOD_PATH
-             os.path.abspath(os.path.join(nr_root,"log")), # NAGARE_LOG_PATH
-             icons_root, # NAGARE_ICONS_PATH
-             os.path.join(icons_root,"node.png"), # NAGARE_DEFAULT_ICON
-             test_json, # NAGARE_DEFAULT_JSON
-             global_css, # NAGARE_GLOBAL_CSS
-             lang, # NAGARE_LANGUAGE
-             "1", # NAGARE_STRICT
-             "1", # NAGARE_PROPAGATE
-             pyver, # NAGARE_PYVER
-             "nagare", # NAGARE_LOG
-             title_template.format("Editor",pyver), # NAGARE_EDITOR_TITLE
-             title_template.format("Viewer",pyver), # NAGARE_VIEWER_TITLE
+             core_root,  # NAGARE_FRAMEWORK_ROOT
+             nr_root,  # NAGARE_ROOT
+             os.path.abspath(os.path.join(nr_root, "modules")),  # NAGARE_MOD_PATH
+             os.path.abspath(os.path.join(nr_root, "log")),  # NAGARE_LOG_PATH
+             icons_root,  # NAGARE_ICONS_PATH
+             os.path.join(icons_root, "node.png"),  # NAGARE_DEFAULT_ICON
+             test_json,  # NAGARE_DEFAULT_JSON
+             global_css,  # NAGARE_GLOBAL_CSS
+             lang,  # NAGARE_LANGUAGE
+             "1",  # NAGARE_STRICT
+             "1",  # NAGARE_PROPAGATE
+             pyver,  # NAGARE_PYVER
+             "nagare",  # NAGARE_LOG
+             title_template.format("Editor", pyver),  # NAGARE_EDITOR_TITLE
+             title_template.format("Viewer", pyver),  # NAGARE_VIEWER_TITLE
              ]
 
     for e in envs:

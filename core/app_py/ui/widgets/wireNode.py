@@ -64,8 +64,8 @@ class Spawn(QGraphicsPathItem):
         self.new_line = wireNode(_a,_b)
     """
 
-    _defaultA = QPointF(0.0,0.0)
-    _defaultB = QPointF(50.0,50.0)
+    _defaultA = QPointF(0.0, 0.0)
+    _defaultB = QPointF(50.0, 50.0)
 
 
     def __str__(self):
@@ -73,7 +73,7 @@ class Spawn(QGraphicsPathItem):
 
 
     def __init__(self,pointA=_defaultA,pointB=_defaultB):
-        super(Spawn,self).__init__()
+        super(Spawn, self).__init__()
 
         self._pointA = pointA
         self._pointB = pointB
@@ -81,7 +81,6 @@ class Spawn(QGraphicsPathItem):
         self._target = None
 
         self._setup()
-
 
     def _setup(self):
         """
@@ -98,8 +97,7 @@ class Spawn(QGraphicsPathItem):
         self.pen.setColor(__pen_color)
         self.setPen(self.pen)
 
-
-    def mousePressEvent(self,event):
+    def mousePressEvent(self, event):
         """
         :meta private:
         """
@@ -110,8 +108,7 @@ class Spawn(QGraphicsPathItem):
         self.old_target = self.target
         self.pointB = event.pos()
 
-
-    def mouseMoveEvent(self,event):
+    def mouseMoveEvent(self, event):
         """
         :meta private:
         """
@@ -121,8 +118,7 @@ class Spawn(QGraphicsPathItem):
 
         self.pointB = event.pos()
 
-
-    def mouseReleaseEvent(self,event):
+    def mouseReleaseEvent(self, event):
         """
         :meta private:
         """
@@ -130,32 +126,25 @@ class Spawn(QGraphicsPathItem):
         if not self.scene().editable:
             return
 
-        _to_socket = self.scene().itemAt(event.scenePos().toPoint(),
-                                         QTransform())
+        _to_socket = self.scene().itemAt(event.scenePos().toPoint(), QTransform())
 
-        if not "socketNode" in str(type(_to_socket)):
+        if "socketNode" not in str(type(_to_socket)):
             self.pointB = self.target.getCenter()
 
-            Spawn.removeFromSocket(self.scene(),
-                                   self,
-                                   self.old_target)
+            Spawn.removeFromSocket(self.scene(), self, self.old_target)
             return
 
         if _to_socket.in_wire:
             _old_wire = _to_socket.parentItem().plug_in.in_wire
-
-            Spawn.removeFromSocket(self.scene(),
-                                   _old_wire,
-                                   _to_socket)
+            Spawn.removeFromSocket(self.scene(), _old_wire, _to_socket)
 
         self.old_target.parentItem().plug_in.in_wire = None
         self.target = _to_socket
         self.pointB = _to_socket.getCenter()
         _to_socket.parentItem().plug_in.in_wire = self
 
-
     @staticmethod
-    def removeFromSocket(scene_item,line_item,socket_out):
+    def removeFromSocket(scene_item, line_item, socket_out):
         """
         Removes the wire from the scene and socket.
 
@@ -187,17 +176,16 @@ class Spawn(QGraphicsPathItem):
         _node_to.plug_in.in_wire = None
         line_item.target = None
 
-        _nfo = {"name" : _node_to.name,
-                "uuid" : _node_to.uuid}
+        _nfo = {"name": _node_to.name,
+                "uuid": _node_to.uuid}
 
-        if _nfo in _node_from.node_out:
-            _node_from.node_out.remove(_nfo)
+        if _nfo in _node_from.nodes_out:
+            _node_from.nodes_out.remove(_nfo)
 
         if line_item in _node_to.plug_in.out_wires:
             _node_to.plug_in.out_wires.remove(line_item)
 
         scene_item.removeItem(line_item)
-
 
     def _updatePath(self):
         """
@@ -207,20 +195,19 @@ class Spawn(QGraphicsPathItem):
         path = QPainterPath()
         path.moveTo(self.pointA)
 
-        dx = self.pointB.x()-self.pointA.x()
-        dy = self.pointB.y()-self.pointA.y()
+        dx = self.pointB.x() - self.pointA.x()
+        dy = self.pointB.y() - self.pointA.y()
 
-        ctrl1 = QPointF(self.pointA.x()+dx*0.25,
-                        self.pointA.y()+dy*0.1)
+        ctrl1 = QPointF(self.pointA.x() + dx * 0.25,
+                        self.pointA.y() + dy * 0.1)
 
-        ctrl2 = QPointF(self.pointA.x()+dx*0.75,
-                        self.pointA.y()+dy*0.9)
+        ctrl2 = QPointF(self.pointA.x() + dx * 0.75,
+                        self.pointA.y() + dy * 0.9)
 
-        path.cubicTo(ctrl1,ctrl2,self.pointB)
+        path.cubicTo(ctrl1, ctrl2, self.pointB)
         self.setPath(path)
 
-
-    def paint(self,painter,option,widget):
+    def paint(self, painter, option, widget):
         """
         :meta private:
         """
@@ -234,7 +221,6 @@ class Spawn(QGraphicsPathItem):
         painter.setPen(self.pen)
         painter.drawPath(self.path())
 
-
     @property
     def pointA(self):
         """
@@ -243,16 +229,14 @@ class Spawn(QGraphicsPathItem):
 
         return self._pointA
 
-
     @pointA.setter
-    def pointA(self,point):
+    def pointA(self, point):
         """
         :meta private:
         """
 
         self._pointA = point
         self._updatePath()
-
 
     @property
     def pointB(self):
@@ -262,16 +246,14 @@ class Spawn(QGraphicsPathItem):
 
         return self._pointB
 
-
     @pointB.setter
-    def pointB(self,point):
+    def pointB(self, point):
         """
         :meta private:
         """
 
         self._pointB = point
         self._updatePath()
-
 
     @property
     def source(self):
@@ -281,15 +263,13 @@ class Spawn(QGraphicsPathItem):
 
         return self._source
 
-
     @source.setter
-    def source(self,widget):
+    def source(self, widget):
         """
         :meta private:
         """
 
         self._source = widget
-
 
     @property
     def target(self):
@@ -299,9 +279,8 @@ class Spawn(QGraphicsPathItem):
 
         return self._target
 
-
     @target.setter
-    def target(self,widget):
+    def target(self, widget):
         """
         :meta private:
         """

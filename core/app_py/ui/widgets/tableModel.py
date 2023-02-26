@@ -35,17 +35,14 @@ class Spawn(QAbstractTableModel):
         self.items_list = items_list
         self.headers = headers
 
-
     def rowCount(self, parent_obj):
         return len(self.items_list)
-
 
     def columnCount(self, parent_obj):
         if not len(self.items_list):
             return 1
 
         return len(self.items_list[0])
-
 
     def data(self, index, role):
         if not len(self.items_list):
@@ -55,19 +52,17 @@ class Spawn(QAbstractTableModel):
             return None
         elif role != Qt.DisplayRole:
             return None
-        return self.items_list[index.row()][index.column()]
 
+        return self.items_list[index.row()][index.column()]
 
     def headerData(self, col, orientation, role):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
             return self.headers[col]
         return None
 
-
     def sort(self, col, order):
         self.emit(SIGNAL("layoutAboutToBeChanged()"))
-        self.items_list = sorted(self.items_list,
-                                 key=operator.itemgetter(col))
+        self.items_list = sorted(self.items_list, key=operator.itemgetter(col))
 
         if order == Qt.DescendingOrder:
             self.items_list.reverse()

@@ -27,12 +27,11 @@ SOFTWARE.
 from __future__ import print_function
 
 import os
-import sys
 import json
 import importlib
 
 from traceback import format_exc
-from pprint import (pprint,pformat)
+from pprint import pformat
 from .resultObj import Spawn as result_obj
 from .nodeDummy import Spawn as node_dummy
 from .utilities import logUtils
@@ -53,8 +52,7 @@ class Spawn(object):
         self.log_obj = None
         self.log_file = ""
 
-
-    def runJson(self,json_path,data_block):
+    def runJson(self, json_path, data_block):
         """
         Call this to run a JSON file graph.
         You give it a dict to process information.
@@ -83,14 +81,14 @@ class Spawn(object):
 
         self.log_file = os.path.join(os.environ["NAGARE_LOG_PATH"],
                                      os.environ["NAGARE_LANGUAGE"],
-                                     "{}.log".format(logUtils.timeStamp(),
-                                                     os.environ["NAGARE_LANGUAGE"]))
-        self.log_obj = logUtils.getLogger(os.environ["NAGARE_LOG"],
-                                          self.log_file)
-        self.log_obj.propagate = True
+                                     "{}.log".format(logUtils.timeStamp(), os.environ["NAGARE_LANGUAGE"])
+                                     )
 
+        self.log_obj = logUtils.getLogger(os.environ["NAGARE_LOG"], self.log_file)
+        self.log_obj.propagate = True
         self.log_obj.info("Running JSON: {}".format(json_path))
         self.nodes_all = list()
+
         _datas = Spawn.getDataFromJson(json_path)
         _nodes_data = _datas.get("nodes", _datas)
         self._recurser(_nodes_data, data_block)
@@ -99,8 +97,7 @@ class Spawn(object):
         logUtils.kill(self.log_obj)
         self.log_obj = None
 
-
-    def _recurser(self,node_data,data_block):
+    def _recurser(self, node_data, data_block):
         """
         Recurses the next set of data.
 
@@ -119,15 +116,13 @@ class Spawn(object):
         :rtype: None
         """
 
-        # early recursion stop
         if self.strict and self._failedNodes():
             return
 
         _run_result = None
-        self.log_obj.info("="*88)
+        self.log_obj.info("=" * 88)
         _dummy = node_dummy(node_data)
 
-        # inject a new key for feedback
         self.log_obj.info("Running: {}".format(_dummy.name))
         _dummy.messages.append("{}'s report:".format(_dummy.name))
 
@@ -142,10 +137,8 @@ class Spawn(object):
         if _dummy.command is None:
             for _dummy_dict in _dummy.out_nodes:
                 self._recurser(_dummy_dict, _copy_block)
-            # this method actually ends here
             return
 
-        # recurse with commands
         _ex_msgs = ["No Exception message..."]
 
         try:
@@ -153,24 +146,21 @@ class Spawn(object):
             _run_result = _proc_mod.main(_copy_block)
             del(_proc_mod)
         except Exception as err:
-            self.log_obj.info("="*88)
+            self.log_obj.info("=" * 88)
             _err_msg = "Failed module: {}".format(_dummy.command)
             _err_for = str(format_exc())
             _ex_msgs = [_err_msg]
             _ex_msgs.append(_err_for)
             self.log_obj.error(_err_msg)
             self.log_obj.error(_err_for)
-            self.log_obj.error("="*88)
+            self.log_obj.error("=" * 88)
 
         # used for safety
-        if not "resultObj" in repr(_run_result)\
-           and not isinstance(_run_result,dict)\
-           and _run_result is None:
-
-            _tp = "{} returned {}".format(_dummy.name,str(type(_run_result)))
+        if "resultObj" not in repr(_run_result) and not isinstance(_run_result,dict) and _run_result is None:
+            _tp = "{} returned {}".format(_dummy.name, str(type(_run_result)))
             _run_result = result_obj("error")
             _run_result.addMessage(_tp)
-            _run_result.addMessage(pformat(_copy_block,indent=4))
+            _run_result.addMessage(pformat(_copy_block, indent=4))
             _run_result.addMessage("Created new error instance.")
             for e in _ex_msgs:
                 _run_result.addMessage(e)
@@ -186,7 +176,7 @@ class Spawn(object):
             if _run_result.getStatus() == "error":
                 _dummy.error = True
                 self.log_obj.error("Error running: {}".format(_dummy.name))
-                self.log_obj.error(pformat(_copy_block,indent=4))
+                self.log_obj.error(pformat(_copy_block, indent=4))
 
                 for d in _dummy.messages:
                     self.log_obj.error(d)
@@ -209,13 +199,12 @@ class Spawn(object):
 
         # run out-nodes
         for _dd in _dummy.out_nodes:
-            # out_conn is now redundant because of nodes_all, refactor this.
+            # TO-DO: out_conn is now redundant because of nodes_all, refactor this.
             out_conn = self._recurser(_dd, _copy_block)
 
         # done
         _dummy.messages.append("Success")
         return _dummy
-
 
     def _failedNodes(self):
         """
@@ -226,13 +215,11 @@ class Spawn(object):
         """
 
         _out = list()
-
         for _fail in self.nodes_all:
             if _fail.error:
                 _out.append(_fail)
 
         return _out
-
 
     @staticmethod
     def getDataFromJson(json_file):
@@ -249,5 +236,4 @@ class Spawn(object):
 
 if __name__ == "__main__":
     dummy = Spawn()
-    dummy.runJson(os.environ["NAGARE_DEFAULT_JSON"],
-                  os.environ["TEST_BLOCK"])
+    dummy.runJson(os.environ["NAGARE_DEFAULT_JSON"], os.environ["TEST_BLOCK"])

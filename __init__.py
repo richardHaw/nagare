@@ -339,11 +339,12 @@ class Viewer(app_py):
 
 
 if __name__ == "__main__":
-    # os.environ["NAGARE_MOD_PATH"] = r"C:\repo\_dummy"
-    os.environ["NAGARE_MOD_PATH"] = r"C:\repo\_dummy_jsx"
+    os.environ["NAGARE_MOD_PATH"] = r"C:\repo\_dummy"
+    # os.environ["NAGARE_MOD_PATH"] = r"C:\repo\_dummy_jsx"
 
-    Editor(language="jsx",graph_file="C:/repo/nagare/graphs/xxx.json")
+    # Editor(language="jsx",graph_file="C:/repo/nagare/graphs/xxx.json")
     # Editor(graph_file=r"C:/repo/nagare/graphs/xxx.json")
+    Editor()
     # Player()
     # Viewer(r"C:/repo/nagare/graphs/tester_jsx.json",r"C:\repo\_tmp\batman.json")
     pass

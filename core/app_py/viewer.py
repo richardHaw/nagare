@@ -30,7 +30,6 @@ import os
 import sys
 
 from PySide2.QtGui import QIcon
-
 from PySide2.QtWidgets import (QMenu,
                                QDialog,
                                QLineEdit,
@@ -39,7 +38,6 @@ from PySide2.QtWidgets import (QMenu,
                                QSystemTrayIcon)
 
 from .ui import widgets
-from .ui.widgets import icons
 from .utilities import sceneUtils
 
 
@@ -58,9 +56,8 @@ class Spawn(QDialog):
     def __str__(self):
         return __name__
 
-
-    def __init__(self,json_file,datablock=None):
-        super(Spawn,self).__init__()
+    def __init__(self, json_file, datablock=None):
+        super(Spawn, self).__init__()
         self.json_file = json_file
         self.datablock = datablock
 
@@ -72,11 +69,10 @@ class Spawn(QDialog):
 
         if self.json_file:
             if not os.path.isfile(self.json_file):
-                raise IOError("JSON file not found:",self.json_file)
-            self.build(self.json_file,self.datablock)
+                raise IOError("JSON file not found:", self.json_file)
+            self.build(self.json_file, self.datablock)
 
         self.show()
-
 
     def _setup(self):
         """
@@ -91,11 +87,11 @@ class Spawn(QDialog):
         self.scene = widgets.graphicsScene()
         self.scene.setMode("viewer")
         self.view = widgets.graphicsView(self.scene)
-        self.view.setSceneRect(100,50,self.winW,self.winH)
+        self.view.setSceneRect(100, 50, self.winW, self.winH)
         _main_layout.addWidget(self.view)
 
         #bottom
-        widgets.separator(True,_main_layout)
+        widgets.separator(True, _main_layout)
         _bottom_layout = QHBoxLayout(self)
         _main_layout.addLayout(_bottom_layout)
 
@@ -125,8 +121,7 @@ class Spawn(QDialog):
         self.tray.show()
         self.tray.setToolTip(os.environ["NAGARE_VIEWER_TITLE"])
 
-
-    def build(self,json_file,datablock=None):
+    def build(self, json_file, datablock=None):
         """
         **parameters**, **types**, **return** and **return types**
 
@@ -138,12 +133,11 @@ class Spawn(QDialog):
 
         """
 
-        _b = sceneUtils.buildGraph(self.scene,json_file,datablock)
-        if isinstance(_b,str) or _b is None:
+        _b = sceneUtils.buildGraph(self.scene, json_file, datablock)
+        if isinstance(_b, str) or _b is None:
             self.scene.resetToStarter()
             print("Failed to build tree.")
             return
-
 
     def feedback(self,msg):
         """
@@ -158,8 +152,7 @@ class Spawn(QDialog):
 
         self.info_txt.setText(msg)
 
-
-    def notify(self,title,msg):
+    def notify(self, title, msg):
         """
         Show a notification on the tray.
 
@@ -173,8 +166,7 @@ class Spawn(QDialog):
 
         """
 
-        self.tray.showMessage(title,msg)
-
+        self.tray.showMessage(title, msg)
 
     def refresh(self):
         """

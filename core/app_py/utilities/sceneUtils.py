@@ -127,7 +127,7 @@ def buildGraph(scene_obj,json_file,data_block={}):
                     }
 
         _tmp_nodes.append(_tmp_nfo)
-    _starter.node_out = _tmp_nodes
+    _starter.nodes_out = _tmp_nodes
 
     # creates a copy of the datablock for the starter
     if isinstance(data_block,dict) and data_block:
@@ -445,7 +445,7 @@ def buildTreeRecurse(tree_list,scene_item):
                 if _nfo_out:
                     _tmp_out.append(_nfo_out)
 
-            _new_node.node_out = _tmp_out
+            _new_node.nodes_out = _tmp_out
 
             # icon
             _icon = tnd.get("icon",None)
@@ -455,7 +455,7 @@ def buildTreeRecurse(tree_list,scene_item):
                 _new_node.changeIcon(_icon)
 
         # recurse
-        buildTreeRecurse(tnd["out_nodes"], scene_item)
+        buildTreeRecurse(tnd["out_nodes"],scene_item)
 
 
 def linkTreeRecurse(tree_data,scene_item):

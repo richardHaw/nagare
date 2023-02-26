@@ -28,12 +28,10 @@ from __future__ import print_function
 
 import os
 import sys
-import uuid
 import ctypes
 
 from random import randrange
-from traceback import print_exc
-from pprint import (pprint,pformat)
+from pprint import pprint
 
 from PySide2.QtCore import (Qt,Slot)
 from PySide2.QtWidgets import (QAction,
@@ -106,7 +104,7 @@ class Spawn(object):
                  data_block=dict(),
                  parent=None):
 
-        super(Spawn,self).__init__()
+        super(Spawn, self).__init__()
 
         self.software = software
         self.language = language
@@ -128,7 +126,6 @@ class Spawn(object):
 
         self._initUi()
 
-
     def _initUi(self):
         """
         Setup UI and initiates state.
@@ -146,11 +143,8 @@ class Spawn(object):
         else:
             raise IOError("This is not a file: {}".format(self.tree_json))
 
-        self.ui.view.fitInView(self.ui.scene.itemsBoundingRect(),
-                               Qt.KeepAspectRatio)
-
+        self.ui.view.fitInView(self.ui.scene.itemsBoundingRect(), Qt.KeepAspectRatio)
         self.starter = sceneUtils.getStarter(self.ui.scene)
-
 
     def _linkCommands(self):
         """
@@ -177,8 +171,7 @@ class Spawn(object):
         self.ui.erase_btn.clicked.connect(self._clearSearch)
         self.ui.find_txt.textChanged[str].connect(self._searchTree)
 
-
-    def _triggerActions(self,_ta):
+    def _triggerActions(self, _ta):
         """
         Links menu items to their commands.
         """
@@ -206,7 +199,6 @@ class Spawn(object):
         elif _tx == "About":
             pass
 
-
     def _populateModuleTree(self):
         """
         Builds Nodes Tree Repository from "modules" folder contents.
@@ -221,8 +213,9 @@ class Spawn(object):
             custom nodes folder ("maya2018_ModelCheck")
         """
 
-        ext_map = {"py":["py","pyc"],
-                   "jsx":["jsxbin","jsxinc"]}
+        ext_map = {"py": ["py", "pyc"],
+                   "jsx": ["jsxbin", "jsxinc"]
+                   }
 
         if not os.path.isdir(self.modules_root):
             raise IOError("No module path: ".format(self.modules_root))
@@ -230,7 +223,7 @@ class Spawn(object):
 
         _cat_count = 1
         for _cat in os.listdir(self.modules_root):
-            _cat_dir = os.path.join(self.modules_root,_cat)
+            _cat_dir = os.path.join(self.modules_root, _cat)
 
             if not os.path.isdir(_cat_dir) or _cat.startswith("_"):
                 continue
@@ -239,10 +232,9 @@ class Spawn(object):
             if len(_mfiles) < 1:
                 continue
 
-            print(" {} ".format(_cat).center(88,"="))
-            _tree_tit = "{}: {} nodes".format(str(_cat_count).zfill(2),_cat)
-            _branch = QTreeWidgetItem(self.ui.module_tree,
-                                      [_tree_tit])
+            print(" {} ".format(_cat).center(88, "="))
+            _tree_tit = "{}: {} nodes".format(str(_cat_count).zfill(2), _cat)
+            _branch = QTreeWidgetItem(self.ui.module_tree, [_tree_tit])
             _branch.setExpanded(True)
             _added = list()
 
@@ -253,28 +245,26 @@ class Spawn(object):
                 if _leaf_file.startswith("_") or _leaf_name in _added:
                     continue
 
-                if not _leaf_ext in ext_map[self.language]:
+                if _leaf_ext not in ext_map[self.language]:
                     continue
                 
-                _leaf_node = QTreeWidgetItem(_branch,[_leaf_name])
-                _leaf_path = os.path.abspath(os.path.join(_cat_dir,_leaf_file))
+                _leaf_node = QTreeWidgetItem(_branch, [_leaf_name])
+                _leaf_path = os.path.abspath(os.path.join(_cat_dir, _leaf_file))
                 _leaf_tt = nodeUtils.getDescription(_leaf_path)
 
-                _leaf_node.setToolTip(0,_leaf_tt)
-                _leaf_node.setWhatsThis(0,_leaf_path)
+                _leaf_node.setToolTip(0, _leaf_tt)
+                _leaf_node.setWhatsThis(0, _leaf_path)
                 _branch.addChild(_leaf_node)
                 _added.append(_leaf_name)
-                print("- Loaded",_leaf_file)
-            _cat_count+=1
+                print("- Loaded", _leaf_file)
+            _cat_count += 1
 
         self.ui.module_tree.itemClicked.connect(self._clicker)
         _title = ["{} Modules".format(self.software).title()]
         self.ui.module_tree.setHeaderLabels(_title)
 
-
     def show(self):
         self.ui.show()
-
 
     def saveTree(self):
         """
@@ -283,24 +273,21 @@ class Spawn(object):
 
         _tj = sceneUtils.getGraph(os.path.dirname(self.tree_json), True)
         if not _tj:
-            self._feedback("Cancelled...",1)
+            self._feedback("Cancelled...", 1)
             return
 
         _node_data = nodeUtils.printTree(self.starter)
         if len(_node_data.get("out_nodes")) < 1:
             pprint(_node_data)
-            self._feedback("No nodes saved...",2)
-            self._alert("No nodes saved...","Warning")
+            self._feedback("No nodes saved...", 2)
+            self._alert("No nodes saved...", "Warning")
             return
 
-        _gp_data = sceneUtils.getGroups(self.ui.scene)
-
-        _out_data = {"nodes":_node_data,"groups":_gp_data}
-        sceneUtils.write(_tj,_out_data)
+        _out_data = {"nodes": _node_data, "groups": sceneUtils.getGroups(self.ui.scene)}
+        sceneUtils.write(_tj, _out_data)
         self._setTree(_tj)
         self._feedback("Saved to: {}".format(self.tree_json))
         self._alert("Saved successfully...")
-
 
     def clearTree(self):
         """
@@ -308,12 +295,10 @@ class Spawn(object):
         """
 
         self.starter = self.ui.scene.resetToStarter()
-
         if self.starter is None:
             raise AssertionError("No starter found.")
 
         self._feedback("Cleared graph.",1)
-
 
     def _openTree(self):
         """
@@ -328,16 +313,14 @@ class Spawn(object):
         self._setTree(j_file)
         self._feedback("Opened graph: {}".format(j_file))
 
-
-    def _setTree(self,json_path):
+    def _setTree(self, json_path):
         if not os.path.isfile(json_path):
-            self._feedback("Not found: {}".format(json_path),2)
-            self._alert("Invalid file...","Warning")
+            self._feedback("Not found: {}".format(json_path), 2)
+            self._alert("Invalid file...", "Warning")
             return
 
         self.tree_json = json_path
         self.buildTree()
-
 
     def _clearSearch(self):
         """
@@ -346,7 +329,6 @@ class Spawn(object):
 
         self.ui.find_txt.setText("")
         sceneUtils.clearSelection(self.ui.scene)
-
 
     def _searchTree(self):
         """
@@ -360,7 +342,6 @@ class Spawn(object):
         for _n in _all_nodes:
             _n.setSelected(True)
 
-
     def _setStrict(self):
         """
         Toggles the strict state of the scene.
@@ -372,11 +353,11 @@ class Spawn(object):
 
         if not self.strict:
             self.ui.strict_btn.setIcon(self.ui.strict_icon1)
-            self._feedback("Will evaluate the graph even when there are Errors.",1)
-        else:
-            self.ui.strict_btn.setIcon(self.ui.strict_icon2)
-            self._feedback("Stops evaluating the graph when there's an Error."),1
+            self._feedback("Will evaluate the graph even when there are Errors.", 1)
+            return
 
+        self.ui.strict_btn.setIcon(self.ui.strict_icon2)
+        self._feedback("Stops evaluating the graph when there's an Error."), 1
 
     def _setPropagate(self):
         """
@@ -390,10 +371,10 @@ class Spawn(object):
         if self.propagate:
             self.ui.propagate_btn.setIcon(self.ui.propagate_icon1)
             self._feedback("Datablock is propagated on the whole graph.")
-        else:
-            self.ui.propagate_btn.setIcon(self.ui.propagate_icon2)
-            self._feedback("Datablock only propagated on branch-level.",1)
+            return
 
+        self.ui.propagate_btn.setIcon(self.ui.propagate_icon2)
+        self._feedback("Datablock only propagated on branch-level.", 1)
 
     def openLog(self):
         """
@@ -408,10 +389,10 @@ class Spawn(object):
                 _sub_call(["open",self.log_file])
 
             self._feedback("Opening log: {}".format(self.log_file))
-        else:
-            self._feedback("Log not found: {}".format(self.log_file),2)
-            self._alert("No logs found...")
+            return
 
+        self._feedback("Log not found: {}".format(self.log_file), 2)
+        self._alert("No logs found...")
 
     def setupLog(self):
         """
@@ -422,10 +403,9 @@ class Spawn(object):
                                      self.software,
                                      "{}.log".format(logUtils.timeStamp(),
                                                      self.software))
-        logger = logUtils.getLogger(self.logger_name,self.log_file)
+        logger = logUtils.getLogger(self.logger_name, self.log_file)
         logger.propagate = True
         return logger
-
 
     def buildTree(self):
         """
@@ -437,13 +417,13 @@ class Spawn(object):
         _g = sceneUtils.buildGraph(self.ui.scene,
                                    self.tree_json,
                                    self.data_block)
-        if not isinstance(_g,startNode):
+
+        if not isinstance(_g, startNode):
             self.clearTree()
-            self._feedback(_g,2)
+            self._feedback(_g, 2)
             return
 
         self._feedback("Rebuilt graph: {}".format(self.tree_json))
-
 
     def _zoomExtents(self):
         """
@@ -451,7 +431,6 @@ class Spawn(object):
         """
 
         self.ui.view.zoomExtents()
-
 
     def _playJson(self):
         """
@@ -463,14 +442,14 @@ class Spawn(object):
         _dummy.strict = self.strict
         _dummy.propagate = self.propagate
         _copy_block = self.data_block.copy()
-        _dummy.runJson(self.tree_json,_copy_block)
+        _dummy.runJson(self.tree_json, _copy_block)
 
-        print("="*168)
+        print("=" * 168)
         self.buildTree()
 
         for _n in _dummy.nodes_all:
-            _dummy_dict = {"name":_n.name,
-                           "uuid":_n.uuid}
+            _dummy_dict = {"name": _n.name,
+                           "uuid": _n.uuid}
 
             _d = nodeUtils.getPointer(_dummy_dict,
                                       self.ui.scene)
@@ -479,18 +458,17 @@ class Spawn(object):
             _d.setErrors(_n.getErrors())
 
             if _n.error:
-                _d.setDirty(state="error",msg=_m)
+                _d.setDirty(state="error", msg=_m)
             elif _n.skip:
-                _d.setDirty(state="skip",msg=_m)
+                _d.setDirty(state="skip", msg=_m)
             else:
                 _d.setDirty()
 
-            print("\n","@",_m)
+            print("\n", "@", _m)
 
         del(_dummy)
         self.ui.scene.update()
         self._feedback("Ran: {}".format(self.tree_json))
-
 
     def _groupSelected(self):
         """
@@ -498,20 +476,17 @@ class Spawn(object):
         Must have more than 1 node_items selected.
         """
 
-        _widgets = [_s for _s in\
-                    sceneUtils.getSelected(self.ui.scene)\
-                    if isinstance(_s,itemNode)]
+        _widgets = [_s for _s in sceneUtils.getSelected(self.ui.scene) if isinstance(_s, itemNode)]
 
         if len(_widgets) < 2:
-            self._feedback("Select more than 1 node to group...",1)
-            self._alert("Selected more nodes...","Nagare Alert")
+            self._feedback("Select more than 1 node to group...", 1)
+            self._alert("Selected more nodes...", "Nagare Alert")
             return
 
-        groupNode(self.ui.scene,_widgets)
+        groupNode(self.ui.scene, _widgets)
         self._feedback("Grouped {} nodes...".format(len(_widgets)))
 
-
-    def _alignTree(self,is_all=False):
+    def _alignTree(self, is_all=False):
         """
         Arranges down-stream nodes from first selection.
         Called 2x to prevent overlaps.
@@ -528,8 +503,7 @@ class Spawn(object):
         if not _sels:
             return
 
-        _gps = [g for g in self.ui.scene.items()\
-                if isinstance(g,groupNode)]
+        _gps = [g for g in self.ui.scene.items() if isinstance(g, groupNode)]
 
         if not is_all:
             for _sl in _sels:
@@ -540,15 +514,15 @@ class Spawn(object):
                 for _s in _sels:
                     if _s in _g.group_widgets:
                         _g.rebuildRect()
-        else:
-            sceneUtils.alignTreeRecurse(self.starter)
-            sceneUtils.alignTreeRecurse(self.starter)
+            return
 
-            for _g in _gps:
-                _g.rebuildRect()
+        sceneUtils.alignTreeRecurse(self.starter)
+        sceneUtils.alignTreeRecurse(self.starter)
 
+        for _g in _gps:
+            _g.rebuildRect()
 
-    def _feedback(self,feed_text,level=0):
+    def _feedback(self, feed_text, level=0):
         """
         Updates the _feedback text and prints "feed_text".
 
@@ -563,14 +537,13 @@ class Spawn(object):
                   "background-color: #ff5252; color: black"]
 
         if level > len(colors):
-            level = len(colors);
+            level = len(colors)
 
         print(feed_text)
         self.ui.info_txt.setText(feed_text)
         self.ui.info_txt.setStyleSheet(colors[level])
 
-
-    def _notify(self,title,msg):
+    def _notify(self, title, msg):
         """
         Show a notification on the tray.
 
@@ -584,10 +557,9 @@ class Spawn(object):
 
         """
 
-        self.ui.tray.showMessage(title,msg)
+        self.ui.tray.showMessage(title, msg)
 
-
-    def _alert(self,text,title="Nagare Alert",style=0):
+    def _alert(self, text, title="Nagare Alert", style=0):
         """
         0 : OK
         1 : OK | Cancel
@@ -599,43 +571,41 @@ class Spawn(object):
         """
 
         if sys.version_info[0] > 2:
-            return ctypes.windll.user32.MessageBoxW(0,text,title,style)
-        else:
-            return ctypes.windll.user32.MessageBoxA(0,text,title,style)
+            return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 
+        return ctypes.windll.user32.MessageBoxA(0, text, title, style)
 
-    @Slot(QTreeWidgetItem,int)
-    def _clicker(self,tree_item,column):
+    @Slot(QTreeWidgetItem, int)
+    def _clicker(self, tree_item, column):
         """
         Creates new nodes from the repository.
         Called when QTreeWidgetItem is clicked.
         Spawn names are unique.
         """
 
-        _text =  tree_item.text(column)
+        _text = tree_item.text(column)
         if _text[0].isdigit():
             return
 
         _counter = 1
         _name = _text+str(_counter).zfill(2)
 
-        while not nodeUtils.uniqueName(self.ui.scene,_name):
-            _counter+=1
+        while not nodeUtils.uniqueName(self.ui.scene, _name):
+            _counter += 1
             _name = _text+str(_counter).zfill(2)
 
         _whats_this = tree_item.whatsThis(0)
-
         _desc = nodeUtils.getDescription(_whats_this)
         _icon = nodeUtils.getIconPath(_whats_this)
 
         new_node = itemNode(_name,
-                            self.ui.winW/2+randrange(-50,50),
-                            self.ui.winH/2+randrange(-50,50),
+                            self.ui.winW/2+randrange(-50, 50),
+                            self.ui.winH/2+randrange(-50, 50),
                             self.ui.scene,
                             _desc)
 
         _fol_name = os.path.basename(os.path.dirname(_whats_this))
-        new_node.command = "{}.{}".format(_fol_name,_text)
+        new_node.command = "{}.{}".format(_fol_name, _text)
         new_node.changeIcon(_icon)
         self._feedback("Created: {}".format(_name))
 

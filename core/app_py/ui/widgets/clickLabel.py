@@ -26,8 +26,7 @@ SOFTWARE.
 
 from __future__ import print_function
 
-from PySide2.QtGui import (QFont,
-                           QColor)
+from PySide2.QtGui import (QFont, QColor)
 
 from PySide2.QtWidgets import QGraphicsTextItem
 from .inputText import Spawn as inputText
@@ -56,15 +55,14 @@ class Spawn(QGraphicsTextItem):
         clickLabel("text",self.scene)
     """
 
-    def __init__(self,label_text,parent=None,posiX=5,posiY=0):
+    def __init__(self, label_text, parent=None, posiX=5, posiY=0):
         self.label_text = label_text
         self.parent = parent
         self.posiX = posiX
         self.posiY = posiY
 
-        super(Spawn,self).__init__(self.parent)
+        super(Spawn, self).__init__(self.parent)
         self.initItem()
-
 
     def initItem(self):
         """
@@ -72,15 +70,14 @@ class Spawn(QGraphicsTextItem):
         """
 
         label_color = QColor("#FFFFFF")
-        label_font = QFont("Ubuntu",10)
+        label_font = QFont("Ubuntu", 10)
 
         self.setDefaultTextColor(label_color)
         self.setFont(label_font)
         self.setPlainText(self.label_text)
-        self.setTextWidth(self.parent.width-2*4)
+        self.setTextWidth(self.parent.width - 2 * 4)
 
         self.reposition()
-
 
     def reposition(self):
         """
@@ -90,30 +87,28 @@ class Spawn(QGraphicsTextItem):
         if not self.parent:
             return
 
-        text_size = len(self.toPlainText())*5.5
+        text_size = len(self.toPlainText()) * 5.5
 
         if "widgets.itemNode" in self.parent.__str__():
-            self.setTextWidth(self.parent.width-2*4)
+            self.setTextWidth(self.parent.width - 2 * 4)
             self.setPos(self.posiX,self.posiY)
         elif "widgets.startNode" in self.parent.__str__():
-            self.setTextWidth(self.parent.width-2*4)
+            self.setTextWidth(self.parent.width - 2 * 4)
 
-            self.setPos(self.parent.width*0.5-text_size,
-                        self.parent.width*0.5-20)
+            self.setPos(self.parent.width * 0.5 - text_size,
+                        self.parent.width * 0.5 - 20)
         elif "widgets.groupNode" in self.parent.__str__():
-            self.setTextWidth(self.parent.width-2*2)
+            self.setTextWidth(self.parent.width - 2 * 2)
 
             self.setPos(self.parent.rect().x(),
-                        self.parent.rect().y()-25)
+                        self.parent.rect().y() - 25)
 
-
-    def mouseDoubleClickEvent(self,event):
+    def mouseDoubleClickEvent(self, event):
         """
         :meta private:
         """
 
-        _new_name = inputText("New name",
-                              "Group Name").out()
+        _new_name = inputText("New name", "Group Name").out()
 
         if not _new_name:
             return

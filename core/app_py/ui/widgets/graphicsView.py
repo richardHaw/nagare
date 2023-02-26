@@ -27,9 +27,7 @@ SOFTWARE.
 from __future__ import division
 from __future__ import print_function
 
-from PySide2.QtCore import (Qt,
-                            QPoint)
-
+from PySide2.QtCore import (Qt, QPoint)
 from .itemNode import Spawn as itemNode
 from PySide2.QtWidgets import QGraphicsView
 
@@ -51,8 +49,8 @@ class Spawn(QGraphicsView):
         graphicsView(self.scene_obj)
     """
 
-    def __init__(self,scene_obj):
-        super(Spawn,self).__init__()
+    def __init__(self, scene_obj):
+        super(Spawn, self).__init__()
         self.scene_obj = scene_obj
 
         self.__drag = False
@@ -67,23 +65,20 @@ class Spawn(QGraphicsView):
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
         self.setViewportUpdateMode(QGraphicsView.SmartViewportUpdate)
 
-
     def zoomExtents(self):
         """
         Fits the view to the bounding boxes of its items.
         """
 
-        self.fitInView(self.scene_obj.itemsBoundingRect(),
-                       Qt.KeepAspectRatio)
+        self.fitInView(self.scene_obj.itemsBoundingRect(), Qt.KeepAspectRatio)
 
-
-    def wheelEvent(self,event):
+    def wheelEvent(self, event):
         """
         :meta private:
         """
 
         inFactor = 1.25
-        outFactor = 1/inFactor
+        outFactor = 1 / inFactor
         oldPos = self.mapToScene(event.pos())
 
         if event.delta() > 0:
@@ -91,24 +86,22 @@ class Spawn(QGraphicsView):
         else:
             zoom_value = outFactor
 
-        self.scale(zoom_value,zoom_value)
+        self.scale(zoom_value, zoom_value)
         newPos = self.mapToScene(event.pos())
         _delta = newPos-oldPos
         self.__zoom = zoom_value
-        self.translate(_delta.x(),_delta.y())
+        self.translate(_delta.x(), _delta.y())
 
-
-    def mouseMoveEvent(self,event):
+    def mouseMoveEvent(self, event):
         """
         :meta private:
         """
 
         if self.__drag:
-            _delta = (self.mapToScene(event.pos()) -\
-                      self.mapToScene(self.__prevPos))*-1.0
+            _delta = (self.mapToScene(event.pos()) - self.mapToScene(self.__prevPos)) * -1.0
 
-            _center = QPoint(self.viewport().width()/2+_delta.x(),
-                             self.viewport().height()/2+_delta.y())
+            _center = QPoint(self.viewport().width() / 2 + _delta.x(),
+                             self.viewport().height() / 2 + _delta.y())
 
             _new_center = self.mapToScene(_center)
             self.centerOn(_new_center)
@@ -123,12 +116,11 @@ class Spawn(QGraphicsView):
                 if _nd.isSelected:
                     _nd.drawMe()
         try:
-            super(Spawn,self).mouseMoveEvent(event)
+            super(Spawn, self).mouseMoveEvent(event)
         except:
             pass
 
-
-    def mousePressEvent(self,event):
+    def mousePressEvent(self, event):
         """
         :meta private:
         """
@@ -143,10 +135,9 @@ class Spawn(QGraphicsView):
         elif event.button() == Qt.LeftButton:
             self.setDragMode(QGraphicsView.RubberBandDrag)
 
-        super(Spawn,self).mousePressEvent(event)
+        super(Spawn, self).mousePressEvent(event)
 
-
-    def mouseReleaseEvent(self,event):
+    def mouseReleaseEvent(self, event):
         """
         :meta private:
         """
@@ -157,4 +148,4 @@ class Spawn(QGraphicsView):
             self.__drag = False
             self.setCursor(Qt.ArrowCursor)
 
-        super(Spawn,self).mouseReleaseEvent(event)
+        super(Spawn, self).mouseReleaseEvent(event)

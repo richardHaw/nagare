@@ -28,7 +28,6 @@ from __future__ import division
 from __future__ import print_function
 
 import os
-from sys import version_info
 
 from PySide2.QtGui import QIcon
 from PySide2.QtWidgets import (QMenu,
@@ -54,8 +53,8 @@ class Spawn(QDialog):
 
     """
 
-    def __init__(self,parent=None):
-        super(Spawn,self).__init__(parent)
+    def __init__(self, parent=None):
+        super(Spawn, self).__init__(parent)
 
         self.winW = 1200
         self.winH = 600
@@ -66,7 +65,6 @@ class Spawn(QDialog):
         self._build()
 
         self.setStyleSheet(os.environ["NAGARE_GLOBAL_CSS"])
-
 
     def _build(self):
         """
@@ -105,7 +103,7 @@ class Spawn(QDialog):
 
         self.scene = graphicsScene()
         self.view = graphicsView(self.scene)
-        self.view.setSceneRect(100,50,self.winW,self.winH)
+        self.view.setSceneRect(100, 50, self.winW, self.winH)
         _central_layout = QVBoxLayout()
 
         # top
@@ -138,7 +136,7 @@ class Spawn(QDialog):
                                         _top_layout)
 
         # graph buttons
-        separator(False,_top_layout)
+        separator(False, _top_layout)
 
         self.zoom_btn = buttonTool(self._getIcon("zoom.png"),
                                    "Zoom Extents",
@@ -213,8 +211,7 @@ class Spawn(QDialog):
         self.tray.show()
         self.tray.setToolTip(os.environ["NAGARE_EDITOR_TITLE"])
 
-
-    def _getIcon(self,icon_name,qrc=True):
+    def _getIcon(self, icon_name, qrc=True):
         """
         Convenience method for getting .qrc resources or files.
 

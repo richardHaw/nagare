@@ -31,9 +31,8 @@ class Spawn(QFrame):
     def __str__(self):
         return __name__
 
-
-    def __init__(self,horizontal,parent_layout=None):
-        super(Spawn,self).__init__()
+    def __init__(self, horizontal, parent_layout=None):
+        super(Spawn, self).__init__()
 
         if horizontal:
             self.setFrameShape(QFrame.HLine)

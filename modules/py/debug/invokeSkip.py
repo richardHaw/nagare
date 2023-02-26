@@ -1,6 +1,7 @@
 from __future__ import print_function
 
-import os, logging
+import os
+import logging
 from core import resultObj
 
 

@@ -27,8 +27,6 @@ SOFTWARE.
 from __future__ import print_function
 
 import sys
-import json
-
 from PySide2.QtWidgets import (QDialog,
                                QTextEdit,
                                QVBoxLayout,
@@ -57,9 +55,8 @@ class Spawn(QDialog):
     def __str__(self):
         return __name__
 
-
-    def __init__(self,text_data=""):
-        super(Spawn,self).__init__()
+    def __init__(self, text_data=""):
+        super(Spawn, self).__init__()
 
         self.text_data = text_data
 
@@ -69,7 +66,6 @@ class Spawn(QDialog):
         self.setModal(True)
         self.show()
         self.exec_()
-
 
     def _build(self):
         """
@@ -85,7 +81,6 @@ class Spawn(QDialog):
 
         self.main_layout.addWidget(self.text_edit)
         self.main_layout.addWidget(self.button)
-
 
     def closeCmd(self):
         """

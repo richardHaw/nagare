@@ -11,6 +11,6 @@ def main(data_block={}):
     _log = data_block["logger"]
     _log.write(__name__)
     _log.write("Creating a sphere...")
-    cmds.sphere(r = 5)
+    cmds.sphere(radius=5)
 
     return data_block
