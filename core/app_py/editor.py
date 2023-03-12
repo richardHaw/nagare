@@ -41,7 +41,7 @@ from PySide2.QtWidgets import (QAction,
 from .ui.widgets import startNode
 from .ui.widgets import itemNode
 from .ui.widgets import groupNode
-from .main import Spawn as app_py
+from .main import Main as app_py
 from .ui.interface import Interface
 from .utilities import (nodeUtils,
                         logUtils,
