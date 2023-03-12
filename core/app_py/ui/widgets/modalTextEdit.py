@@ -34,7 +34,7 @@ from PySide2.QtWidgets import (QDialog,
                                QApplication)
 
 
-class Spawn(QDialog):
+class ModalTextEdit(QDialog):
     """
     Creates a modal dialog with text box.
     You have to call this with closeCmd() to get something meaningful.
@@ -56,7 +56,7 @@ class Spawn(QDialog):
         return __name__
 
     def __init__(self, text_data=""):
-        super(Spawn, self).__init__()
+        super(ModalTextEdit, self).__init__()
 
         self.text_data = text_data
 
@@ -97,6 +97,6 @@ class Spawn(QDialog):
 if __name__ == "__main__":
     debug = True
     top_app = QApplication(sys.argv)
-    ui = Text(None)
+    ui = ModalTextEdit(None)
     top_app.exec_()
     sys.exit(0)

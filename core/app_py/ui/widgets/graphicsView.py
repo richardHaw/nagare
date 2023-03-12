@@ -28,11 +28,11 @@ from __future__ import division
 from __future__ import print_function
 
 from PySide2.QtCore import (Qt, QPoint)
-from .itemNode import Spawn as itemNode
+from .itemNode import ItemNode
 from PySide2.QtWidgets import QGraphicsView
 
 
-class Spawn(QGraphicsView):
+class GraphicsView(QGraphicsView):
     """
     Creates an instance of QGraphicsView with reimplemented functions.
 
@@ -50,7 +50,7 @@ class Spawn(QGraphicsView):
     """
 
     def __init__(self, scene_obj):
-        super(Spawn, self).__init__()
+        super(GraphicsView, self).__init__()
         self.scene_obj = scene_obj
 
         self.__drag = False
@@ -110,13 +110,13 @@ class Spawn(QGraphicsView):
 
         if self.__pressed:
             for _nd in self.scene_obj.items():
-                if not type(_nd) is itemNode:
+                if not type(_nd) is ItemNode:
                     continue
 
                 if _nd.isSelected:
                     _nd.drawMe()
         try:
-            super(Spawn, self).mouseMoveEvent(event)
+            super(GraphicsView, self).mouseMoveEvent(event)
         except:
             pass
 
@@ -135,7 +135,7 @@ class Spawn(QGraphicsView):
         elif event.button() == Qt.LeftButton:
             self.setDragMode(QGraphicsView.RubberBandDrag)
 
-        super(Spawn, self).mousePressEvent(event)
+        super(GraphicsView, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
         """
@@ -148,4 +148,4 @@ class Spawn(QGraphicsView):
             self.__drag = False
             self.setCursor(Qt.ArrowCursor)
 
-        super(Spawn, self).mouseReleaseEvent(event)
+        super(GraphicsView, self).mouseReleaseEvent(event)

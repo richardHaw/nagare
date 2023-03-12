@@ -25,5 +25,5 @@ SOFTWARE.
 """
 
 
-from .app_py.nodeDummy import Spawn as nodeDummy
-from .app_py.resultObj import Spawn as resultObj
+from .app_py.nodeDummy import NodeDummy
+from .app_py.resultObj import ResultObj

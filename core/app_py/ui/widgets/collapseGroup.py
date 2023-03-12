@@ -30,12 +30,12 @@ from PySide2.QtWidgets import (QGroupBox)
 from PySide2.QtCore import Qt
 
 
-class Spawn(QGroupBox):
+class CollapseGroup(QGroupBox):
     def __str__(self):
         return __name__
 
     def __init__(self, title_text, label_height=20):
-        super(Spawn, self).__init__()
+        super(CollapseGroup, self).__init__()
 
         self.title_text = title_text
 

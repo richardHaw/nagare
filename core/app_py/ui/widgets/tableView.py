@@ -29,9 +29,9 @@ from PySide2.QtWidgets import (QTableView,
                                QHeaderView)
 
 
-class Spawn(QTableView):
+class TableView(QTableView):
     def __init__(self, model, sort_items=False):
-        super(Spawn, self).__init__()
+        super(TableView, self).__init__()
 
         self.model = model
         self.sort_items = False

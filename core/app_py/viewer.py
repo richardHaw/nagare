@@ -41,7 +41,7 @@ from .ui import widgets
 from .utilities import sceneUtils
 
 
-class Spawn(QDialog):
+class Viewer(QDialog):
     """
     **parameters**, **types**, **return** and **return types**
 
@@ -57,7 +57,7 @@ class Spawn(QDialog):
         return __name__
 
     def __init__(self, json_file, datablock=None):
-        super(Spawn, self).__init__()
+        super(Viever, self).__init__()
         self.json_file = json_file
         self.datablock = datablock
 
@@ -84,14 +84,14 @@ class Spawn(QDialog):
         #top
         _main_layout = QVBoxLayout(self)
 
-        self.scene = widgets.graphicsScene()
+        self.scene = widgets.GraphicsScene()
         self.scene.setMode("viewer")
-        self.view = widgets.graphicsView(self.scene)
+        self.view = widgets.GraphicsView(self.scene)
         self.view.setSceneRect(100, 50, self.winW, self.winH)
         _main_layout.addWidget(self.view)
 
         #bottom
-        widgets.separator(True, _main_layout)
+        widgets.Separator(True, _main_layout)
         _bottom_layout = QHBoxLayout(self)
         _main_layout.addLayout(_bottom_layout)
 
@@ -104,7 +104,7 @@ class Spawn(QDialog):
                                        "icons",
                                        "log.png"))
 
-        self.log_btn = widgets.buttonTool(_log_icon,
+        self.log_btn = widgets.ButtonTool(_log_icon,
                                           "Open log",
                                           _bottom_layout)
 
@@ -139,7 +139,7 @@ class Spawn(QDialog):
             print("Failed to build tree.")
             return
 
-    def feedback(self,msg):
+    def feedback(self, msg):
         """
         Updates the feedback text.
 
@@ -180,7 +180,7 @@ if __name__ == "__main__":
     from PySide2.QtWidgets import QApplication
 
     top_app = QApplication(sys.argv)
-    tester = Spawn(os.environ["NAGARE_DEFAULT_JSON"])
+    tester = Viewer(os.environ["NAGARE_DEFAULT_JSON"])
 
     top_app.exec_()
     sys.exit(0)

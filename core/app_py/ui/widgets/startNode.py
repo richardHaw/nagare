@@ -41,12 +41,12 @@ from PySide2.QtGui import (QPen,
 
 from PySide2.QtWidgets import QGraphicsEllipseItem
 
-from .socketNode import Spawn as socketNode
-from .clickLabel import Spawn as clickLabel
-from .modalTextEdit import Spawn as modalTextEdit
+from .socketNode import SocketNode
+from .clickLabel import ClickLabel
+from .modalTextEdit import ModalTextEdit
 
 
-class Spawn(QGraphicsEllipseItem):
+class StartNode(QGraphicsEllipseItem):
     """
     Starter node, can only have 1 in the graph.
     Contains data_block in the form of a dict.
@@ -77,7 +77,7 @@ class Spawn(QGraphicsEllipseItem):
         return __name__
 
     def __init__(self, name, posX=0, posY=0, scene=None):
-        super(Spawn,self).__init__()
+        super(StartNode, self).__init__()
         self.setAcceptHoverEvents(True)
         self.hovered = False
 
@@ -136,10 +136,10 @@ class Spawn(QGraphicsEllipseItem):
         self.setFlag(self.ItemIsSelectable)
         self.setToolTip(self.desc)
 
-        self.plug_out = socketNode(self, "out")
+        self.plug_out = SocketNode(self, "out")
         self.plug_in = None
 
-        self.label = clickLabel(self.name, self)
+        self.label = ClickLabel(self.name, self)
         self.label.setFont(QFont("Arial Black", 10))
         self.label.setDefaultTextColor(QColor("#000000"))
 
@@ -218,7 +218,7 @@ class Spawn(QGraphicsEllipseItem):
         if not self.scene.editable:
             return
 
-        super(Spawn,self).mouseMoveEvent(event)
+        super(StartNode, self).mouseMoveEvent(event)
 
         for _v in self.scene.views():
             # if _v.zoom > 1.0:
@@ -232,7 +232,7 @@ class Spawn(QGraphicsEllipseItem):
         :meta private:
         """
 
-        super(Spawn, self).mouseReleaseEvent(event)
+        super(StartNode, self).mouseReleaseEvent(event)
         posi = event.pos()
         posi = self.mapToScene(posi)
         self.posX = posi.x()
@@ -243,15 +243,13 @@ class Spawn(QGraphicsEllipseItem):
         :meta private:
         """
 
-        out_dict = None
-
         try:
             _data = json.dumps(self.data_block)
         except TypeError:
             pprint(self.data_block)
             return
 
-        new_data = modalTextEdit(_data).closeCmd()
+        new_data = ModalTextEdit(_data).closeCmd()
 
         try:
             out_dict = json.loads(new_data)

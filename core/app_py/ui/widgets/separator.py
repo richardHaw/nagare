@@ -27,12 +27,12 @@ SOFTWARE.
 from PySide2.QtWidgets import QFrame
 
 
-class Spawn(QFrame):
+class Separator(QFrame):
     def __str__(self):
         return __name__
 
     def __init__(self, horizontal, parent_layout=None):
-        super(Spawn, self).__init__()
+        super(Separator, self).__init__()
 
         if horizontal:
             self.setFrameShape(QFrame.HLine)

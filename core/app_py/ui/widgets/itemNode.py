@@ -40,12 +40,12 @@ from PySide2.QtWidgets import (QGraphicsRectItem,
                                QGraphicsTextItem,
                                QGraphicsPixmapItem)
 
-from .resultsDialog import Spawn as resultsDialog
-from .clickLabel import Spawn as clickLabel
-from .socketNode import Spawn as socketNode
+from .resultsDialog import ResultsDialog
+from .clickLabel import ClickLabel
+from .socketNode import SocketNode
 
 
-class Spawn(QGraphicsRectItem):
+class ItemNode(QGraphicsRectItem):
     """
     Inherits QGraphicsRectItem, used to create nodes.
     Nodes contain information as data_bloc using dict.
@@ -86,7 +86,7 @@ class Spawn(QGraphicsRectItem):
                  desc=def_desc,
                  uuid_str=None):
 
-        super(Spawn, self).__init__()
+        super(ItemNode, self).__init__()
 
         self.setAcceptHoverEvents(True)
         self.hovered = False
@@ -158,9 +158,9 @@ class Spawn(QGraphicsRectItem):
         self.setFlag(self.ItemIsMovable)
         self.setFlag(self.ItemIsSelectable)
 
-        self.plug_out = socketNode(self, "out")
-        self.plug_in = socketNode(self, "in")
-        self.label = clickLabel(self.name, self)
+        self.plug_out = SocketNode(self, "out")
+        self.plug_in = SocketNode(self, "in")
+        self.label = ClickLabel(self.name, self)
 
         self.state_label = QGraphicsTextItem(self)
         self.state_label.setPlainText("")
@@ -270,7 +270,6 @@ class Spawn(QGraphicsRectItem):
         if not str(self.uuid) == new_uuid:
             raise AttributeError("Failed to set UUID: {}".format(self.name))
 
-
     def setDirty(self, state="", msg="Processed"):
         """
         Sets the node dirty, changes the tooltip.
@@ -348,7 +347,7 @@ class Spawn(QGraphicsRectItem):
         if not self.scene.editable:
             return
 
-        super(Spawn, self).mouseMoveEvent(event)
+        super(ItemNode, self).mouseMoveEvent(event)
 
         for _v in self.scene.views():
             _v.update()
@@ -360,7 +359,7 @@ class Spawn(QGraphicsRectItem):
         :meta private:
         """
 
-        super(Spawn, self).mouseReleaseEvent(event)
+        super(ItemNode, self).mouseReleaseEvent(event)
 
         posi = event.pos()
         posi = self.mapToScene(posi)
@@ -372,7 +371,7 @@ class Spawn(QGraphicsRectItem):
         :meta private:
         """
 
-        _dw = resultsDialog(self.name,
+        _dw = ResultsDialog(self.name,
                             self.state,
                             self.desc,
                             "\n".join(self.messages),

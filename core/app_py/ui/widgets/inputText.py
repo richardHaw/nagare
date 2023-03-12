@@ -29,7 +29,7 @@ from __future__ import print_function
 from PySide2.QtWidgets import (QInputDialog, QLineEdit)
 
 
-class Spawn(QInputDialog):
+class InputText(QInputDialog):
     """
     Creates a modal dialog with text field.
 
@@ -43,7 +43,7 @@ class Spawn(QInputDialog):
     """
 
     def __init__(self, show_text="Enter text", def_txt=""):
-        super(Spawn, self).__init__()
+        super(InputText, self).__init__()
 
         self.show_text = show_text
         self.def_txt = def_txt

@@ -38,18 +38,18 @@ from PySide2.QtWidgets import (QLabel,
                                QPlainTextEdit)
 from PySide2.QtCore import Qt
 
-from .tableModel import Spawn as tableModel
-from .tableView import Spawn as tableView
-from .collapseGroup import Spawn as collapseGroup
+from .tableModel import TableModel
+from .tableView import TableView
+from .collapseGroup import CollapseGroup
 GLOBAL_CSS = os.getenv("NAGARE_GLOBAL_CSS")
 
 
-class Spawn(QDialog):
+class ResultsDialog(QDialog):
     def __str__(self):
         return __name__
 
     def __init__(self, node_name, status, desc="none", msg="", errors_list=[]):
-        super(Spawn, self).__init__()
+        super(ResultsDialog, self).__init__()
 
         self.node_name = node_name
         self.errors_list = self._processErrors(errors_list)
@@ -73,7 +73,7 @@ class Spawn(QDialog):
         self.setLayout(_main_layout)
 
         # information
-        _info_box = collapseGroup("Information:")
+        _info_box = CollapseGroup("Information:")
         _info_box.setCheckable(False)
         _info_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         _main_layout.addWidget(_info_box)
@@ -126,7 +126,7 @@ class Spawn(QDialog):
         _spec_layout.addItem(_spacer1)
 
         # description
-        _desc_box = collapseGroup("Description:")
+        _desc_box = CollapseGroup("Description:")
         _desc_box.setChecked(False)
         _main_layout.addWidget(_desc_box)
 
@@ -139,7 +139,7 @@ class Spawn(QDialog):
         _desc_box.setLayout(_desc_layout)
 
         # messages
-        _memo_box = collapseGroup("Messages:")
+        _memo_box = CollapseGroup("Messages:")
         _main_layout.addWidget(_memo_box)
 
         self._message_txt = QPlainTextEdit(self)
@@ -151,14 +151,14 @@ class Spawn(QDialog):
         _memo_box.setLayout(_memo_layout)
 
         # table
-        _table_box = collapseGroup("Errors:")
+        _table_box = CollapseGroup("Errors:")
         _main_layout.addWidget(_table_box)
 
-        self.tableModel = tableModel(self,
+        self.tableModel = TableModel(self,
                                      self.errors_list,
                                      self.headers)
 
-        self.tableView = tableView(self.tableModel)
+        self.tableView = TableView(self.tableModel)
         self.tableView.setMaximumHeight(300)
         _hori_head = self.tableView.horizontalHeader()
         _hori_head.setSectionResizeMode(0, QHeaderView.Fixed)
@@ -170,7 +170,7 @@ class Spawn(QDialog):
         _table_box.setLayout(_table_layout)
 
         # button
-        _button_box = collapseGroup("")
+        _button_box = CollapseGroup("")
         _button_box.setFixedHeight(65)
         _button_box.setCheckable(False)
         _main_layout.addWidget(_button_box)
@@ -244,5 +244,5 @@ if __name__ == "__main__":
             {"item": "baba_folder", "type": "FolderItem",  "reason": "Japanese name, should be ASCII only"},
             ]
 
-    sp = Spawn("babalu", "error", "my description", "", errs)
+    sp = ResultsDialog("babalu", "error", "my description", "", errs)
     sys.exit(0)

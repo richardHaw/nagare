@@ -38,7 +38,7 @@ from .startNode import Spawn as startNode
 from .groupNode import Spawn as groupNode
 
 
-class Spawn(QGraphicsScene):
+class GraphicsScene(QGraphicsScene):
     """
     Creates an instance of QGraphicsScene with reimplemented functions.
     Takes no arguements.
@@ -54,7 +54,7 @@ class Spawn(QGraphicsScene):
     """
 
     def __init__(self, mode="editor"):
-        super(Spawn, self).__init__()
+        super(GraphicsScene, self).__init__()
 
         _grid_color = QColor(25, 25, 25, 150)
         self.setBackgroundBrush(QBrush(_grid_color, Qt.CrossPattern))

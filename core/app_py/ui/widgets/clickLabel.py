@@ -29,10 +29,10 @@ from __future__ import print_function
 from PySide2.QtGui import (QFont, QColor)
 
 from PySide2.QtWidgets import QGraphicsTextItem
-from .inputText import Spawn as inputText
+from .inputText import InputText
 
 
-class Spawn(QGraphicsTextItem):
+class ClickLabel(QGraphicsTextItem):
     """
     Creates clickable text label widget.
 
@@ -61,7 +61,7 @@ class Spawn(QGraphicsTextItem):
         self.posiX = posiX
         self.posiY = posiY
 
-        super(Spawn, self).__init__(self.parent)
+        super(ClickLabel, self).__init__(self.parent)
         self.initItem()
 
     def initItem(self):
@@ -108,7 +108,7 @@ class Spawn(QGraphicsTextItem):
         :meta private:
         """
 
-        _new_name = inputText("New name", "Group Name").out()
+        _new_name = InputText("New name", "Group Name").out()
 
         if not _new_name:
             return

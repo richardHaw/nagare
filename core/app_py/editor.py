@@ -42,13 +42,13 @@ from .ui.widgets import startNode
 from .ui.widgets import itemNode
 from .ui.widgets import groupNode
 from .main import Spawn as app_py
-from .ui.interface import Spawn as interface
+from .ui.interface import Interface
 from .utilities import (nodeUtils,
                         logUtils,
                         sceneUtils)
 
 
-class Spawn(object):
+class Editor(object):
     """
     Runs the app.
 
@@ -104,7 +104,7 @@ class Spawn(object):
                  data_block=dict(),
                  parent=None):
 
-        super(Spawn, self).__init__()
+        super(Editor, self).__init__()
 
         self.software = software
         self.language = language
@@ -119,7 +119,7 @@ class Spawn(object):
         self.strict = False
         self.propagate = True
 
-        self.ui = interface(parent)
+        self.ui = Interface(parent)
 
         if self.modules_root not in sys.path:
             sys.path.append(self.modules_root)
@@ -298,7 +298,7 @@ class Spawn(object):
         if self.starter is None:
             raise AssertionError("No starter found.")
 
-        self._feedback("Cleared graph.",1)
+        self._feedback("Cleared graph.", 1)
 
     def _openTree(self):
         """
@@ -386,7 +386,7 @@ class Spawn(object):
                 os.startfile(self.log_file)
             else:
                 from subprocess import call as _sub_call
-                _sub_call(["open",self.log_file])
+                _sub_call(["open", self.log_file])
 
             self._feedback("Opening log: {}".format(self.log_file))
             return
@@ -588,11 +588,11 @@ class Spawn(object):
             return
 
         _counter = 1
-        _name = _text+str(_counter).zfill(2)
+        _name = _text + str(_counter).zfill(2)
 
         while not nodeUtils.uniqueName(self.ui.scene, _name):
             _counter += 1
-            _name = _text+str(_counter).zfill(2)
+            _name = _text + str(_counter).zfill(2)
 
         _whats_this = tree_item.whatsThis(0)
         _desc = nodeUtils.getDescription(_whats_this)
@@ -614,7 +614,7 @@ if __name__ == "__main__":
     import config
     top_app = QApplication(sys.argv)
 
-    hApp = Spawn("generic",
+    hApp = Editor("generic",
                  os.environ["NAGARE_LANGUAGE"],
                  data_block=config.TEST_BLOCK)
 

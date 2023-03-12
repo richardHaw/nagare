@@ -32,10 +32,10 @@ import uuid
 from PySide2.QtGui import (QColor, QBrush)
 from PySide2.QtCore import QRectF
 from PySide2.QtWidgets import QGraphicsRectItem
-from .clickLabel import Spawn as clickLabel
+from .clickLabel import ClickLabel
 
 
-class Spawn(QGraphicsRectItem):
+class GroupNode(QGraphicsRectItem):
     """
     Inherits QGraphicsRectItem, used to group nodes.
     Parents the listed nodes to this widget.
@@ -57,7 +57,7 @@ class Spawn(QGraphicsRectItem):
         return __name__
 
     def __init__(self, scene, group_widgets, name="New Group"):
-        super(Spawn, self).__init__()
+        super(GroupNode, self).__init__()
 
         self.scene = scene
         self.group_widgets = group_widgets
@@ -83,7 +83,7 @@ class Spawn(QGraphicsRectItem):
         self.setZValue(-2)
 
         self.setupBgColor(self._default_rgba)
-        self.label = clickLabel(self.name, self)
+        self.label = ClickLabel(self.name, self)
 
     def mouseMoveEvent(self, event):
         """
@@ -93,7 +93,7 @@ class Spawn(QGraphicsRectItem):
         if not self.scene.editable:
             return
 
-        super(Spawn, self).mouseMoveEvent(event)
+        super(GroupNode, self).mouseMoveEvent(event)
 
     def parentWidgetsList(self, widgets_list):
         """
@@ -137,7 +137,7 @@ class Spawn(QGraphicsRectItem):
         Retranslates the rect and repositions the label.
         """
 
-        self.custom_rect = Spawn.getBogusBBox(self.group_widgets)
+        self.custom_rect = GroupNode.getBogusBBox(self.group_widgets)
         self.setRect(self.custom_rect)
         self.width = self.custom_rect.width()
         self.height = self.custom_rect.height()
@@ -204,10 +204,10 @@ class Spawn(QGraphicsRectItem):
         _factor_y = 1.2
 
         widgets_list.sort(key=lambda wid: wid.x())
-        _bogus_x = Spawn.mergeRectsList([widgets_list[0], widgets_list[-1]])
+        _bogus_x = GroupNode.mergeRectsList([widgets_list[0], widgets_list[-1]])
 
         widgets_list.sort(key=lambda wid: wid.y())
-        _bogus_y = Spawn.mergeRectsList([widgets_list[0], widgets_list[-1]])
+        _bogus_y = GroupNode.mergeRectsList([widgets_list[0], widgets_list[-1]])
         _bogus_xy = _bogus_x.united(_bogus_y)
 
         _offset_w = _bogus_xy.width()*_factor_x

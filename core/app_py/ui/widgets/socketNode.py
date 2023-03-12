@@ -40,10 +40,10 @@ from PySide2.QtGui import (QPen,
                            QPainterPath)
 
 from PySide2.QtWidgets import QGraphicsEllipseItem
-from .wireNode import Spawn as wireNode
+from .wireNode import WireNode
 
 
-class Spawn(QGraphicsEllipseItem):
+class SocketNode(QGraphicsEllipseItem):
     """
     Spawn for wire connection, to be parented to nodes.
     You can only have 1 connection for "in" type sockets.
@@ -68,7 +68,7 @@ class Spawn(QGraphicsEllipseItem):
     def __init__(self, parent, socketType):
         self.parent = parent
         self.socketType = socketType
-        super(Spawn, self).__init__(self.parent)
+        super(SocketNode, self).__init__(self.parent)
 
         self.hovered = False
         self.new_line = None
@@ -201,11 +201,11 @@ class Spawn(QGraphicsEllipseItem):
             pointA = self.mapToScene(pointA)
             pointB = self.mapToScene(event.pos())
 
-            self.new_line = wireNode(pointA, pointB)
+            self.new_line = WireNode(pointA, pointB)
             self.out_wires.append(self.new_line)
             self.scene().addItem(self.new_line)
         else:
-            super(Spawn, self).mousePressEvent(event)
+            super(SocketNode, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         """
@@ -222,7 +222,7 @@ class Spawn(QGraphicsEllipseItem):
             self.new_line.pointB = pointB
             return
 
-        super(Spawn, self).mouseMoveEvent(event)
+        super(SocketNode, self).mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
         """
@@ -230,7 +230,7 @@ class Spawn(QGraphicsEllipseItem):
         """
 
         _under_type = self._item_under.socketType
-        if not type(self._item_under) is Spawn:
+        if not type(self._item_under) is SocketNode:
             self.killWire(self.new_line)
             print(datetime.now(), "Dropped under a non-socket.")
             return
@@ -247,13 +247,13 @@ class Spawn(QGraphicsEllipseItem):
                 print(datetime.now(), "Killed old wire.", _in)
 
         if self.socketType == "out" and _under_type == "in":
-            Spawn.connectWire(self.new_line, self, self._item_under)
+            SocketNode.connectWire(self.new_line, self, self._item_under)
             print(datetime.now(), "Connected new wire.")
 
             if not self._item_under.parentItem().node_in:
                 raise RuntimeError("Connection failed!")
 
-        super(Spawn, self).mouseReleaseEvent(event)
+        super(SocketNode, self).mouseReleaseEvent(event)
 
     def getCenter(self):
         """
@@ -285,7 +285,6 @@ class Spawn(QGraphicsEllipseItem):
         self.scene().removeItem(kill_this_wire)
         print(kill_this_wire)
         print(datetime.now(), "Remove wire from scene", kill_this_wire)
-
         self.in_wire = None
 
     def _setParentNodeIn(self, node_to):

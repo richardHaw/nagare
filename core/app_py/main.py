@@ -32,12 +32,12 @@ import importlib
 
 from traceback import format_exc
 from pprint import pformat
-from .resultObj import Spawn as result_obj
-from .nodeDummy import Spawn as node_dummy
+from .resultObj import ResultObj
+from .nodeDummy import NodeDummy
 from .utilities import logUtils
 
 
-class Spawn(object):
+class Main(object):
     """
     This creates an app object for python.
     You use this for running Haw-dini with no UI.
@@ -45,7 +45,7 @@ class Spawn(object):
     """
 
     def __init__(self):
-        super(Spawn, self).__init__()
+        super(Main, self).__init__()
         self.nodes_all = list()
         self.strict = False
         self.propagate = True
@@ -89,7 +89,7 @@ class Spawn(object):
         self.log_obj.info("Running JSON: {}".format(json_path))
         self.nodes_all = list()
 
-        _datas = Spawn.getDataFromJson(json_path)
+        _datas = Main.getDataFromJson(json_path)
         _nodes_data = _datas.get("nodes", _datas)
         self._recurser(_nodes_data, data_block)
 
@@ -121,7 +121,7 @@ class Spawn(object):
 
         _run_result = None
         self.log_obj.info("=" * 88)
-        _dummy = node_dummy(node_data)
+        _dummy = NodeDummy(node_data)
 
         self.log_obj.info("Running: {}".format(_dummy.name))
         _dummy.messages.append("{}'s report:".format(_dummy.name))
@@ -156,9 +156,9 @@ class Spawn(object):
             self.log_obj.error("=" * 88)
 
         # used for safety
-        if "resultObj" not in repr(_run_result) and not isinstance(_run_result,dict) and _run_result is None:
+        if "resultObj" not in repr(_run_result) and not isinstance(_run_result, dict) and _run_result is None:
             _tp = "{} returned {}".format(_dummy.name, str(type(_run_result)))
-            _run_result = result_obj("error")
+            _run_result = ResultObj("error")
             _run_result.addMessage(_tp)
             _run_result.addMessage(pformat(_copy_block, indent=4))
             _run_result.addMessage("Created new error instance.")
@@ -194,7 +194,7 @@ class Spawn(object):
             # don't run down-stream nodes
             return _dummy
 
-        if not isinstance(_run_result,dict):
+        if not isinstance(_run_result, dict):
             raise TypeError("Escaped results filtering: {}".format(_dummy.name))
 
         # run out-nodes
@@ -223,8 +223,6 @@ class Spawn(object):
 
     @staticmethod
     def getDataFromJson(json_file):
-        out = None
-
         if not os.path.exists(json_file):
             raise IOError("File not found: {}".format(json_file))
 
@@ -235,5 +233,5 @@ class Spawn(object):
 
 
 if __name__ == "__main__":
-    dummy = Spawn()
+    dummy = Main()
     dummy.runJson(os.environ["NAGARE_DEFAULT_JSON"], os.environ["TEST_BLOCK"])

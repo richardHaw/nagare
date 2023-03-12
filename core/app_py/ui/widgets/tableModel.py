@@ -29,7 +29,7 @@ from PySide2.QtCore import SIGNAL
 from PySide2.QtCore import QAbstractTableModel
 
 
-class Spawn(QAbstractTableModel):
+class TableModel(QAbstractTableModel):
     def __init__(self, parent_obj, items_list, headers, *args):
         QAbstractTableModel.__init__(self, parent_obj, *args)
         self.items_list = items_list

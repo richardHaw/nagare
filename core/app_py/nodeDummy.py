@@ -27,7 +27,7 @@ SOFTWARE.
 from __future__ import print_function
 
 
-class Spawn(object):
+class NodeDummy(object):
     """
     Creates a dummy object for app_py.main to run with.
 

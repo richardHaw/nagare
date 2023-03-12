@@ -27,7 +27,7 @@ SOFTWARE.
 from __future__ import print_function
 
 
-class Spawn(object):
+class ResultObj(object):
     def __str__(self):
         return __name__
 
@@ -67,7 +67,7 @@ class Spawn(object):
 
     def appendMessages(self, new_messages):
         for m in new_messages:
-            addMessage(m)
+            self.addMessage(m)
 
     def getMessages(self):
         return self._messages
@@ -84,8 +84,8 @@ class Spawn(object):
 
     def _getErrorDict(self, err_tup):
         if len(err_tup) != 3:
-            raise ValueError("Must exactly be 3 items:",err_tup)
+            raise ValueError("Must exactly be 3 items:", err_tup)
 
-        return {"item":err_tup[0],
-                "type":err_tup[1],
-                "reason":err_tup[2]}
+        return {"item": err_tup[0],
+                "type": err_tup[1],
+                "reason": err_tup[2]}

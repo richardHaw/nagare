@@ -24,19 +24,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from .buttonTool import Spawn as buttonTool
-from .clickLabel import Spawn as clickLabel
-from .collapseGroup import Spawn as collapseGroup
-from .graphicsScene import Spawn as graphicsScene
-from .graphicsView import Spawn as graphicsView
-from .groupNode import Spawn as groupNode
-from .inputText import Spawn as inputText
-from .itemNode import Spawn as itemNode
-from .modalTextEdit import Spawn as modalTextEdit
-from .resultsDialog import Spawn as resultsDialog
-from .separator import Spawn as separator
-from .socketNode import Spawn as socketNode
-from .startNode import Spawn as startNode
-from .tableModel import Spawn as tableModel
-from .tableView import Spawn as tableView
-from .wireNode import Spawn as wireNode
+from .buttonTool import ButtonTool
+from .clickLabel import ClickLabel
+from .collapseGroup import CollapseGroup
+from .graphicsScene import GraphicsScene
+from .graphicsView import GraphicsView
+from .groupNode import GroupNode
+from .inputText import InputText
+from .itemNode import ItemNode
+from .modalTextEdit import ModalTextEdit
+from .resultsDialog import ResultsDialog
+from .separator import Separator
+from .socketNode import SocketNode
+from .startNode import StartNode
+from .tableModel import TableModel
+from .tableView import TableView
+from .wireNode import WireNode

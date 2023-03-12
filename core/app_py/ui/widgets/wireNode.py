@@ -39,7 +39,7 @@ from PySide2.QtCore import (Qt,
 from PySide2.QtWidgets import QGraphicsPathItem
 
 
-class Spawn(QGraphicsPathItem):
+class WireNode(QGraphicsPathItem):
     """
     Spawn connecting nodes to each other.
     Created by "pulling" a socket.
@@ -67,13 +67,11 @@ class Spawn(QGraphicsPathItem):
     _defaultA = QPointF(0.0, 0.0)
     _defaultB = QPointF(50.0, 50.0)
 
-
     def __str__(self):
         return __name__
 
-
-    def __init__(self,pointA=_defaultA,pointB=_defaultB):
-        super(Spawn, self).__init__()
+    def __init__(self, pointA=_defaultA, pointB=_defaultB):
+        super(WireNode, self).__init__()
 
         self._pointA = pointA
         self._pointB = pointB
@@ -131,12 +129,12 @@ class Spawn(QGraphicsPathItem):
         if "socketNode" not in str(type(_to_socket)):
             self.pointB = self.target.getCenter()
 
-            Spawn.removeFromSocket(self.scene(), self, self.old_target)
+            WireNode.removeFromSocket(self.scene(), self, self.old_target)
             return
 
         if _to_socket.in_wire:
             _old_wire = _to_socket.parentItem().plug_in.in_wire
-            Spawn.removeFromSocket(self.scene(), _old_wire, _to_socket)
+            WireNode.removeFromSocket(self.scene(), _old_wire, _to_socket)
 
         self.old_target.parentItem().plug_in.in_wire = None
         self.target = _to_socket
