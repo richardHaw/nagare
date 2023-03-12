@@ -33,14 +33,16 @@ import ctypes
 from random import randrange
 from pprint import pprint
 
-from PySide2.QtCore import (Qt,Slot)
+from PySide2.QtCore import (Qt,
+                            Slot)
+
 from PySide2.QtWidgets import (QAction,
                                QApplication,
                                QTreeWidgetItem)
 
-from .ui.widgets import startNode
-from .ui.widgets import itemNode
-from .ui.widgets import groupNode
+from ui import StartNode
+from ui import ItemNode
+from ui import GroupNode
 from .main import Main as app_py
 from .ui.interface import Interface
 from .utilities import (nodeUtils,
@@ -418,7 +420,7 @@ class Editor(object):
                                    self.tree_json,
                                    self.data_block)
 
-        if not isinstance(_g, startNode):
+        if not isinstance(_g, StartNode):
             self.clearTree()
             self._feedback(_g, 2)
             return
@@ -476,14 +478,14 @@ class Editor(object):
         Must have more than 1 node_items selected.
         """
 
-        _widgets = [_s for _s in sceneUtils.getSelected(self.ui.scene) if isinstance(_s, itemNode)]
+        _widgets = [_s for _s in sceneUtils.getSelected(self.ui.scene) if isinstance(_s, ItemNode)]
 
         if len(_widgets) < 2:
             self._feedback("Select more than 1 node to group...", 1)
             self._alert("Selected more nodes...", "Nagare Alert")
             return
 
-        groupNode(self.ui.scene, _widgets)
+        GroupNode(self.ui.scene, _widgets)
         self._feedback("Grouped {} nodes...".format(len(_widgets)))
 
     def _alignTree(self, is_all=False):
@@ -503,7 +505,7 @@ class Editor(object):
         if not _sels:
             return
 
-        _gps = [g for g in self.ui.scene.items() if isinstance(g, groupNode)]
+        _gps = [g for g in self.ui.scene.items() if isinstance(g, GroupNode)]
 
         if not is_all:
             for _sl in _sels:
@@ -598,7 +600,7 @@ class Editor(object):
         _desc = nodeUtils.getDescription(_whats_this)
         _icon = nodeUtils.getIconPath(_whats_this)
 
-        new_node = itemNode(_name,
+        new_node = ItemNode(_name,
                             self.ui.winW/2+randrange(-50, 50),
                             self.ui.winH/2+randrange(-50, 50),
                             self.ui.scene,
