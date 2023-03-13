@@ -32,6 +32,8 @@ TEST_BLOCK = dict()
 
 def setup():
     """
+    # >>> setup()
+
     **NAGARE_PYVER** - *The system's Python version.*
 
     **NAGARE_EDITOR_TITLE** - *The system's Python version.*
@@ -59,8 +61,6 @@ def setup():
     **TEST_BLOCK** - *default datablock for testing.*
 
     **NAGARE_LOG** - *Default handler name.*
-
-    >>> setup()
 
     """
     global TEST_BLOCK
@@ -138,3 +138,7 @@ def setup():
                        "who" : "Richard Haw"})
 
     print("Configs initiated...")
+
+
+if __name__ == "__main__":
+    setup()

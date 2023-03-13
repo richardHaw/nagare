@@ -40,14 +40,14 @@ from PySide2.QtWidgets import (QAction,
                                QApplication,
                                QTreeWidgetItem)
 
-from ui import StartNode
-from ui import ItemNode
-from ui import GroupNode
-from .main import Main as app_py
-from .ui.interface import Interface
-from .utilities import (nodeUtils,
-                        logUtils,
-                        sceneUtils)
+from ui.widgets import StartNode
+from ui.widgets import ItemNode
+from ui.widgets import GroupNode
+from main import Main as pyApp
+from ui.interface import Interface
+from utilities import (nodeUtils,
+                       logUtils,
+                       sceneUtils)
 
 
 class Editor(object):
@@ -102,7 +102,7 @@ class Editor(object):
     def __init__(self,
                  software,
                  language,
-                 tree_json=os.environ["NAGARE_DEFAULT_JSON"],
+                 tree_json=os.getenv("NAGARE_DEFAULT_JSON"),
                  data_block=dict(),
                  parent=None):
 
@@ -112,11 +112,11 @@ class Editor(object):
         self.language = language
         self.tree_json = tree_json
         self.data_block = data_block
-        self.modules_root = os.environ["NAGARE_MOD_PATH"]
-        self.title_text = os.environ["NAGARE_EDITOR_TITLE"]
+        self.modules_root = os.getenv("NAGARE_MOD_PATH")
+        self.title_text = os.getenv("NAGARE_EDITOR_TITLE")
         self.starter = None
-        self.log_dir = os.environ["NAGARE_LOG_PATH"]
-        self.logger_name = os.environ["NAGARE_LOG"]
+        self.log_dir = os.getenv("NAGARE_LOG_PATH")
+        self.logger_name = os.getenv("NAGARE_LOG")
         self.log_file = ""
         self.strict = False
         self.propagate = True
@@ -440,7 +440,7 @@ class Editor(object):
         """
 
         self.setupLog()
-        _dummy = app_py()
+        _dummy = pyApp()
         _dummy.strict = self.strict
         _dummy.propagate = self.propagate
         _copy_block = self.data_block.copy()
@@ -617,8 +617,8 @@ if __name__ == "__main__":
     top_app = QApplication(sys.argv)
 
     hApp = Editor("generic",
-                 os.environ["NAGARE_LANGUAGE"],
-                 data_block=config.TEST_BLOCK)
+                  os.getenv("NAGARE_LANGUAGE"),
+                  data_block=config.TEST_BLOCK)
 
     hApp.show()
     top_app.exec_()

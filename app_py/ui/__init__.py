@@ -23,20 +23,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-
-from widgets.buttonTool import ButtonTool
-from widgets.clickLabel import ClickLabel
-from widgets.collapseGroup import CollapseGroup
-from widgets.graphicsScene import GraphicsScene
-from widgets.graphicsView import GraphicsView
-from widgets.groupNode import GroupNode
-from widgets.inputText import InputText
-from widgets.itemNode import ItemNode
-from widgets.modalTextEdit import ModalTextEdit
-from widgets.resultsDialog import ResultsDialog
-from widgets.separator import Separator
-from widgets.socketNode import SocketNode
-from widgets.startNode import StartNode
-from widgets.tableModel import TableModel
-from widgets.tableView import TableView
-from widgets.wireNode import WireNode

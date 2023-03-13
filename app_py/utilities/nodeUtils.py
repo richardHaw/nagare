@@ -32,18 +32,11 @@ import os
 import sys
 import uuid
 import logging
-import importlib
 
-from time import sleep
-from pprint import pformat
-from traceback import (print_exc,format_exc)
 from PySide2.QtWidgets import QApplication
-from ...app_py.ui import widgets
+from app_py.ui import widgets
 
-if sys.version_info[0] > 2:
-    from importlib import reload as imp_r
-
-NAGARE_LOG = logging.getLogger(os.environ["NAGARE_LOG"])
+NAGARE_LOG = logging.getLogger(os.getenv("NAGARE_LOG"))
 NAGARE_LOG.propagate = True
 
 
@@ -128,14 +121,14 @@ def getIconPath(mod_path):
                                 "icons",
                                 "_default.png")
 
-    for _icn in [_icon_path,_branch_path,os.environ["NAGARE_DEFAULT_ICON"]]:
+    for _icn in (_icon_path, _branch_path, os.getenv("NAGARE_DEFAULT_ICON")):
         if os.path.exists(_icn):
             return _icn
 
     print("No icons found.")
 
 
-def getPointer(node_data,scene_obj):
+def getPointer(node_data, scene_obj):
     """
     Used to get a node's pointer using its name and uuid.
     Will search a scene's items (ALL).
@@ -156,7 +149,7 @@ def getPointer(node_data,scene_obj):
     """
 
     all_nodes = [i for i in scene_obj.items()
-                 if type(i) in [widgets.itemNode,widgets.startNode]]
+                 if type(i) in [widgets.itemNode, widgets.startNode]]
 
     for nd in all_nodes:
         if nd.name != node_data["name"]:
@@ -166,28 +159,24 @@ def getPointer(node_data,scene_obj):
         nd_uuid = node_data["uuid"]
 
         if sys.version_info[0] > 2:
-            bad_t = not isinstance(nd_uuid,str)\
-                and not isinstance(nd_uuid,uuid.UUID)
+            bad_t = not isinstance(nd_uuid, str) and not isinstance(nd_uuid, uuid.UUID)
         else:
-            bad_t = not isinstance(nd_uuid,str)\
-                and not isinstance(nd_uuid,unicode)\
-                and not isinstance(nd_uuid,uuid.UUID)
+            bad_t = not isinstance(nd_uuid, str)\
+                    and not isinstance(nd_uuid, unicode)\
+                    and not isinstance(nd_uuid, uuid.UUID)
 
         if bad_t:
             raise TypeError("Not a str, unicode or uuid.UUID",
                             nd_uuid,
                             type(nd_uuid))
 
-        if not isinstance(nd_uuid,uuid.UUID):
+        if not isinstance(nd_uuid, uuid.UUID):
             nd_uuid = uuid.UUID(nd_uuid)
 
         if str(nd.uuid) != str(nd_uuid):
             continue
 
         return nd
-
-    # done
-    return
 
 
 def refresh(node_obj):
@@ -209,7 +198,7 @@ def refresh(node_obj):
 
 def printTree(node_obj):
     """
-    Method to print-out a node's.
+    Method to print out a node's.
     Use this to run the graph or save it.
     This can be set to recursive.
 
@@ -243,7 +232,7 @@ def printTree(node_obj):
     """
 
     # sleep(0.01)
-    print("printTree:",node_obj.name)
+    print("printTree:", node_obj.name)
 
     out_dict = dict()
     out_dict["name"] = node_obj.name
@@ -258,21 +247,21 @@ def printTree(node_obj):
     out_dict["in_node"] = node_obj.node_in
 
     # get in-nodes if itemNode
-    if isinstance(node_obj,widgets.itemNode):
+    if isinstance(node_obj, widgets.itemNode):
         if node_obj.node_in:
             out_dict["in_node"] = node_obj.node_in
 
     # to uuid
     if out_dict["in_node"]:
         tmp_id = out_dict["in_node"].get("uuid")
-        if isinstance(tmp_id,uuid.UUID):
+        if isinstance(tmp_id, uuid.UUID):
             out_dict["in_node"]["uuid"] = str(tmp_id)
 
     # run out-nodes
     for nd_out in node_obj.nodes_out:
-        next_node = getPointer(nd_out,node_obj.scene)
+        next_node = getPointer(nd_out, node_obj.scene)
         if not next_node:
-            e = " - Out-node not found",nd_out.get("name","")
+            e = " - Out-node not found", nd_out.get("name","")
             print(nd_out)
             print(e)
             raise AttributeError(e)
@@ -284,7 +273,7 @@ def printTree(node_obj):
     return out_dict
 
 
-def uniqueName(scene_obj,node_name):
+def uniqueName(scene_obj, node_name):
     """
     Used for checking if a node with the same name exists.
 
@@ -305,7 +294,7 @@ def uniqueName(scene_obj,node_name):
     """
 
     for _nd in scene_obj.items():
-        if not "itemNode" in _nd.__str__():
+        if "itemNode" not in _nd.__str__():
             continue
 
         if _nd.name == node_name:

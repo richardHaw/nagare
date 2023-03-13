@@ -24,8 +24,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from __future__ import print_function
-from .main import *
+from PySide2.QtWidgets import QToolButton
 
 
-setup()
+class ButtonTool(QToolButton):
+    def __str__(self):
+        return __name__
+
+    def __init__(self, icon_path, tip_text, parent_layout=None):
+        super(ButtonTool, self).__init__()
+
+        self.setToolTip(tip_text)
+        self.setAutoRaise(True)
+        self.setIcon(icon_path)
+
+        if parent_layout:
+            parent_layout.addWidget(self)

@@ -26,25 +26,30 @@ SOFTWARE.
 
 from __future__ import print_function
 
-print("Starting Nagare...")
-
 import os
 import sys
 
 from PySide2.QtWidgets import QApplication
 
-if sys.version_info[0] > 2:
-    from .core import configs
-    from .core.app_py.editor import Spawn as editor
-    from .core.app_py.viewer import Spawn as viewer
-    from .core.app_py.utilities import nodeUtils
-    from .core.app_py.main import Spawn as app_py
-else:
-    from core import configs
-    from core.app_py.editor import Spawn as editor
-    from core.app_py.viewer import Spawn as viewer
-    from core.app_py.utilities import nodeUtils
-    from core.app_py.main import Spawn as app_py
+# if sys.version_info[0] is not 2:
+#     from app_py import configs
+#     from app_py.editor import Editor as EditorObj
+#     from app_py.viewer import Viewer as ViewerObj
+#     from app_py.utilities import nodeUtils
+#     from app_py.main import Main
+# else:
+#     from app_py import configs
+#     from app_py.editor import Editor as EditorObj
+#     from app_py.viewer import Viewer as ViewerObj
+#     from app_py.utilities import nodeUtils
+#     from app_py.main import Main
+from app_py import configs
+from app_py.editor import Editor as EditorObj
+from app_py.viewer import Viewer as ViewerObj
+from app_py.utilities import nodeUtils
+from app_py.main import Main
+
+print("Starting Nagare...")
 
 
 def setDefaults():
@@ -80,7 +85,7 @@ def setDefaults():
 
     **PROPAGATE** - *Propagate datablock information.*
 
-    >>> nagare.setDefaults()
+    # >>> nagare.setDefaults()
 
     """
 
@@ -96,15 +101,15 @@ def setStrict(val="1"):
     :param val: Sets strict mode on or off.
     :type val: bool
 
-    >>> nagare.setStrict(True)
+    # >>> nagare.setStrict(True)
 
     """
 
-    if val not in ["0","1"]:
+    if val not in ("0", "1"):
         raise ValueError('NAGARE_STRICT should be string "0" or "1".')
 
     os.environ["NAGARE_STRICT"] = str(val)
-    print("Strict error checking set to:",val)
+    print("Strict error checking set to:", val)
 
 
 def setPropagate(val="1"):
@@ -116,7 +121,7 @@ def setPropagate(val="1"):
     :param val: Sets datablock propagation on or off.
     :type val: int
 
-    >>> nagare.setPropagate(True)
+    # >>> nagare.setPropagate(True)
 
     """
 
@@ -137,7 +142,7 @@ def setLanguage(lang_str="py"):
     :param lang_str: the language to be used. Valid: py, jsx, lua.
     :type lang_str: str
 
-    >>> nagare.setLanguage("jsx")
+    # >>> nagare.setLanguage("jsx")
 
     """
 
@@ -149,7 +154,7 @@ def setLanguage(lang_str="py"):
     os.environ["NAGARE_MOD_PATH"] = os.path.abspath(NAGARE_MOD_PATH)
 
 
-class Editor(editor):
+class Editor(EditorObj):
     """
     Runs the editor, used for authoring graphs.
 
@@ -164,10 +169,10 @@ class Editor(editor):
     :param datablock: Serializable datablock (ideally).
     :type datablock: dict
 
-    >>> nagare.Editor("maya","py",datablock_dict)
-    >>> nagare.Editor("max","py",self.data)
-    >>> nagare.Editor("ae","jsx",datablock)
-    >>> nagare.Editor("fusion","lua",datablock)
+    # >>> nagare.Editor("maya", "py", datablock_dict)
+    # >>> nagare.Editor("max", "py", self.data)
+    # >>> nagare.Editor("ae", "jsx", datablock)
+    # >>> nagare.Editor("fusion", "lua", datablock)
 
     """
 
@@ -186,23 +191,22 @@ class Editor(editor):
         else:
             self._app = QApplication.instance()
 
-        super(Editor,self).__init__(software,
-                                    language,
-                                    graph_file,
-                                    datablock)
+        super(Editor, self).__init__(software,
+                                     language,
+                                     graph_file,
+                                     datablock)
         self.ui.show()
-        print("Editor",software,language,graph_file)
+        print("Editor", software, language, graph_file)
 
-        # done
         self._app.exec_()
         # del self._app
         sys.exit(0)
 
 
-class Player(app_py):
+class Player(Main):
     """
     Runs the player. Used for running graphs in Python env.
-    Inherits app_py, calls viewer.
+    Inherits Main, calls Viewer.
 
     **parameters**, **types**, **return** and **return types**
 
@@ -212,8 +216,8 @@ class Player(app_py):
     :param datablock: Serializable datablock (ideally).
     :type datablock: dict
 
-    >>> nagare.Player(r"C:\tests\test_graph.json", datablock)
-    >>> nagare.Player(self.json_graph, self.datablock)
+    # >>> nagare.Player(r"C:\tests\test_graph.json", datablock)
+    # >>> nagare.Player(self.json_graph, self.datablock)
 
     """
 
@@ -227,18 +231,17 @@ class Player(app_py):
         else:
             self._app = QApplication.instance()
 
-        super(Player,self).__init__()
+        super(Player, self).__init__()
 
         self.strict = eval(os.environ["NAGARE_STRICT"])
         self.propagate = eval(os.environ["NAGARE_PROPAGATE"])
         _copy_block = datablock.copy()
-        self.runJson(json_file,_copy_block)
-        self.player = viewer(json_file)
+        self.runJson(json_file, _copy_block)
+        self.player = ViewerObj(json_file)
         self.player.log_btn.clicked.connect(self._openLog)
 
         for _n in self.nodes_all:
-            _dummy_dict = {"name":_n.name,
-                           "uuid":_n.uuid}
+            _dummy_dict = {"name": _n.name, "uuid": _n.uuid}
 
             _node = nodeUtils.getPointer(_dummy_dict,
                                          self.player.scene)
@@ -247,9 +250,9 @@ class Player(app_py):
             _node.setErrors(_n.getErrors())
 
             if _n.error:
-                _node.setDirty(state="error",msg=_msg)
+                _node.setDirty(state="error", msg=_msg)
             elif _n.skip:
-                _node.setDirty(state="skip",msg=_msg)
+                _node.setDirty(state="skip", msg=_msg)
             else:
                 _node.setDirty()
 
@@ -257,7 +260,6 @@ class Player(app_py):
         self.player.scene.setMode("player")
         self.player.feedback("Ran: {}".format(json_file))
 
-        # done
         self._app.exec_()
         # del self._app
         sys.exit(0)
@@ -273,17 +275,17 @@ class Player(app_py):
                 os.startfile(self.log_file)
             else:
                 from subprocess import call as _sub_call
-                _sub_call(["open",self.log_file])
+                _sub_call(["open", self.log_file])
 
             self.player.feedback("Opening log: {}".format(self.log_file))
         else:
             self.player.feedback("Log not found: {}".format(self.log_file))
 
 
-class Viewer(app_py):
+class Viewer(Main):
     """
-    Runs the viewer.
-    Inherits app_py, calls viewer.
+    Runs the Viewer.
+    Inherits app_py, calls Viewer.
     Used only for displaying results from non-python apps.
 
     **parameters**, **types**, **return** and **return types**
@@ -294,12 +296,12 @@ class Viewer(app_py):
     :param score_json: Full path of JSON score extracted from graph_json.
     :type score_json: str
 
-    >>> nagare.Viewer(r"C:\graphs\ae_build.json", r"C:\score.json")
+    # >>> nagare.Viewer(r"C:\graphs\ae_build.json", r"C:\score.json")
 
     """
 
-    def __init__(self, graph_json,score_json):
-        for j in (graph_json,score_json):
+    def __init__(self, graph_json, score_json):
+        for j in (graph_json, score_json):
             if not os.path.exists(j):
                 raise IOError("Not found: {}".format(j))
 
@@ -309,13 +311,13 @@ class Viewer(app_py):
         else:
             self._app = QApplication.instance()
 
-        super(Viewer,self).__init__()
+        super(Viewer, self).__init__()
 
-        self.player = viewer(graph_json)
+        self.player = ViewerObj(graph_json)
         _score_data = self.getDataFromJson(score_json)
 
         for _score in _score_data:
-            _node = nodeUtils.getPointer(_score,self.player.scene)
+            _node = nodeUtils.getPointer(_score, self.player.scene)
 
             if not _node:
                 raise RuntimeError("Failed to find node pointer:",
@@ -323,16 +325,15 @@ class Viewer(app_py):
                                    _score["uuid"])
 
             _msg = "\n".join(_score["messages"])
-            _node.setErrors(_score.get("errors",list()))
+            _node.setErrors(_score.get("errors", list()))
 
             if _score["error"]:
-                _node.setDirty(state="error",msg=_msg)
+                _node.setDirty(state="error", msg=_msg)
             elif _score["skip"]:
-                _node.setDirty(state="skip",msg=_msg)
+                _node.setDirty(state="skip", msg=_msg)
             else:
                 _node.setDirty()
 
-        # done
         self._app.exec_()
         # del self._app
         sys.exit(0)
@@ -347,4 +348,3 @@ if __name__ == "__main__":
     Editor()
     # Player()
     # Viewer(r"C:/repo/nagare/graphs/tester_jsx.json",r"C:\repo\_tmp\batman.json")
-    pass

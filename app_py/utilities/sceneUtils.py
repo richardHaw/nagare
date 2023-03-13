@@ -36,7 +36,7 @@ from . import nodeUtils
 from PySide2.QtWidgets import QFileDialog
 
 
-def getGraph(folder_start,save=False):
+def getGraph(folder_start, save=False):
     """
     Method for creating modal file dialog.
     Used to open or save JSON file graphs files.
@@ -62,10 +62,10 @@ def getGraph(folder_start,save=False):
     if save:
         _diag = QFileDialog.getSaveFileName
 
-    j_file,_ = _diag(QFileDialog(),
-                     "Save/Open Flow Graph:",
-                     folder_start,
-                     "JSON (*.json)")
+    j_file, _ = _diag(QFileDialog(),
+                      "Save/Open Flow Graph:",
+                      folder_start,
+                      "JSON (*.json)")
 
     if not save and not os.path.exists(j_file):
         return
@@ -76,7 +76,7 @@ def getGraph(folder_start,save=False):
     return j_file
 
 
-def buildGraph(scene_obj,json_file,data_block={}):
+def buildGraph(scene_obj, json_file, data_block={}):
     """
     Builds a new graph on the scene object.
     WARNING: Copies the datablock to the starter node.
@@ -108,12 +108,12 @@ def buildGraph(scene_obj,json_file,data_block={}):
 
     # nodes
     try:
-        _nodes_data = _json_data.get("nodes",_json_data)
+        _nodes_data = _json_data.get("nodes", _json_data)
     except:
         return "No nodes data: {}".format(json_file)
 
     # create starter
-    _starter = widgets.startNode(_nodes_data["name"],
+    _starter = widgets.StartNode(_nodes_data["name"],
                                  _nodes_data["x"],
                                  _nodes_data["y"],
                                  scene_obj)
@@ -130,15 +130,15 @@ def buildGraph(scene_obj,json_file,data_block={}):
     _starter.nodes_out = _tmp_nodes
 
     # creates a copy of the datablock for the starter
-    if isinstance(data_block,dict) and data_block:
+    if isinstance(data_block, dict) and data_block:
         _starter.data_block = data_block.copy()
 
     # build and link
-    buildTreeRecurse(_nodes_data["out_nodes"],scene_obj)
-    linkTreeRecurse(_nodes_data,scene_obj)
+    buildTreeRecurse(_nodes_data["out_nodes"], scene_obj)
+    linkTreeRecurse(_nodes_data, scene_obj)
 
     # groups, if any
-    _gp_data = _json_data.get("groups",list())
+    _gp_data = _json_data.get("groups", list())
     for _gp in _gp_data:
         _gp_kids = list()
         _all_kids = _gp["children"]
@@ -148,7 +148,7 @@ def buildGraph(scene_obj,json_file,data_block={}):
             continue
 
         for _c in (_all_kids):
-            _npt = nodeUtils.getPointer(_c,scene_obj)
+            _npt = nodeUtils.getPointer(_c, scene_obj)
 
             if not _npt:
                 print("Warning: child not found ({}).".format(_c["name"]))
@@ -160,7 +160,7 @@ def buildGraph(scene_obj,json_file,data_block={}):
             print("Warning: not enough nodes to make a group.")
             continue
 
-        widgets.groupNode(scene_obj,
+        widgets.GroupNode(scene_obj,
                           _gp_kids,
                           _gp["name"])
 
@@ -211,7 +211,7 @@ def getStarter(scene_obj):
     start_node = None
 
     for _nd in scene_obj.items():
-        if not type(_nd) == widgets.startNode:
+        if not type(_nd) == widgets.StartNode:
             continue
 
         start_node = _nd
@@ -220,7 +220,7 @@ def getStarter(scene_obj):
     return start_node
 
 
-def searchTree(scene_obj,node_keyword):
+def searchTree(scene_obj, node_keyword):
     """
     Searches the scene and returns nodes that match.
     The keyword is not case-sensitive.
@@ -242,7 +242,6 @@ def searchTree(scene_obj,node_keyword):
     """
 
     _out = list()
-
     if not node_keyword:
         return _out
 
@@ -310,10 +309,7 @@ def getNodes(scene_obj):
         getNodes(self.scene)
     """
 
-    _out = [n for n in scene_obj.items()\
-            if isinstance(n,widgets.itemNode)]
-
-    return _out
+    return [n for n in scene_obj.items() if isinstance(n, widgets.ItemNode)]
 
 
 def getGroups(scene_obj):
@@ -336,7 +332,7 @@ def getGroups(scene_obj):
     _out = list()
 
     for _gp in scene_obj.items():
-        if not isinstance(_gp,widgets.groupNode):
+        if not isinstance(_gp, widgets.GroupNode):
             continue
 
         _gp_nfo = dict()
@@ -352,8 +348,8 @@ def getGroups(scene_obj):
                            "h":_gp_rect.height()}
 
         for _c in _gp.group_widgets:
-            _c_nfo = {"name":_c.name,
-                      "uuid":str(_c.uuid)}
+            _c_nfo = {"name": _c.name,
+                      "uuid": str(_c.uuid)}
             _gp_nfo["children"].append(_c_nfo)
 
         _out.append(_gp_nfo)
@@ -391,7 +387,7 @@ def getBadNodes(scene_obj):
     return _bads
 
 
-def buildTreeRecurse(tree_list,scene_item):
+def buildTreeRecurse(tree_list, scene_item):
     """
     Builds a tree from a starting list and the information stored there.
 
@@ -417,20 +413,20 @@ def buildTreeRecurse(tree_list,scene_item):
         return
 
     for tnd in tree_list:
-        if not tnd["class"] == "widgets.itemNode":
+        if not tnd["class"] == "widgets.ItemNode":
             continue
 
-        _new_node = nodeUtils.getPointer(tnd,scene_item)
+        _new_node = nodeUtils.getPointer(tnd, scene_item)
 
         # create a new node if not in the scene and is unique
         if _new_node is None:
-            _new_node = widgets.itemNode(tnd["name"],
+            _new_node = widgets.ItemNode(tnd["name"],
                                          tnd["x"],
                                          tnd["y"],
                                          scene_item,
                                          tnd["description"],
                                          tnd["uuid"])
-            _new_node.command = tnd.get("command","")
+            _new_node.command = tnd.get("command", "")
 
             # rebuild a node's in and out info
             if tnd["in_node"]:
@@ -448,17 +444,17 @@ def buildTreeRecurse(tree_list,scene_item):
             _new_node.nodes_out = _tmp_out
 
             # icon
-            _icon = tnd.get("icon",None)
+            _icon = tnd.get("icon", None)
             if not _icon or not os.path.exists(_icon):
                 _new_node.changeIcon(os.getenv("NAGARE_DEFAULT_ICON"))
             else:
                 _new_node.changeIcon(_icon)
 
         # recurse
-        buildTreeRecurse(tnd["out_nodes"],scene_item)
+        buildTreeRecurse(tnd["out_nodes"], scene_item)
 
 
-def linkTreeRecurse(tree_data,scene_item):
+def linkTreeRecurse(tree_data, scene_item):
     """
     Reconnects all nodes in the dictionary.
     This is recursive
@@ -485,17 +481,14 @@ def linkTreeRecurse(tree_data,scene_item):
     if not to_nodes:
         return
 
-    node_A = nodeUtils.getPointer(tree_data,scene_item)
-    if not node_A:
-        raise RuntimeError("Failed to find node - linkTreeRecurse")
+    node_A = nodeUtils.getPointer(tree_data, scene_item)
+    assert node_A, "Failed to find node - linkTreeRecurse"
 
     for tnd in to_nodes:
-        node_B = nodeUtils.getPointer(tnd,scene_item)
+        node_B = nodeUtils.getPointer(tnd, scene_item)
+        assert node_B, "Destination node not found: {}".format(node_B.name)
 
-        if not node_B:
-            raise RuntimeError("Destination node not found: {}".format(node_B.name))
-
-        new_wire = widgets.wireNode()
+        new_wire = widgets.WireNode()
         new_wire.source = node_A.plug_out
         new_wire.target = node_B.plug_in
         new_wire.pointA = node_A.plug_out.getCenter()
@@ -505,7 +498,7 @@ def linkTreeRecurse(tree_data,scene_item):
         node_B.plug_in.in_wire = new_wire
         scene_item.addItem(new_wire)
 
-        linkTreeRecurse(tnd,scene_item)
+        linkTreeRecurse(tnd, scene_item)
 
 
 def alignTreeRecurse(node_obj):
@@ -533,7 +526,7 @@ def alignTreeRecurse(node_obj):
         node_obj.drawMe()
 
 
-    if not isinstance(node_obj,widgets.itemNode):
+    if not isinstance(node_obj, widgets.ItemNode):
         return
 
     if not node_obj.plug_in:
@@ -549,21 +542,16 @@ def alignTreeRecurse(node_obj):
             return
 
         in_p = node_obj.plug_in.in_wire.source.parentItem()
-
-        in_p_targets = [w.target.parentItem()\
-                        for w in in_p.plug_out.out_wires\
-                        if w.target]
-
+        in_p_targets = [w.target.parentItem() for w in in_p.plug_out.out_wires if w.target]
         p_index = in_p_targets.index(node_obj)
 
-        node_obj.posX = in_p.posX+node_obj.width+50
-        node_obj.posY = in_p.posY+(120*p_index)
+        node_obj.posX = in_p.posX + node_obj.width + 50
+        node_obj.posY = in_p.posY + (120 * p_index)
 
         if node_obj.coveredBy():
-            node_obj.posY+=120
+            node_obj.posY += 120
 
         update()
-        out_w = node_obj.plug_out.out_wires
 
         for _w in node_obj.plug_out.out_wires:
             if not _w.target:
@@ -573,7 +561,7 @@ def alignTreeRecurse(node_obj):
             alignTreeRecurse(out_p)
 
 
-def write(file_path,data):
+def write(file_path, data):
     """
     Saves a json file from the scene graph.
     Contents of json file must be generated from nodeUtils.recurse.
@@ -610,8 +598,8 @@ def write(file_path,data):
             return
 
     try:
-        with open(file_path,"w") as file_path:
-            json.dump(data,file_path,indent=4)
+        with open(file_path, "w") as file_path:
+            json.dump(data, file_path, indent=4)
     except Exception as err:
         print(str(err))
         return
@@ -641,8 +629,6 @@ def readGraphJson(file_path):
         readGraphJson(r"C:/temp/graph.json")
     """
 
-    datas = None
-
     if not os.path.exists(file_path):
         print("No json file found: {}".format(file_path))
         return
@@ -663,15 +649,13 @@ def getInfoDict(raw_dict):
     Returns a dict with basic information for scene parsing.
     """
 
-    if not isinstance(raw_dict,dict):
+    if not isinstance(raw_dict, dict):
         return {}
 
     try:
-        out = {"name": raw_dict["name"],
-               "uuid": uuid.UUID(raw_dict["uuid"])}
+        return {"name": raw_dict["name"],
+                "uuid": uuid.UUID(raw_dict["uuid"])}
     except Exception as err:
         print(err)
         print(raw_dict)
         raise ValueError("Failed to build data from dict.")
-
-    return out

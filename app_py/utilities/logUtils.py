@@ -31,7 +31,7 @@ import logging
 from datetime import datetime
 
 
-def getLogger(name = os.environ["NAGARE_LOG"], log_name = None):
+def getLogger(name=os.getenv("NAGARE_LOG"), log_name = None):
     """
     Use this to find a handler with specified name.
     Also sets the formatter.
@@ -50,14 +50,13 @@ def getLogger(name = os.environ["NAGARE_LOG"], log_name = None):
     """
 
     formatter = logging.Formatter("%(levelname)s (%(module)s): %(message)s")
-    handler = None
 
     if log_name:
-        log_path = os.path.join(os.environ["NAGARE_LOG_PATH"],log_name)
+        log_path = os.path.join(os.getenv("NAGARE_LOG_PATH"), log_name)
         if not os.path.isdir(os.path.dirname(log_path)):
             os.makedirs(os.path.dirname(log_path))
         handler = logging.FileHandler(log_path)
-        print("Log:",log_path)
+        print("Log:", log_path)
     else:
         handler = logging.StreamHandler()
 
@@ -93,7 +92,7 @@ def timeStamp():
     hour = str(time().hour).zfill(2)
     minute = str(time().minute).zfill(2)
     secs = str(time().second).zfill(2)
-    out = "{}{}{}_{{{}_{}_{}}}".format(year,month,day,hour,minute,secs)
+    out = "{}{}{}_{{{}_{}_{}}}".format(year, month, day, hour, minute, secs)
     return out
 
 
@@ -114,7 +113,7 @@ def getDatedName(filename):
         logUtils.Logs.getDatedName("MyLogName")
     """
 
-    return "{}_{}_".format(filename,Logs.timeStamp())
+    return "{}_{}_".format(filename, timeStamp())
 
 
 def kill(logger):

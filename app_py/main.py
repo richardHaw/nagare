@@ -32,9 +32,9 @@ import importlib
 
 from traceback import format_exc
 from pprint import pformat
-from .resultObj import ResultObj
-from .nodeDummy import NodeDummy
-from .utilities import logUtils
+from resultObj import ResultObj
+from nodeDummy import NodeDummy
+from utilities import logUtils
 
 
 class Main(object):
@@ -79,12 +79,12 @@ class Main(object):
             Spawn.runJson("C:/test/sample.json",test_block")
         """
 
-        self.log_file = os.path.join(os.environ["NAGARE_LOG_PATH"],
-                                     os.environ["NAGARE_LANGUAGE"],
-                                     "{}.log".format(logUtils.timeStamp(), os.environ["NAGARE_LANGUAGE"])
+        self.log_file = os.path.join(os.getenv("NAGARE_LOG_PATH"),
+                                     os.getenv("NAGARE_LANGUAGE"),
+                                     "{}.log".format(logUtils.timeStamp(), os.getenv("NAGARE_LANGUAGE"))
                                      )
 
-        self.log_obj = logUtils.getLogger(os.environ["NAGARE_LOG"], self.log_file)
+        self.log_obj = logUtils.getLogger(os.getenv("NAGARE_LOG"), self.log_file)
         self.log_obj.propagate = True
         self.log_obj.info("Running JSON: {}".format(json_path))
         self.nodes_all = list()
@@ -198,9 +198,9 @@ class Main(object):
             raise TypeError("Escaped results filtering: {}".format(_dummy.name))
 
         # run out-nodes
-        for _dd in _dummy.out_nodes:
+        # for _dd in _dummy.out_nodes:
             # TO-DO: out_conn is now redundant because of nodes_all, refactor this.
-            out_conn = self._recurser(_dd, _copy_block)
+            # out_conn = self._recurser(_dd, _copy_block)
 
         # done
         _dummy.messages.append("Success")
@@ -234,4 +234,4 @@ class Main(object):
 
 if __name__ == "__main__":
     dummy = Main()
-    dummy.runJson(os.environ["NAGARE_DEFAULT_JSON"], os.environ["TEST_BLOCK"])
+    dummy.runJson(os.getenv("NAGARE_DEFAULT_JSON"), os.getenv("TEST_BLOCK"))

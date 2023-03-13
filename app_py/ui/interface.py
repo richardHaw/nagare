@@ -40,10 +40,10 @@ from PySide2.QtWidgets import (QMenu,
                                QTreeWidget,
                                QSystemTrayIcon)
 
-from .widgets import (ButtonTool,
-                      GraphicsScene,
-                      GraphicsView,
-                      Separator)
+from widgets import (ButtonTool,
+                     GraphicsScene,
+                     GraphicsView,
+                     Separator)
 
 
 class Interface(QDialog):

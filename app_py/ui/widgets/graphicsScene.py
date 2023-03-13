@@ -33,9 +33,9 @@ from PySide2.QtCore import Qt
 from PySide2.QtGui import (QColor, QBrush)
 from PySide2.QtWidgets import QGraphicsScene
 
-from .itemNode import Spawn as itemNode
-from .startNode import Spawn as startNode
-from .groupNode import Spawn as groupNode
+from itemNode import ItemNode
+from startNode import StartNode
+from groupNode import GroupNode
 
 
 class GraphicsScene(QGraphicsScene):
@@ -80,7 +80,7 @@ class GraphicsScene(QGraphicsScene):
         # delete selected
         if event.key() in (Qt.Key_Delete, Qt.Key_Backspace):
             for _w in self.selectedItems():
-                if isinstance(_w, itemNode):
+                if isinstance(_w, ItemNode):
                     for _out_w in _w.plug_out.out_wires:
                         _w.scene.removeItem(_out_w)
 
@@ -88,7 +88,7 @@ class GraphicsScene(QGraphicsScene):
                     if _in_wire:
                         _in_wire.removeFromSocket(_w.scene, _in_wire, _in_wire.target)
                     _w.scene.removeItem(_w)
-                elif isinstance(_w, groupNode):
+                elif isinstance(_w, GroupNode):
                     _w.unparentChildren()
                     _w.scene.removeItem(_w)
                     self.clearSelection()
@@ -109,7 +109,7 @@ class GraphicsScene(QGraphicsScene):
             return
 
         self.clear()
-        _starter = startNode("Start",
+        _starter = StartNode("Start",
                              self.sceneRect().width() / 2,
                              self.sceneRect().height() / 2,
                              self)
