@@ -31,18 +31,6 @@ import sys
 
 from PySide2.QtWidgets import QApplication
 
-# if sys.version_info[0] is not 2:
-#     from app_py import configs
-#     from app_py.editor import Editor as EditorObj
-#     from app_py.viewer import Viewer as ViewerObj
-#     from app_py.utilities import nodeUtils
-#     from app_py.main import Main
-# else:
-#     from app_py import configs
-#     from app_py.editor import Editor as EditorObj
-#     from app_py.viewer import Viewer as ViewerObj
-#     from app_py.utilities import nodeUtils
-#     from app_py.main import Main
 from app_py import configs
 from app_py.editor import Editor as EditorObj
 from app_py.viewer import Viewer as ViewerObj
@@ -243,8 +231,7 @@ class Player(Main):
         for _n in self.nodes_all:
             _dummy_dict = {"name": _n.name, "uuid": _n.uuid}
 
-            _node = nodeUtils.getPointer(_dummy_dict,
-                                         self.player.scene)
+            _node = nodeUtils.getObject(_dummy_dict, self.player.scene)
             _msg = "\n".join(_n.messages)
             _node.desc = _n.description
             _node.setErrors(_n.getErrors())
@@ -317,7 +304,7 @@ class Viewer(Main):
         _score_data = self.getDataFromJson(score_json)
 
         for _score in _score_data:
-            _node = nodeUtils.getPointer(_score, self.player.scene)
+            _node = nodeUtils.getObject(_score, self.player.scene)
 
             if not _node:
                 raise RuntimeError("Failed to find node pointer:",
@@ -343,8 +330,8 @@ if __name__ == "__main__":
     os.environ["NAGARE_MOD_PATH"] = r"C:\repo\_dummy"
     # os.environ["NAGARE_MOD_PATH"] = r"C:\repo\_dummy_jsx"
 
-    # Editor(language="jsx",graph_file="C:/repo/nagare/graphs/xxx.json")
+    # Editor(language="jsx", graph_file="C:/repo/nagare/graphs/xxx.json")
     # Editor(graph_file=r"C:/repo/nagare/graphs/xxx.json")
     Editor()
     # Player()
-    # Viewer(r"C:/repo/nagare/graphs/tester_jsx.json",r"C:\repo\_tmp\batman.json")
+    # Viewer(r"C:/repo/nagare/graphs/tester_jsx.json", r"C:\repo\_tmp\batman.json")

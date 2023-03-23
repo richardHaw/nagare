@@ -453,8 +453,7 @@ class Editor(object):
             _dummy_dict = {"name": _n.name,
                            "uuid": _n.uuid}
 
-            _d = nodeUtils.getPointer(_dummy_dict,
-                                      self.ui.scene)
+            _d = nodeUtils.getObject(_dummy_dict, self.ui.scene)
             _m = "\n".join(_n.messages)
             _d.desc = _n.description
             _d.setErrors(_n.getErrors())
@@ -542,7 +541,7 @@ class Editor(object):
             level = len(colors)
 
         print(feed_text)
-        self.ui.info_txt.setText(feed_text)
+        self.ui.info_txt.setText(str(feed_text))
         self.ui.info_txt.setStyleSheet(colors[level])
 
     def _notify(self, title, msg):

@@ -31,8 +31,8 @@ import os
 import uuid
 import json
 
+import nodeUtils
 from ..ui import widgets
-from . import nodeUtils
 from PySide2.QtWidgets import QFileDialog
 
 
@@ -148,7 +148,7 @@ def buildGraph(scene_obj, json_file, data_block={}):
             continue
 
         for _c in (_all_kids):
-            _npt = nodeUtils.getPointer(_c, scene_obj)
+            _npt = nodeUtils.getObject(_c, scene_obj)
 
             if not _npt:
                 print("Warning: child not found ({}).".format(_c["name"]))
@@ -413,10 +413,10 @@ def buildTreeRecurse(tree_list, scene_item):
         return
 
     for tnd in tree_list:
-        if not tnd["class"] == "widgets.ItemNode":
+        if tnd["class"] != "widgets.ItemNode":
             continue
 
-        _new_node = nodeUtils.getPointer(tnd, scene_item)
+        _new_node = nodeUtils.getObject(tnd, scene_item)
 
         # create a new node if not in the scene and is unique
         if _new_node is None:
@@ -481,21 +481,23 @@ def linkTreeRecurse(tree_data, scene_item):
     if not to_nodes:
         return
 
-    node_A = nodeUtils.getPointer(tree_data, scene_item)
-    assert node_A, "Failed to find node - linkTreeRecurse"
+    nodeA = nodeUtils.getObject(tree_data, scene_item)
+    if not nodeA:
+        "Failed to find node - linkTreeRecurse"
 
     for tnd in to_nodes:
-        node_B = nodeUtils.getPointer(tnd, scene_item)
-        assert node_B, "Destination node not found: {}".format(node_B.name)
+        nodeB = nodeUtils.getObject(tnd, scene_item)
+        if not nodeB:
+            "Destination node not found: {}".format(tnd.get("name", "Failed to get name"))
 
         new_wire = widgets.WireNode()
-        new_wire.source = node_A.plug_out
-        new_wire.target = node_B.plug_in
-        new_wire.pointA = node_A.plug_out.getCenter()
-        new_wire.pointB = node_B.plug_in.getCenter()
+        new_wire.source = nodeA.plug_out
+        new_wire.target = nodeB.plug_in
+        new_wire.pointA = nodeA.plug_out.getCenter()
+        new_wire.pointB = nodeB.plug_in.getCenter()
 
-        node_A.plug_out.out_wires.append(new_wire)
-        node_B.plug_in.in_wire = new_wire
+        nodeA.plug_out.out_wires.append(new_wire)
+        nodeB.plug_in.in_wire = new_wire
         scene_item.addItem(new_wire)
 
         linkTreeRecurse(tnd, scene_item)
@@ -524,7 +526,6 @@ def alignTreeRecurse(node_obj):
     def update():
         node_obj.translate()
         node_obj.drawMe()
-
 
     if not isinstance(node_obj, widgets.ItemNode):
         return

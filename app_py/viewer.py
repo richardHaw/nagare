@@ -57,7 +57,7 @@ class Viewer(QDialog):
         return __name__
 
     def __init__(self, json_file, datablock=None):
-        super(Viever, self).__init__()
+        super(Viewer, self).__init__()
         self.json_file = json_file
         self.datablock = datablock
 

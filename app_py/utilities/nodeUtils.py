@@ -128,9 +128,9 @@ def getIconPath(mod_path):
     print("No icons found.")
 
 
-def getPointer(node_data, scene_obj):
+def getObject(node_data, scene_obj):
     """
-    Used to get a node's pointer using its name and uuid.
+    Used to get a object using its name and uuid.
     Will search a scene's items (ALL).
 
     **parameters**, **types**, **return** and **return types**
@@ -148,9 +148,7 @@ def getPointer(node_data, scene_obj):
     :rtype: NoneType
     """
 
-    all_nodes = [i for i in scene_obj.items()
-                 if type(i) in [widgets.itemNode, widgets.startNode]]
-
+    all_nodes = [i for i in scene_obj.items() if type(i) in [widgets.ItemNode, widgets.StartNode]]
     for nd in all_nodes:
         if nd.name != node_data["name"]:
             continue
@@ -173,10 +171,8 @@ def getPointer(node_data, scene_obj):
         if not isinstance(nd_uuid, uuid.UUID):
             nd_uuid = uuid.UUID(nd_uuid)
 
-        if str(nd.uuid) != str(nd_uuid):
-            continue
-
-        return nd
+        if str(nd.uuid) == str(nd_uuid):
+            return nd
 
 
 def refresh(node_obj):
@@ -247,7 +243,7 @@ def printTree(node_obj):
     out_dict["in_node"] = node_obj.node_in
 
     # get in-nodes if itemNode
-    if isinstance(node_obj, widgets.itemNode):
+    if isinstance(node_obj, widgets.ItemNode):
         if node_obj.node_in:
             out_dict["in_node"] = node_obj.node_in
 
@@ -259,15 +255,14 @@ def printTree(node_obj):
 
     # run out-nodes
     for nd_out in node_obj.nodes_out:
-        next_node = getPointer(nd_out, node_obj.scene)
+        next_node = getObject(nd_out, node_obj.scene)
         if not next_node:
             e = " - Out-node not found", nd_out.get("name","")
             print(nd_out)
             print(e)
             raise AttributeError(e)
 
-        out_conn = printTree(next_node)
-        out_dict["out_nodes"].append(out_conn)
+        out_dict["out_nodes"].append(printTree(next_node))
 
     NAGARE_LOG.info("Processed: {}".format(node_obj.name))
     return out_dict

@@ -33,6 +33,7 @@ TEST_BLOCK = dict()
 def setup():
     """
     # >>> setup()
+    TO-DO: turn this into ini
 
     **NAGARE_PYVER** - *The system's Python version.*
 
@@ -127,7 +128,7 @@ def setup():
              ]
 
     for e in envs:
-        if not os.environ.get(e,None):
+        if not os.environ.get(e, None):
             os.environ[e] = nulls[envs.index(e)]
 
     # just for testing
