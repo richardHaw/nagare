@@ -28,6 +28,7 @@ from __future__ import division
 from __future__ import print_function
 
 import os
+import resource  # QT resource, do not delete!
 
 from PySide2.QtGui import QIcon
 from PySide2.QtWidgets import (QMenu,
@@ -242,4 +243,5 @@ class Interface(QDialog):
         else:
             _icon_path = os.path.join(os.environ["NAGARE_ICONS_PATH"],
                                       icon_name)
+        print(_icon_path)
         return QIcon(_icon_path)
