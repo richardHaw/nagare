@@ -147,12 +147,13 @@ class Main(object):
             del(_proc_mod)
         except Exception as err:
             self.log_obj.info("=" * 88)
-            _err_msg = "Failed module: {}".format(_dummy.command)
+            _err_msg = "Failed module import: {}".format(_dummy.command)
             _err_for = str(format_exc())
             _ex_msgs = [_err_msg]
             _ex_msgs.append(_err_for)
             self.log_obj.error(_err_msg)
             self.log_obj.error(_err_for)
+            self.log_obj.error(str(err))
             self.log_obj.error("=" * 88)
 
         # used for safety

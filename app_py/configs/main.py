@@ -26,6 +26,7 @@ SOFTWARE.
 
 import os
 import sys
+from six.moves import configparser
 
 TEST_BLOCK = dict()
 
@@ -132,14 +133,70 @@ def setup():
             os.environ[e] = nulls[envs.index(e)]
 
     # just for testing
-    TEST_BLOCK.update({"what" : "This is Hawdini",
-                       "where" : "Made in Japan",
-                       "when" : "On my spare time",
-                       # "why" : "To make a better world",
-                       "who" : "Richard Haw"})
+    TEST_BLOCK.update({"what": "This is Hawdini",
+                       "where": "Made in Japan",
+                       "when": "On my spare time",
+                       # "why": "To make a better world",
+                       "who": "Richard Haw"})
 
     print("Configs initiated...")
 
 
 if __name__ == "__main__":
-    setup()
+    # global TEST_BLOCK
+    TEST_BLOCK = dict()
+
+    # core_root = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    # nr_root = os.path.abspath(os.path.dirname(core_root))
+    # icons_root = os.path.join(core_root, "app_py", "ui", "widgets", "icons")
+    # title_template = "Nagare {} (Alpha, Python-{})"
+    # lang = "py"
+    # pyver = str(sys.version_info[0])
+    # test_json = os.path.join(nr_root, "graphs", "tester_{}.json".format(lang))
+
+    # just for testing
+    TEST_BLOCK.update({"what": "This is Hawdini",
+                       "where": "Made in Japan",
+                       "when": "On my spare time",
+                       # "why": "To make a better world",
+                       "who": "Richard Haw"})
+
+    # global_css = "QDialog {background-color: dimgrey} "
+    # global_css += "QLineEdit {background-color: slate; color: silver; border: none} "
+    # global_css += "QToolButton {background-color: dimgrey; border: none} "
+    # global_css += "QToolButton::hover {background-color: slategrey; border: none} "
+    # global_css += "QMenuBar {border: none} "
+    # global_css += "QTreeWidget {background-color: #505050; color: silver; border: none} "
+    # global_css += "QTreeWidget::item:hover {background-color:slategrey;} "
+    # global_css += "QHeaderView::section {background-color: dimgrey; border: none} "
+    #
+    # config_obj = configparser.ConfigParser()
+    # config_obj.add_section("PATHS")
+    # config_obj.set("PATHS", "nagare_framework_root", core_root)
+    # config_obj.set("PATHS", "nagare_root", nr_root)
+    # config_obj.set("PATHS", "nagare_mod_paths", [os.path.abspath(os.path.join(nr_root, "modules"))])
+    # config_obj.set("PATHS", "nagare_log_path", os.path.abspath(os.path.join(nr_root, "log")))
+    # config_obj.set("PATHS", "nagare_icons_path", icons_root)
+    # config_obj.set("PATHS", "nagare_default_icon", os.path.join(icons_root, "node.png"))
+    # config_obj.set("PATHS", "nagare_default_json", test_json)
+    #
+    # config_obj.add_section("DETAILS")
+    # config_obj.set("DETAILS", "nagare_global_css", global_css)
+    # config_obj.set("DETAILS", "nagare_language", "py")
+    # config_obj.set("DETAILS", "nagare_strict", "1")
+    # config_obj.set("DETAILS", "nagare_propagate", "1")
+    # config_obj.set("DETAILS", "nagare_pyver", pyver)
+    # config_obj.set("DETAILS", "nagare_log", "nagare")
+    # config_obj.set("DETAILS", "nagare_editor_title", title_template.format("Editor", pyver))
+    # config_obj.set("DETAILS", "nagare_viewer_title", title_template.format("Viewer", pyver))
+    #
+    # with open(r'C:\repo\nagare.ini', 'w') as fp:
+    #     config_obj.write(fp)
+    config_obj = configparser.ConfigParser()
+    config_obj.read(r'C:\repo\nagare.ini')
+    for sect in config_obj.sections():
+        print('Section:', sect)
+        for k, v in config_obj.items(sect):
+            print(' {} = {}'.format(k, v))
+        print
+    # setup()
