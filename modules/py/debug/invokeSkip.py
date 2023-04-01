@@ -12,7 +12,7 @@ def main(data_block={}):
     Return "skip"
     """
 
-    _log = logging.getLogger(os.environ["NAGARE_LOG"])
+    _log = logging.getLogger("nagare_log")
     _log.propagate = True
     _log.info(__name__)
     _log.warning("Simulating a skip...")

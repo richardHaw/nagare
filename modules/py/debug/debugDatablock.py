@@ -15,7 +15,7 @@ def main(data_block={}):
     Return data_block
     """
 
-    _log = logging.getLogger(os.environ["NAGARE_LOG"])
+    _log = logging.getLogger("nagare_log")
     _log.propagate = True
     _log.debug(__name__)
     _log.debug(data_block)

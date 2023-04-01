@@ -11,7 +11,7 @@ def main(data_block={}):
     Return None
     """
 
-    _log = logging.getLogger(os.environ["NAGARE_LOG"])
+    _log = logging.getLogger("nagare_log")
     _log.propagate = True
     _log.info(__name__)
     _log.error("Simulating an Error")

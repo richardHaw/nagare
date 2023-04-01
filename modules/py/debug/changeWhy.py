@@ -16,7 +16,7 @@ def main(data_block={}):
 
     data_block["why"] = "Helping people bring out the best in themselves."
 
-    _log = logging.getLogger(os.environ["NAGARE_LOG"])
+    _log = logging.getLogger("nagare_log")
     _log.propagate = True
     _log.info(__name__)
     _log.info(data_block["why"])
