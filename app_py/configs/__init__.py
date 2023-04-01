@@ -25,7 +25,21 @@ SOFTWARE.
 """
 
 from __future__ import print_function
-from main import *
+import os
+from six.moves import configparser
 
 
-setup()
+config_file = os.getenv("NAGARE_CONFIGS", "")
+if not os.path.exists(config_file):
+    raise IOError("Invalid Path: NAGARE_CONFIGS")
+
+config_obj = configparser.ConfigParser()
+config_obj.read(config_file)
+
+print(config_obj.get("PATHS", "root"))
+
+test_block = {"what": "This is Hawdini",
+              "where": "Made in Japan",
+              "when": "On my spare time",
+              # "why": "To make a better world",
+              "who": "Richard Haw"}

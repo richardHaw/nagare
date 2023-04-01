@@ -46,6 +46,8 @@ from widgets import (ButtonTool,
                      GraphicsView,
                      Separator)
 
+from app_py.configs import config_obj
+
 
 class Interface(QDialog):
     """
@@ -68,7 +70,7 @@ class Interface(QDialog):
         self.help_menu = None
         self._build()
 
-        self.setStyleSheet(os.environ["NAGARE_GLOBAL_CSS"])
+        self.setStyleSheet(config_obj.get("DETAILS", "global_css"))
 
     def _build(self):
         """
@@ -213,7 +215,7 @@ class Interface(QDialog):
         self.tray.setIcon(_win_icon)
         self.tray.setContextMenu(_menu)
         self.tray.show()
-        self.tray.setToolTip(os.environ["NAGARE_EDITOR_TITLE"])
+        self.tray.setToolTip(config_obj.get("DETAILS", "editor_title"))
 
     def _getIcon(self, icon_name, qrc=True):
         """

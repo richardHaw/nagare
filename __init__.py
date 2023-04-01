@@ -31,7 +31,8 @@ import sys
 
 from PySide2.QtWidgets import QApplication
 
-from app_py import configs
+from app_py.configs import config_obj
+from app_py.configs import test_block
 from app_py.editor import Editor as EditorObj
 from app_py.viewer import Viewer as ViewerObj
 from app_py.utilities import nodeUtils
@@ -40,47 +41,7 @@ from app_py.main import Main
 print("Starting Nagare...")
 
 
-def setDefaults():
-    """
-    Initiates config and sets the defaults.
-    These are all environment variables.
-
-    **NAGARE_PYVER** - *The system's Python version.*
-
-    **NAGARE_EDITOR_TITLE** - *The system's Python version.*
-
-    **NAGARE_VIEWER_TITLE** - *The system's Python version.*
-
-    **NAGARE_FRAMEWORK_ROOT** - *The framwork's root directory.*
-
-    **NAGARE_ROOT** - *Haw-dini's root directory.*
-
-    **NAGARE_MOD_PATH** - *Root directory for modules.*
-
-    **NAGARE_LOG_PATH** - *Root directory for logging.*
-
-    **NAGARE_DEFAULT_JSON** - *Full path of the default JSON graph.*
-
-    **NAGARE_DEFAULT_ICON** - *Full path of the default node icon.*
-
-    **NAGARE_ICONS_PATH** - *Root directory for the icons.*
-
-    **NAGARE_GLOBAL_CSS** - *Default CSS style for the UI.*
-
-    **TEST_BLOCK** - *Default datablock for testing.*
-
-    **STRICT** - *Strict mode.*
-
-    **PROPAGATE** - *Propagate datablock information.*
-
-    # >>> nagare.setDefaults()
-
-    """
-
-    configs.setup()
-
-
-def setStrict(val="1"):
+def setStrict(val=None):
     """
     Sets strict mode.
 
@@ -93,14 +54,17 @@ def setStrict(val="1"):
 
     """
 
+    if val is None:
+        val = "1"
+
     if val not in ("0", "1"):
         raise ValueError('NAGARE_STRICT should be string "0" or "1".')
 
-    os.environ["NAGARE_STRICT"] = str(val)
+    config_obj.set("DETAILS", "strict", str(val))
     print("Strict error checking set to:", val)
 
 
-def setPropagate(val="1"):
+def setPropagate(val=None):
     """
     Set the propagations switch for the datablock.
 
@@ -113,14 +77,17 @@ def setPropagate(val="1"):
 
     """
 
-    if val not in ["0","1"]:
+    if val is None:
+        val = "1"
+
+    if val not in ["0", "1"]:
         raise ValueError('NAGARE_PROPAGATE should be string "0" or "1".')
 
-    os.environ["NAGARE_PROPAGATE"] = str(val)
-    print("Datablock propagation set to:",val)
+    config_obj.set("DETAILS", "propagate", str(val))
+    print("Datablock propagation set to:", val)
 
 
-def setLanguage(lang_str="py"):
+def setLanguage(lang_str=None):
     """
     Use this to change the language to operate with beside Python.
     Also runs ``setup()`` once again to affect changes.
@@ -134,12 +101,15 @@ def setLanguage(lang_str="py"):
 
     """
 
-    os.environ["NAGARE_LANGUAGE"] = lang_str
+    if lang_str is None:
+        lang_str = "py"
 
-    NAGARE_MOD_PATH = os.path.join(os.environ["NAGARE_ROOT"],
+    config_obj.set("DETAILS", "language", lang_str)
+
+    NAGARE_MOD_PATH = os.path.join(config_obj.get("PATHS", "root"),
                                    "modules",
-                                   os.environ["NAGARE_LANGUAGE"])
-    os.environ["NAGARE_MOD_PATH"] = os.path.abspath(NAGARE_MOD_PATH)
+                                   config_obj.get("DETAILS", "language"))
+    config_obj.set("PATHS", [os.path.abspath(NAGARE_MOD_PATH)])
 
 
 class Editor(EditorObj):
@@ -165,12 +135,24 @@ class Editor(EditorObj):
     """
 
     def __init__(self,
-                 software="generic",
-                 language=os.environ["NAGARE_LANGUAGE"],
-                 graph_file=os.environ["NAGARE_DEFAULT_JSON"],
-                 datablock=configs.TEST_BLOCK):
+                 software=None,
+                 language=None,
+                 graph_file=None,
+                 datablock=None):
 
-        if language != os.environ["NAGARE_LANGUAGE"]:
+        if software is None:
+            software = "generic"
+
+        if language is None:
+            language = config_obj.get("DETAILS", "language")
+
+        if graph_file is None:
+            graph_file = config_obj.get("PATHS", "default_json")
+
+        if datablock is None:
+            datablock = test_block
+
+        if language != config_obj.get("DETAILS", "language"):
             setLanguage(language)
 
         self._app = None
@@ -210,8 +192,14 @@ class Player(Main):
     """
 
     def __init__(self,
-                 json_file=os.environ["NAGARE_DEFAULT_JSON"],
-                 datablock=configs.TEST_BLOCK):
+                 json_file=None,
+                 datablock=None):
+
+        if json_file is None:
+            json_file = config_obj.get("PATHS", "default_json")
+
+        if datablock is None:
+            datablock = test_block
 
         self._app = None
         if not QApplication.instance():
@@ -221,8 +209,8 @@ class Player(Main):
 
         super(Player, self).__init__()
 
-        self.strict = eval(os.environ["NAGARE_STRICT"])
-        self.propagate = eval(os.environ["NAGARE_PROPAGATE"])
+        self.strict = eval(config_obj.get("DETAILS", "strict"))
+        self.propagate = eval(config_obj.get("DETAILS", "propagate"))
         _copy_block = datablock.copy()
         self.runJson(json_file, _copy_block)
         self.player = ViewerObj(json_file)
@@ -251,14 +239,13 @@ class Player(Main):
         # del self._app
         sys.exit(0)
 
-
     def _openLog(self):
         """
         Opens the log.txt file if self.log_file is a valid file in drive.
         """
 
         if os.path.isfile(self.log_file):
-            if sys.platform in "win32":
+            if sys.platform == "win32":
                 os.startfile(self.log_file)
             else:
                 from subprocess import call as _sub_call
@@ -327,8 +314,8 @@ class Viewer(Main):
 
 
 if __name__ == "__main__":
-    os.environ["NAGARE_MOD_PATH"] = r"C:\repo\_dummy"
-    # os.environ["NAGARE_MOD_PATH"] = r"C:\repo\_dummy_jsx"
+    config_obj.set("PATHS", "mod_paths", [r"C:\repo\_dummy"])
+    # config_obj.set("PATHS", "mod_paths", [r"C:\repo\_dummy_jsx"])
 
     # Editor(language="jsx", graph_file="C:/repo/nagare/graphs/xxx.json")
     # Editor(graph_file=r"C:/repo/nagare/graphs/xxx.json")
