@@ -58,7 +58,7 @@ def setStrict(val=None):
         val = "1"
 
     if val not in ("0", "1"):
-        raise ValueError('NAGARE_STRICT should be string "0" or "1".')
+        raise ValueError('DETAILS strict should be string "0" or "1".')
 
     config_obj.set("DETAILS", "strict", str(val))
     print("Strict error checking set to:", val)
@@ -81,7 +81,7 @@ def setPropagate(val=None):
         val = "1"
 
     if val not in ["0", "1"]:
-        raise ValueError('NAGARE_PROPAGATE should be string "0" or "1".')
+        raise ValueError('DETAILS propagate should be string "0" or "1".')
 
     config_obj.set("DETAILS", "propagate", str(val))
     print("Datablock propagation set to:", val)
@@ -106,10 +106,10 @@ def setLanguage(lang_str=None):
 
     config_obj.set("DETAILS", "language", lang_str)
 
-    NAGARE_MOD_PATH = os.path.join(config_obj.get("PATHS", "root"),
-                                   "modules",
-                                   config_obj.get("DETAILS", "language"))
-    config_obj.set("PATHS", [os.path.abspath(NAGARE_MOD_PATH)])
+    modules_path = os.path.join(config_obj.get("PATHS", "root"),
+                                "modules",
+                                config_obj.get("DETAILS", "language"))
+    config_obj.set("PATHS", [os.path.abspath(modules_path)])
 
 
 class Editor(EditorObj):

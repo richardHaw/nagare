@@ -45,9 +45,11 @@ from ui.widgets import ItemNode
 from ui.widgets import GroupNode
 from main import Main as pyApp
 from ui.interface import Interface
-from utilities import (nodeUtils,
-                       logUtils,
-                       sceneUtils)
+from utilities import nodeUtils
+from utilities import logUtils
+from utilities import sceneUtils
+from configs import config_obj
+from configs import test_block
 
 
 class Editor(object):
@@ -102,21 +104,27 @@ class Editor(object):
     def __init__(self,
                  software,
                  language,
-                 tree_json=os.getenv("NAGARE_DEFAULT_JSON"),
-                 data_block=dict(),
+                 tree_json=None,
+                 data_block=None,
                  parent=None):
 
         super(Editor, self).__init__()
+
+        if tree_json is None:
+            tree_json = config_obj.get("PATHS", "default_json")
+
+        if data_block is None:
+            data_block = dict()
 
         self.software = software
         self.language = language
         self.tree_json = tree_json
         self.data_block = data_block
-        self.modules_root = os.getenv("NAGARE_MOD_PATH")
-        self.title_text = os.getenv("NAGARE_EDITOR_TITLE")
+        self.modules_root = config_obj.get("PATHS", "mod_paths")
+        self.title_text = config_obj.get("DETAILS", "editor_title")
         self.starter = None
-        self.log_dir = os.getenv("NAGARE_LOG_PATH")
-        self.logger_name = os.getenv("NAGARE_LOG")
+        self.log_dir = config_obj.get("PATHS", "log_path")
+        self.logger_name = config_obj.get("DETAILS", "log_name")
         self.log_file = ""
         self.strict = False
         self.propagate = True
@@ -612,12 +620,11 @@ class Editor(object):
 
 
 if __name__ == "__main__":
-    import config
     top_app = QApplication(sys.argv)
 
     hApp = Editor("generic",
-                  os.getenv("NAGARE_LANGUAGE"),
-                  data_block=config.TEST_BLOCK)
+                  config_obj.get("DETAILS", "language"),
+                  data_block=test_block)
 
     hApp.show()
     top_app.exec_()

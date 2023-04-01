@@ -35,7 +35,8 @@ from pprint import pformat
 from resultObj import ResultObj
 from nodeDummy import NodeDummy
 from utilities import logUtils
-
+from app_py.configs import config_obj
+from app_py.configs import test_block
 
 class Main(object):
     """
@@ -79,12 +80,12 @@ class Main(object):
             Spawn.runJson("C:/test/sample.json",test_block")
         """
 
-        self.log_file = os.path.join(os.getenv("NAGARE_LOG_PATH"),
-                                     os.getenv("NAGARE_LANGUAGE"),
-                                     "{}.log".format(logUtils.timeStamp(), os.getenv("NAGARE_LANGUAGE"))
+        self.log_file = os.path.join(config_obj.get("PATH", "log_path"),
+                                     config_obj.get("DETAILS", "language"),
+                                     "{}.log".format(logUtils.timeStamp(), config_obj.get("DETAILS", "language"))
                                      )
 
-        self.log_obj = logUtils.getLogger(os.getenv("NAGARE_LOG"), self.log_file)
+        self.log_obj = logUtils.getLogger(config_obj.get("DETAILS", "log_name"), self.log_file)
         self.log_obj.propagate = True
         self.log_obj.info("Running JSON: {}".format(json_path))
         self.nodes_all = list()
@@ -235,4 +236,4 @@ class Main(object):
 
 if __name__ == "__main__":
     dummy = Main()
-    dummy.runJson(os.getenv("NAGARE_DEFAULT_JSON"), os.getenv("TEST_BLOCK"))
+    dummy.runJson(config_obj.get("PATHS", "default_json"), test_block)

@@ -35,9 +35,10 @@ import logging
 
 from PySide2.QtWidgets import QApplication
 from app_py.ui import widgets
+from app_py.configs import config_obj
 
-NAGARE_LOG = logging.getLogger(os.getenv("NAGARE_LOG"))
-NAGARE_LOG.propagate = True
+LOGGER = logging.getLogger(config_obj.get("DETAILS", "log_name"))
+LOGGER.propagate = True
 
 
 def getDescription(mod_path):
@@ -121,7 +122,7 @@ def getIconPath(mod_path):
                                 "icons",
                                 "_default.png")
 
-    for _icn in (_icon_path, _branch_path, os.getenv("NAGARE_DEFAULT_ICON")):
+    for _icn in (_icon_path, _branch_path, config_obj.get("PATHS", "default_icon")):
         if os.path.exists(_icn):
             return _icn
 
@@ -264,7 +265,7 @@ def printTree(node_obj):
 
         out_dict["out_nodes"].append(printTree(next_node))
 
-    NAGARE_LOG.info("Processed: {}".format(node_obj.name))
+    LOGGER.info("Processed: {}".format(node_obj.name))
     return out_dict
 
 

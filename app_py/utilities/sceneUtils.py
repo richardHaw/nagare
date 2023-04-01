@@ -33,6 +33,7 @@ import json
 
 import nodeUtils
 from ..ui import widgets
+from app_py.configs import config_obj
 from PySide2.QtWidgets import QFileDialog
 
 
@@ -446,7 +447,7 @@ def buildTreeRecurse(tree_list, scene_item):
             # icon
             _icon = tnd.get("icon", None)
             if not _icon or not os.path.exists(_icon):
-                _new_node.changeIcon(os.getenv("NAGARE_DEFAULT_ICON"))
+                _new_node.changeIcon(config_obj.get("PATHS", "default_icon"))
             else:
                 _new_node.changeIcon(_icon)
 

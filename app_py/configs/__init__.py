@@ -28,7 +28,6 @@ from __future__ import print_function
 import os
 from six.moves import configparser
 
-
 config_file = os.getenv("NAGARE_CONFIGS", "")
 if not os.path.exists(config_file):
     raise IOError("Invalid Path: NAGARE_CONFIGS")

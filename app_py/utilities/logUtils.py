@@ -29,9 +29,9 @@ from __future__ import print_function
 import os
 import logging
 from datetime import datetime
+from app_py.configs import config_obj
 
-
-def getLogger(name=os.getenv("NAGARE_LOG"), log_name = None):
+def getLogger(name=None, log_name = None):
     """
     Use this to find a handler with specified name.
     Also sets the formatter.
@@ -49,10 +49,13 @@ def getLogger(name=os.getenv("NAGARE_LOG"), log_name = None):
         logUtils.getLogger("nagare_logger")
     """
 
+    if name is None:
+        name = config_obj.get("DETAILS", "log_name")
+
     formatter = logging.Formatter("%(levelname)s (%(module)s): %(message)s")
 
     if log_name:
-        log_path = os.path.join(os.getenv("NAGARE_LOG_PATH"), log_name)
+        log_path = os.path.join(config_obj.get("PATHS", "log_path"), log_name)
         if not os.path.isdir(os.path.dirname(log_path)):
             os.makedirs(os.path.dirname(log_path))
         handler = logging.FileHandler(log_path)

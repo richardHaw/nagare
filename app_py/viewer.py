@@ -30,15 +30,16 @@ import os
 import sys
 
 from PySide2.QtGui import QIcon
-from PySide2.QtWidgets import (QMenu,
-                               QDialog,
-                               QLineEdit,
-                               QHBoxLayout,
-                               QVBoxLayout,
-                               QSystemTrayIcon)
+from PySide2.QtWidgets import QMenu
+from PySide2.QtWidgets import QDialog
+from PySide2.QtWidgets import QLineEdit
+from PySide2.QtWidgets import QHBoxLayout
+from PySide2.QtWidgets import QVBoxLayout
+from PySide2.QtWidgets import QSystemTrayIcon
 
 from .ui import widgets
 from .utilities import sceneUtils
+from app_py.configs import config_obj
 
 
 class Viewer(QDialog):
@@ -65,7 +66,7 @@ class Viewer(QDialog):
         self.winH = 600
 
         self._setup()
-        self.setStyleSheet(os.environ["NAGARE_GLOBAL_CSS"])
+        self.setStyleSheet(config_obj.get("DETAILS", "global_css"))
 
         if self.json_file:
             if not os.path.isfile(self.json_file):
@@ -79,7 +80,7 @@ class Viewer(QDialog):
         Creates and arranges the elements.
         """
 
-        self.setWindowTitle(os.environ["NAGARE_VIEWER_TITLE"])
+        self.setWindowTitle(config_obj.get("DETAILS", "viewer_title"))
 
         #top
         _main_layout = QVBoxLayout(self)
@@ -119,7 +120,7 @@ class Viewer(QDialog):
         self.tray.setIcon(_win_icon)
         self.tray.setContextMenu(_menu)
         self.tray.show()
-        self.tray.setToolTip(os.environ["NAGARE_VIEWER_TITLE"])
+        self.tray.setToolTip(config_obj.get("DETAILS", "viewer_title"))
 
     def build(self, json_file, datablock=None):
         """
@@ -180,7 +181,7 @@ if __name__ == "__main__":
     from PySide2.QtWidgets import QApplication
 
     top_app = QApplication(sys.argv)
-    tester = Viewer(os.environ["NAGARE_DEFAULT_JSON"])
+    tester = Viewer(config_obj.get("PATHS", "default_json"))
 
     top_app.exec_()
     sys.exit(0)

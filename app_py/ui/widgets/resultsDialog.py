@@ -41,7 +41,9 @@ from PySide2.QtCore import Qt
 from .tableModel import TableModel
 from .tableView import TableView
 from .collapseGroup import CollapseGroup
-GLOBAL_CSS = os.getenv("NAGARE_GLOBAL_CSS")
+from app_py.configs import config_obj
+
+GLOBAL_CSS = config_obj.get("DETAILS", "global_css")
 
 
 class ResultsDialog(QDialog):
