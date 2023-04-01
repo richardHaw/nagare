@@ -314,7 +314,7 @@ class Viewer(Main):
 
 
 if __name__ == "__main__":
-    config_obj.set("PATHS", "mod_paths", [r"C:\repo\_dummy"])
+    config_obj.set("PATHS", "mod_paths", [r"C:\repo\_dummy\basic", r"C:\repo\_dummy\custom", r"C:\repo\_dummy\basic"])
     # config_obj.set("PATHS", "mod_paths", [r"C:\repo\_dummy_jsx"])
 
     # Editor(language="jsx", graph_file="C:/repo/nagare/graphs/xxx.json")

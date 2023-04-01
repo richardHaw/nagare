@@ -242,5 +242,4 @@ class Interface(QDialog):
             _icon_path = os.path.join(":", "icons", icon_name)
         else:
             _icon_path = os.path.join(config_obj.get("PATHS", "icons_path"), icon_name)
-        print(_icon_path)
         return QIcon(_icon_path)

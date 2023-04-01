@@ -31,6 +31,7 @@ import logging
 from datetime import datetime
 from app_py.configs import config_obj
 
+
 def getLogger(name=None, log_name = None):
     """
     Use this to find a handler with specified name.

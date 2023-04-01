@@ -33,12 +33,12 @@ import ctypes
 from random import randrange
 from pprint import pprint
 
-from PySide2.QtCore import (Qt,
-                            Slot)
+from PySide2.QtCore import Qt
+from PySide2.QtCore import Slot
 
-from PySide2.QtWidgets import (QAction,
-                               QApplication,
-                               QTreeWidgetItem)
+from PySide2.QtWidgets import QAction
+from PySide2.QtWidgets import QApplication
+from PySide2.QtWidgets import QTreeWidgetItem
 
 from ui.widgets import StartNode
 from ui.widgets import ItemNode
@@ -101,13 +101,7 @@ class Editor(object):
         sys.exit(0)
     """
 
-    def __init__(self,
-                 software,
-                 language,
-                 tree_json=None,
-                 data_block=None,
-                 parent=None):
-
+    def __init__(self, software, language, tree_json=None, data_block=None, parent=None):
         super(Editor, self).__init__()
 
         if tree_json is None:
@@ -161,10 +155,7 @@ class Editor(object):
         Links the commands to their widgets.
         """
 
-        for _tm in (self.ui.file_menu,
-                    self.ui.graph_menu,
-                    self.ui.help_menu):
-
+        for _tm in (self.ui.file_menu, self.ui.graph_menu, self.ui.help_menu):
             _tm.triggered[QAction].connect(self._triggerActions)
 
         self.ui.open_btn.clicked.connect(self._openTree)
@@ -181,32 +172,32 @@ class Editor(object):
         self.ui.erase_btn.clicked.connect(self._clearSearch)
         self.ui.find_txt.textChanged[str].connect(self._searchTree)
 
-    def _triggerActions(self, _ta):
+    def _triggerActions(self, _trigger_action):
         """
         Links menu items to their commands.
         """
 
-        _tx = _ta.text()
+        _trigger_text = _trigger_action.text()
 
-        if _tx == "Open":
+        if _trigger_text == "Open":
             self._openTree()
-        elif _tx == "Save":
+        elif _trigger_text == "Save":
             self.saveTree()
-        elif _tx == "Stop on Error":
+        elif _trigger_text == "Stop on Error":
             self._setStrict()
-        elif _tx == "Propagate Datablock":
+        elif _trigger_text == "Propagate Datablock":
             self._setPropagate()
-        elif _tx == "Align (Selected)":
+        elif _trigger_text == "Align (Selected)":
             self._alignTree(False)
-        elif _tx == "Align (All)":
+        elif _trigger_text == "Align (All)":
             self._alignTree(True)
-        elif _tx == "Reset":
+        elif _trigger_text == "Reset":
             self.buildTree()
-        elif _tx == "Clear":
+        elif _trigger_text == "Clear":
             self.clearTree()
-        elif _tx == "Help":
+        elif _trigger_text == "Help":
             pass
-        elif _tx == "About":
+        elif _trigger_text == "About":
             pass
 
     def _populateModuleTree(self):
@@ -227,28 +218,28 @@ class Editor(object):
                    "jsx": ["jsxbin", "jsxinc"]
                    }
 
-        if not os.path.isdir(self.modules_root):
-            raise IOError("No module path: ".format(self.modules_root))
+        for mod_path in self.modules_root:
+            if not os.path.isdir(mod_path):
+                raise RuntimeError("No module path: ".format(self.modules_root))
         print("Searching modules in {}".format(self.modules_root))
 
-        _cat_count = 1
-        for _cat in os.listdir(self.modules_root):
-            _cat_dir = os.path.join(self.modules_root, _cat)
-
-            if not os.path.isdir(_cat_dir) or _cat.startswith("_"):
+        _catgory_count = 1
+        for _catgory_directory in self.modules_root:
+            _catgory = os.path.basename(_catgory_directory)
+            if not os.path.isdir(_catgory_directory) or _catgory.startswith("_"):
                 continue
 
-            _mfiles = os.listdir(_cat_dir)
-            if len(_mfiles) < 1:
+            _module_file = os.listdir(_catgory_directory)
+            if len(_module_file) < 1:
                 continue
 
-            print(" {} ".format(_cat).center(88, "="))
-            _tree_tit = "{}: {} nodes".format(str(_cat_count).zfill(2), _cat)
+            print(" {} ".format(_catgory).center(88, "="))
+            _tree_tit = "{}: {} nodes".format(str(_catgory_count).zfill(2), _catgory)
             _branch = QTreeWidgetItem(self.ui.module_tree, [_tree_tit])
             _branch.setExpanded(True)
             _added = list()
 
-            for _leaf_file in _mfiles:
+            for _leaf_file in _module_file:
                 _leaf_name = _leaf_file.split(".")[0]
                 _leaf_ext = _leaf_file.split(".")[-1]
 
@@ -259,7 +250,7 @@ class Editor(object):
                     continue
                 
                 _leaf_node = QTreeWidgetItem(_branch, [_leaf_name])
-                _leaf_path = os.path.abspath(os.path.join(_cat_dir, _leaf_file))
+                _leaf_path = os.path.abspath(os.path.join(_catgory_directory, _leaf_file))
                 _leaf_tt = nodeUtils.getDescription(_leaf_path)
 
                 _leaf_node.setToolTip(0, _leaf_tt)
@@ -267,7 +258,7 @@ class Editor(object):
                 _branch.addChild(_leaf_node)
                 _added.append(_leaf_name)
                 print("- Loaded", _leaf_file)
-            _cat_count += 1
+            _catgory_count += 1
 
         self.ui.module_tree.itemClicked.connect(self._clicker)
         _title = ["{} Modules".format(self.software).title()]
@@ -411,8 +402,9 @@ class Editor(object):
 
         self.log_file = os.path.join(self.log_dir,
                                      self.software,
-                                     "{}.log".format(logUtils.timeStamp(),
-                                                     self.software))
+                                     "{}.log".format(logUtils.timeStamp(), self.software)
+                                     )
+
         logger = logUtils.getLogger(self.logger_name, self.log_file)
         logger.propagate = True
         return logger
@@ -424,10 +416,7 @@ class Editor(object):
         Must be a valid JSON file.
         """
 
-        _g = sceneUtils.buildGraph(self.ui.scene,
-                                   self.tree_json,
-                                   self.data_block)
-
+        _g = sceneUtils.buildGraph(self.ui.scene, self.tree_json, self.data_block)
         if not isinstance(_g, StartNode):
             self.clearTree()
             self._feedback(_g, 2)
@@ -458,9 +447,7 @@ class Editor(object):
         self.buildTree()
 
         for _n in _dummy.nodes_all:
-            _dummy_dict = {"name": _n.name,
-                           "uuid": _n.uuid}
-
+            _dummy_dict = {"name": _n.name, "uuid": _n.uuid}
             _d = nodeUtils.getObject(_dummy_dict, self.ui.scene)
             _m = "\n".join(_n.messages)
             _d.desc = _n.description
@@ -508,7 +495,6 @@ class Editor(object):
         """
 
         _sels = sceneUtils.getSelected(self.ui.scene)
-
         if not _sels:
             return
 
@@ -581,7 +567,6 @@ class Editor(object):
 
         if sys.version_info[0] > 2:
             return ctypes.windll.user32.MessageBoxW(0, text, title, style)
-
         return ctypes.windll.user32.MessageBoxA(0, text, title, style)
 
     @Slot(QTreeWidgetItem, int)
