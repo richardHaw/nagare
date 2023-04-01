@@ -80,7 +80,7 @@ class Main(object):
             Spawn.runJson("C:/test/sample.json",test_block")
         """
 
-        self.log_file = os.path.join(config_obj.get("PATH", "log_path"),
+        self.log_file = os.path.join(config_obj.get("PATHS", "log_path"),
                                      config_obj.get("DETAILS", "language"),
                                      "{}.log".format(logUtils.timeStamp(), config_obj.get("DETAILS", "language"))
                                      )

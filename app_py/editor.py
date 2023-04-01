@@ -125,8 +125,11 @@ class Editor(object):
 
         self.ui = Interface(parent)
 
-        if self.modules_root not in sys.path:
-            sys.path.append(self.modules_root)
+        for modulee_path in self.modules_root:
+            if not os.path.exists(modulee_path):
+                continue
+            if modulee_path not in sys.path:
+                sys.path.append(modulee_path)
 
         self._initUi()
 
@@ -219,9 +222,9 @@ class Editor(object):
                    }
 
         for mod_path in self.modules_root:
+            print("Searching modules in {}".format(mod_path))
             if not os.path.isdir(mod_path):
-                raise RuntimeError("No module path: ".format(self.modules_root))
-        print("Searching modules in {}".format(self.modules_root))
+                raise RuntimeError("No module path: ".format(mod_path))
 
         _catgory_count = 1
         for _catgory_directory in self.modules_root:
