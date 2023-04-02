@@ -65,8 +65,8 @@ class ItemNode(QGraphicsRectItem):
     :param scene: The pointer of the QGraphicsScene parent item.
     :type scene: object
 
-    :param desc: Text description, defaults to def_desc if not set.
-    :type desc: str
+    :param description: Text description, defaults to def_desc if not set.
+    :type description: str
 
     - Example::
 
@@ -83,7 +83,7 @@ class ItemNode(QGraphicsRectItem):
                  posX=0,
                  posY=0,
                  scene=None,
-                 desc=def_desc,
+                 description=def_desc,
                  uuid_str=None):
 
         super(ItemNode, self).__init__()
@@ -95,7 +95,7 @@ class ItemNode(QGraphicsRectItem):
         self.posX = posX
         self.posY = posY
         self.scene = scene
-        self.desc = desc
+        self.description = description
         self.data_block = dict()
         self.command = None
         self.width = 160
@@ -153,7 +153,7 @@ class ItemNode(QGraphicsRectItem):
         self.pen_hovered = QPen(_bg_hovered)
         self.pen_hovered.setWidthF(3.0)
 
-        self.setToolTip(self.desc)
+        self.setToolTip(self.description)
         self.setRect(0, 0, self.width, self.height)
         self.setFlag(self.ItemIsMovable)
         self.setFlag(self.ItemIsSelectable)
@@ -296,7 +296,7 @@ class ItemNode(QGraphicsRectItem):
         self.messages.append(msg)
         self.state_label.setPlainText(self.state)
 
-        self.setToolTip("{}\n{}\n{}".format(self.desc,
+        self.setToolTip("{}\n{}\n{}".format(self.description,
                                             "=" * 36,
                                             "\n".join(self.messages)))
 
@@ -373,7 +373,7 @@ class ItemNode(QGraphicsRectItem):
 
         _dw = ResultsDialog(self.name,
                             self.state,
-                            self.desc,
+                            self.description,
                             "\n".join(self.messages),
                             self._errors_list)
 

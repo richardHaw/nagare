@@ -38,6 +38,7 @@ from utilities import logUtils
 from app_py.configs import config_obj
 from app_py.configs import test_block
 
+
 class Main(object):
     """
     This creates an app object for python.
@@ -140,8 +141,8 @@ class Main(object):
                 self._recurser(_dummy_dict, _copy_block)
             return
 
+        # run
         _ex_msgs = ["No Exception message..."]
-
         try:
             _proc_mod = importlib.import_module(_dummy.command)
             _run_result = _proc_mod.main(_copy_block)
@@ -159,15 +160,15 @@ class Main(object):
 
         # used for safety
         if "resultObj" not in repr(_run_result) and not isinstance(_run_result, dict) and _run_result is None:
-            _tp = "{} returned {}".format(_dummy.name, str(type(_run_result)))
+            _result_details = "{} returned {}".format(_dummy.name, str(_run_result), str(type(_run_result)))
             _run_result = ResultObj("error")
-            _run_result.addMessage(_tp)
+            _run_result.addMessage(_result_details)
             _run_result.addMessage(pformat(_copy_block, indent=4))
             _run_result.addMessage("Created new error instance.")
             for err in _ex_msgs:
                 _run_result.addMessage(err)
 
-        # after running, add to nodes
+        # after running, add to nodes list
         self.nodes_all.append(_dummy)
 
         # used for failed or skip
@@ -190,8 +191,8 @@ class Main(object):
                 _dummy.skip = True
                 _dummy.messages.append("Skipped")
 
-                for w in _dummy.messages:
-                    self.log_obj.warning(w)
+                for _warning in _dummy.messages:
+                    self.log_obj.warning(_warning)
 
             # don't run down-stream nodes
             return _dummy
@@ -200,8 +201,8 @@ class Main(object):
             raise TypeError("Escaped results filtering: {}".format(_dummy.name))
 
         # run out-nodes
-        for _dd in _dummy.out_nodes:
-            self._recurser(_dd, _copy_block)
+        for _dummy_out in _dummy.out_nodes:
+            self._recurser(_dummy_out, _copy_block)
 
         # done
         _dummy.messages.append("Success")

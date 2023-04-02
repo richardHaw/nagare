@@ -85,7 +85,7 @@ class StartNode(QGraphicsEllipseItem):
         self.posX = posX
         self.posY = posY
         self.scene = scene
-        self.desc = "Starter Spawn"
+        self.description = "Starter Spawn"
         self.data_block = {}
         self.dirty_block = {}
         self.command = None
@@ -134,7 +134,7 @@ class StartNode(QGraphicsEllipseItem):
         self.setRect(0, 0, self.width, self.width)
         self.setFlag(self.ItemIsMovable)
         self.setFlag(self.ItemIsSelectable)
-        self.setToolTip(self.desc)
+        self.setToolTip(self.description)
 
         self.plug_out = SocketNode(self, "out")
         self.plug_in = None

@@ -124,13 +124,6 @@ class Editor(object):
         self.propagate = True
 
         self.ui = Interface(parent)
-
-        for modulee_path in self.modules_root:
-            if not os.path.exists(modulee_path):
-                continue
-            if modulee_path not in sys.path:
-                sys.path.append(modulee_path)
-
         self._initUi()
 
     def _initUi(self):
@@ -234,10 +227,11 @@ class Editor(object):
             _mod_name = os.path.basename(mod_path)
 
             for _branch in os.listdir(mod_path):
-                if _branch in _branch_added:
-                    continue
-
                 _branch_path = os.path.join(mod_path, _branch)
+
+                if _branch in _branch_added:
+                    print("WARNING! Branch is a duplicate ({}): {}".format(_branch, _branch_path))
+                    continue
 
                 if not os.path.isdir(_branch_path) or _branch.startswith("_"):
                     continue
@@ -255,8 +249,13 @@ class Editor(object):
                 for _leaf_file in _branch_files:
                     _leaf_name = _leaf_file.split(".")[0]
 
-                    if _leaf_file.startswith("_") or _leaf_name in _leaf_added:
+                    if _leaf_file.startswith("_"):
                         continue
+
+                    if _leaf_name in _leaf_added:
+                        # print("- WARNING! Leaf is a duplicate ({}) in {}".format(_leaf_name, _branch_path))
+                        continue
+
                     if _leaf_file.split(".")[-1] not in ext_map[self.language]:
                         continue
 
@@ -459,7 +458,7 @@ class Editor(object):
             _dummy_dict = {"name": _node.name, "uuid": _node.uuid}
             _dummy_obj = nodeUtils.getObject(_dummy_dict, self.ui.scene)
             _msg = "\n".join(_node.messages)
-            _dummy_obj.desc = _node.description
+            _dummy_obj.description = _node.description
             _dummy_obj.setErrors(_node.getErrors())
 
             if _node.error:

@@ -226,7 +226,7 @@ def printTree(node_obj):
     out_dict["name"] = node_obj.name
     out_dict["class"] = ".".join(node_obj.__str__().split(".")[-2:])
     out_dict["icon"] = node_obj.icon_path
-    out_dict["description"] = node_obj.desc
+    out_dict["description"] = node_obj.description
     out_dict["command"] = node_obj.command
     out_dict["x"] = node_obj.posX
     out_dict["y"] = node_obj.posY

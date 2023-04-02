@@ -191,9 +191,7 @@ class Player(Main):
 
     """
 
-    def __init__(self,
-                 json_file=None,
-                 datablock=None):
+    def __init__(self, json_file=None, datablock=None):
 
         if json_file is None:
             json_file = config_obj.get("PATHS", "default_json")
@@ -209,8 +207,9 @@ class Player(Main):
 
         super(Player, self).__init__()
 
-        self.strict = eval(config_obj.get("DETAILS", "strict"))
-        self.propagate = eval(config_obj.get("DETAILS", "propagate"))
+        self.strict = int(config_obj.get("DETAILS", "strict"))
+        self.propagate = int(config_obj.get("DETAILS", "propagate"))
+
         _copy_block = datablock.copy()
         self.runJson(json_file, _copy_block)
         self.player = ViewerObj(json_file)
@@ -218,10 +217,9 @@ class Player(Main):
 
         for _node_obj in self.nodes_all:
             _dummy_dict = {"name": _node_obj.name, "uuid": _node_obj.uuid}
-
             _node_obj = nodeUtils.getObject(_dummy_dict, self.player.scene)
             _msg = "\n".join(_node_obj.messages)
-            _node_obj.desc = _node_obj.description
+            _node_obj.description = _node_obj.description
             _node_obj.setErrors(_node_obj.getErrors())
 
             if _node_obj.error:

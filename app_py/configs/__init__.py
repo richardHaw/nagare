@@ -26,7 +26,7 @@ SOFTWARE.
 
 from __future__ import print_function
 import os
-import json
+import sys
 from six.moves import configparser
 
 config_file = os.getenv("NAGARE_CONFIGS", "")
@@ -36,6 +36,12 @@ if not os.path.exists(config_file):
 config_obj = configparser.ConfigParser()
 config_obj.read(config_file)
 config_obj.set("PATHS", "mod_paths", eval(config_obj.get("PATHS", "mod_paths")))
+
+for _module_path in config_obj.get("PATHS", "mod_paths"):
+    if not os.path.exists(_module_path):
+        continue
+    if _module_path not in sys.path:
+        sys.path.append(_module_path)
 
 test_block = {"what": "This is Hawdini",
               "where": "Made in Japan",

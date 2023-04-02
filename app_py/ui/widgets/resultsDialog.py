@@ -50,7 +50,7 @@ class ResultsDialog(QDialog):
     def __str__(self):
         return __name__
 
-    def __init__(self, node_name, status, desc="none", msg="", errors_list=[]):
+    def __init__(self, node_name, status, description="none", msg="", errors_list=[]):
         super(ResultsDialog, self).__init__()
 
         self.node_name = node_name
@@ -62,7 +62,7 @@ class ResultsDialog(QDialog):
 
         self._setup()
         self.setMessage(msg)
-        self.setDesc(desc)
+        self.setDesc(description)
         self.resize(600, 800)
         self.setStyleSheet(GLOBAL_CSS)
         self.setModal(True)
