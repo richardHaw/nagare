@@ -1,8 +1,8 @@
 from __future__ import print_function
 
-import os
 import logging
-from core import resultObj
+from app_py.resultObj import ResultObj
+from app_py.configs import config_obj
 
 
 def main(data_block={}):
@@ -11,12 +11,12 @@ def main(data_block={}):
     Return None
     """
 
-    _log = logging.getLogger("nagare_log")
+    _log = logging.getLogger(config_obj.get("DETAILS", "log_name"))
     _log.propagate = True
     _log.info(__name__)
     _log.error("Simulating an Error")
 
-    dummy_error = resultObj() # defaults to error
+    dummy_error = ResultObj()  # defaults to error
 
     dummy_error.addError({"item": "broken_node",
                           "type": "mesh",
