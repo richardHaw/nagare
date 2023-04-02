@@ -164,8 +164,8 @@ class Main(object):
             _run_result.addMessage(_tp)
             _run_result.addMessage(pformat(_copy_block, indent=4))
             _run_result.addMessage("Created new error instance.")
-            for e in _ex_msgs:
-                _run_result.addMessage(e)
+            for err in _ex_msgs:
+                _run_result.addMessage(err)
 
         # after running, add to nodes
         self.nodes_all.append(_dummy)
@@ -180,8 +180,8 @@ class Main(object):
                 self.log_obj.error("Error running: {}".format(_dummy.name))
                 self.log_obj.error(pformat(_copy_block, indent=4))
 
-                for d in _dummy.messages:
-                    self.log_obj.error(d)
+                for dummy_msg in _dummy.messages:
+                    self.log_obj.error(dummy_msg)
 
                 if self.strict:
                     _dummy.messages.append("Operation stopped")
@@ -200,9 +200,8 @@ class Main(object):
             raise TypeError("Escaped results filtering: {}".format(_dummy.name))
 
         # run out-nodes
-        # for _dd in _dummy.out_nodes:
-            # TO-DO: out_conn is now redundant because of nodes_all, refactor this.
-            # out_conn = self._recurser(_dd, _copy_block)
+        for _dd in _dummy.out_nodes:
+            self._recurser(_dd, _copy_block)
 
         # done
         _dummy.messages.append("Success")

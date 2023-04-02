@@ -343,8 +343,8 @@ class Editor(object):
         _all_nodes = sceneUtils.searchTree(self.ui.scene, _pf)
         sceneUtils.clearSelection(self.ui.scene)
 
-        for _n in _all_nodes:
-            _n.setSelected(True)
+        for _node in _all_nodes:
+            _node.setSelected(True)
 
     def _setStrict(self):
         """
@@ -419,10 +419,10 @@ class Editor(object):
         Must be a valid JSON file.
         """
 
-        _g = sceneUtils.buildGraph(self.ui.scene, self.tree_json, self.data_block)
-        if not isinstance(_g, StartNode):
+        _starter = sceneUtils.buildGraph(self.ui.scene, self.tree_json, self.data_block)
+        if not isinstance(_starter, StartNode):
             self.clearTree()
-            self._feedback(_g, 2)
+            self._feedback(_starter, 2)
             return
 
         self._feedback("Rebuilt graph: {}".format(self.tree_json))
@@ -449,21 +449,21 @@ class Editor(object):
         print("=" * 168)
         self.buildTree()
 
-        for _n in _dummy.nodes_all:
-            _dummy_dict = {"name": _n.name, "uuid": _n.uuid}
-            _d = nodeUtils.getObject(_dummy_dict, self.ui.scene)
-            _m = "\n".join(_n.messages)
-            _d.desc = _n.description
-            _d.setErrors(_n.getErrors())
+        for _node in _dummy.nodes_all:
+            _dummy_dict = {"name": _node.name, "uuid": _node.uuid}
+            _dummy_obj = nodeUtils.getObject(_dummy_dict, self.ui.scene)
+            _msg = "\n".join(_node.messages)
+            _dummy_obj.desc = _node.description
+            _dummy_obj.setErrors(_node.getErrors())
 
-            if _n.error:
-                _d.setDirty(state="error", msg=_m)
-            elif _n.skip:
-                _d.setDirty(state="skip", msg=_m)
+            if _node.error:
+                _dummy_obj.setDirty(state="error", msg=_msg)
+            elif _node.skip:
+                _dummy_obj.setDirty(state="skip", msg=_msg)
             else:
-                _d.setDirty()
+                _dummy_obj.setDirty()
 
-            print("\n", "@", _m)
+            print("\n", "@", _msg)
 
         del(_dummy)
         self.ui.scene.update()
@@ -475,7 +475,7 @@ class Editor(object):
         Must have more than 1 node_items selected.
         """
 
-        _widgets = [_s for _s in sceneUtils.getSelected(self.ui.scene) if isinstance(_s, ItemNode)]
+        _widgets = [s for s in sceneUtils.getSelected(self.ui.scene) if isinstance(s, ItemNode)]
 
         if len(_widgets) < 2:
             self._feedback("Select more than 1 node to group...", 1)
@@ -497,28 +497,28 @@ class Editor(object):
         :type name: bool
         """
 
-        _sels = sceneUtils.getSelected(self.ui.scene)
-        if not _sels:
+        _selection = sceneUtils.getSelected(self.ui.scene)
+        if not _selection:
             return
 
-        _gps = [g for g in self.ui.scene.items() if isinstance(g, GroupNode)]
+        _groups = [g for g in self.ui.scene.items() if isinstance(g, GroupNode)]
 
         if not is_all:
-            for _sl in _sels:
-                sceneUtils.alignTreeRecurse(_sl)
-                sceneUtils.alignTreeRecurse(_sl)
+            for _selected in _selection:
+                sceneUtils.alignTreeRecurse(_selected)
+                sceneUtils.alignTreeRecurse(_selected)
 
-            for _g in _gps:
-                for _s in _sels:
-                    if _s in _g.group_widgets:
-                        _g.rebuildRect()
+            for _group in _groups:
+                for _selected_item in _selection:
+                    if _selected_item in _group.group_widgets:
+                        _group.rebuildRect()
             return
 
         sceneUtils.alignTreeRecurse(self.starter)
         sceneUtils.alignTreeRecurse(self.starter)
 
-        for _g in _gps:
-            _g.rebuildRect()
+        for _group in _groups:
+            _group.rebuildRect()
 
     def _feedback(self, feed_text, level=0):
         """

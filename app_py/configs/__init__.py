@@ -39,6 +39,6 @@ config_obj.set("PATHS", "mod_paths", eval(config_obj.get("PATHS", "mod_paths")))
 
 test_block = {"what": "This is Hawdini",
               "where": "Made in Japan",
-              "when": "On my spare time",
-              # "why": "To make a better world",
+              # "when": "On my spare time",
+              "why": "To make a better world",
               "who": "Richard Haw"}

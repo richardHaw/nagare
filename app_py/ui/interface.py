@@ -31,20 +31,20 @@ import os
 import resource  # QT resource, do not delete!
 
 from PySide2.QtGui import QIcon
-from PySide2.QtWidgets import (QMenu,
-                               QAction,
-                               QDialog,
-                               QMenuBar,
-                               QLineEdit,
-                               QHBoxLayout,
-                               QVBoxLayout,
-                               QTreeWidget,
-                               QSystemTrayIcon)
+from PySide2.QtWidgets import QMenu
+from PySide2.QtWidgets import QAction
+from PySide2.QtWidgets import QDialog
+from PySide2.QtWidgets import QMenuBar
+from PySide2.QtWidgets import QLineEdit
+from PySide2.QtWidgets import QHBoxLayout
+from PySide2.QtWidgets import QVBoxLayout
+from PySide2.QtWidgets import QTreeWidget
+from PySide2.QtWidgets import QSystemTrayIcon
 
-from widgets import (ButtonTool,
-                     GraphicsScene,
-                     GraphicsView,
-                     Separator)
+from widgets import ButtonTool
+from widgets import GraphicsScene
+from widgets import GraphicsView
+from widgets import Separator
 
 from app_py.configs import config_obj
 
@@ -116,63 +116,35 @@ class Interface(QDialog):
         _top_layout = QHBoxLayout(self)
 
         # file IO buttons
-        self.open_btn = ButtonTool(self._getIcon("open.png"),
-                                   "Open",
-                                   _top_layout)
-
-        self.save_btn = ButtonTool(self._getIcon("save.png"),
-                                   "Save",
-                                   _top_layout)
+        self.open_btn = ButtonTool(self._getIcon("open.png"), "Open", _top_layout)
+        self.save_btn = ButtonTool(self._getIcon("save.png"), "Save", _top_layout)
 
         # playing button
         Separator(False, _top_layout)
 
         self.strict_icon1 = self._getIcon("next.png")
         self.strict_icon2 = self._getIcon("stop.png")
-
-        self.strict_btn = ButtonTool(self.strict_icon1,
-                                     "Stop on Error",
-                                     _top_layout)
+        self.strict_btn = ButtonTool(self.strict_icon1, "Stop on Error", _top_layout)
 
         self.propagate_icon1 = self._getIcon("tree.png")
         self.propagate_icon2 = self._getIcon("branch.png")
-
-        self.propagate_btn = ButtonTool(self.propagate_icon1,
-                                        "Propagate Datablock",
-                                        _top_layout)
+        self.propagate_btn = ButtonTool(self.propagate_icon1, "Propagate Datablock", _top_layout)
 
         # graph buttons
         Separator(False, _top_layout)
 
-        self.zoom_btn = ButtonTool(self._getIcon("zoom.png"),
-                                   "Zoom Extents",
-                                   _top_layout)
-
-        self.align_btn = ButtonTool(self._getIcon("align.png"),
-                                    "Align",
-                                    _top_layout)
-
-        self.group_btn = ButtonTool(self._getIcon("group.png"),
-                                    "Group Selected Nodes",
-                                    _top_layout)
-
-        self.reset_btn = ButtonTool(self._getIcon("reset.png"),
-                                    "Reset",
-                                    _top_layout)
-
-        self.clear_btn = ButtonTool(self._getIcon("clear.png"),
-                                    "Clear",
-                                    _top_layout)
+        self.zoom_btn = ButtonTool(self._getIcon("zoom.png"), "Zoom Extents", _top_layout)
+        self.align_btn = ButtonTool(self._getIcon("align.png"), "Align", _top_layout)
+        self.group_btn = ButtonTool(self._getIcon("group.png"), "Group Selected Nodes", _top_layout)
+        self.reset_btn = ButtonTool(self._getIcon("reset.png"), "Reset", _top_layout)
+        self.clear_btn = ButtonTool(self._getIcon("clear.png"), "Clear", _top_layout)
 
         # search
         self.find_txt = QLineEdit()
         self.find_txt.setToolTip("Search node by name.")
         _top_layout.addWidget(self.find_txt)
 
-        self.erase_btn = ButtonTool(self._getIcon("erase.png"),
-                                    "Clear search field",
-                                    _top_layout)
-
+        self.erase_btn = ButtonTool(self._getIcon("erase.png"), "Clear search field", _top_layout)
         _central_layout.addLayout(_top_layout)
 
         # graph
@@ -184,9 +156,7 @@ class Interface(QDialog):
         _central_layout.addLayout(_bottom_layout)
 
         # run buttons
-        self.run_btn = ButtonTool(self._getIcon("run.png"),
-                                  "Run graph",
-                                  _bottom_layout)
+        self.run_btn = ButtonTool(self._getIcon("run.png"), "Run graph", _bottom_layout)
 
         # feedback
         self.info_txt = QLineEdit("Ready...")
@@ -195,9 +165,7 @@ class Interface(QDialog):
         _bottom_layout.addWidget(self.info_txt)
 
         # log button
-        self.log_btn = ButtonTool(self._getIcon("log.png"),
-                                  "Open log",
-                                  _bottom_layout)
+        self.log_btn = ButtonTool(self._getIcon("log.png"), "Open log", _bottom_layout)
 
         # module tree
         self.module_tree = QTreeWidget()

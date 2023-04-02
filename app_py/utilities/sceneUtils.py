@@ -122,9 +122,9 @@ def buildGraph(scene_obj, json_file, data_block={}):
 
     # rebuild starter out nodes
     _tmp_nodes = list()
-    for n in _nodes_data["out_nodes"]:
-        _tmp_nfo = {"name": n["name"],
-                    "uuid": uuid.UUID(n["uuid"])
+    for _node in _nodes_data["out_nodes"]:
+        _tmp_nfo = {"name": _node["name"],
+                    "uuid": uuid.UUID(_node["uuid"])
                     }
 
         _tmp_nodes.append(_tmp_nfo)
@@ -533,12 +533,12 @@ def alignTreeRecurse(node_obj):
 
     if not node_obj.plug_in:
         update()
-        for _w in node_obj.plug_out.out_wires:
-            if not _w.target:
+        for _out_wire in node_obj.plug_out.out_wires:
+            if not _out_wire.target:
                 continue
 
-            _p = _w.target.parentItem()
-            alignTreeRecurse(_p)
+            _target_parent = _out_wire.target.parentItem()
+            alignTreeRecurse(_target_parent)
     else:
         if not node_obj.plug_in.in_wire:
             return
@@ -555,11 +555,11 @@ def alignTreeRecurse(node_obj):
 
         update()
 
-        for _w in node_obj.plug_out.out_wires:
-            if not _w.target:
+        for _wire in node_obj.plug_out.out_wires:
+            if not _wire.target:
                 continue
 
-            out_p = _w.target.parentItem()
+            out_p = _wire.target.parentItem()
             alignTreeRecurse(out_p)
 
 

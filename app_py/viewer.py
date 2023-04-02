@@ -100,19 +100,9 @@ class Viewer(QDialog):
         self.info_txt.setToolTip("Feedback")
         self.info_txt.setEnabled(False)
         _bottom_layout.addWidget(self.info_txt)
-
-        _log_icon = QIcon(os.path.join(":",
-                                       "icons",
-                                       "log.png"))
-
-        self.log_btn = widgets.ButtonTool(_log_icon,
-                                          "Open log",
-                                          _bottom_layout)
-
-        _win_icon = QIcon(os.path.join(":",
-                                       "icons",
-                                       "icon.png"))
-
+        _log_icon = QIcon(os.path.join(":", "icons", "log.png"))
+        self.log_btn = widgets.ButtonTool(_log_icon, "Open log", _bottom_layout)
+        _win_icon = QIcon(os.path.join(":", "icons", "icon.png"))
         self.setWindowIcon(_win_icon)
 
         _menu = QMenu()

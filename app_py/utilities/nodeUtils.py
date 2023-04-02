@@ -69,10 +69,7 @@ def getDescription(mod_path):
 
     _desc = mod_path
     module_name = os.path.basename(mod_path).split(".")[0]
-
-    _desc_path = os.path.join(os.path.dirname(mod_path),
-                              "descriptions",
-                              "{}.txt".format(module_name))
+    _desc_path = os.path.join(os.path.dirname(mod_path), "descriptions", "{}.txt".format(module_name))
 
     if not os.path.exists(_desc_path):
         return _desc
@@ -114,13 +111,8 @@ def getIconPath(mod_path):
     mod_parent = os.path.dirname(mod_path)
     module_name = os.path.basename(mod_path).split(".")[0]
 
-    _icon_path = os.path.join(mod_parent,
-                              "icons",
-                              "{}.png".format(module_name))
-
-    _branch_path = os.path.join(mod_parent,
-                                "icons",
-                                "_default.png")
+    _icon_path = os.path.join(mod_parent, "icons", "{}.png".format(module_name))
+    _branch_path = os.path.join(mod_parent, "icons", "_default.png")
 
     for _icn in (_icon_path, _branch_path, config_obj.get("PATHS", "default_icon")):
         if os.path.exists(_icn):
@@ -154,20 +146,19 @@ def getObject(node_data, scene_obj):
         if nd.name != node_data["name"]:
             continue
 
-        # UUID is buggy for now
+        # TO-DO UUID is a bit buggy for now
         nd_uuid = node_data["uuid"]
 
         if sys.version_info[0] > 2:
-            bad_t = not isinstance(nd_uuid, str) and not isinstance(nd_uuid, uuid.UUID)
+            bad_t = not isinstance(nd_uuid, str)\
+                    and not isinstance(nd_uuid, uuid.UUID)
         else:
             bad_t = not isinstance(nd_uuid, str)\
                     and not isinstance(nd_uuid, unicode)\
                     and not isinstance(nd_uuid, uuid.UUID)
 
         if bad_t:
-            raise TypeError("Not a str, unicode or uuid.UUID",
-                            nd_uuid,
-                            type(nd_uuid))
+            raise TypeError("Not a str, unicode or uuid.UUID", nd_uuid, type(nd_uuid))
 
         if not isinstance(nd_uuid, uuid.UUID):
             nd_uuid = uuid.UUID(nd_uuid)
@@ -258,7 +249,7 @@ def printTree(node_obj):
     for nd_out in node_obj.nodes_out:
         next_node = getObject(nd_out, node_obj.scene)
         if not next_node:
-            e = " - Out-node not found", nd_out.get("name","")
+            e = " - Out-node not found", nd_out.get("name", "")
             print(nd_out)
             print(e)
             raise AttributeError(e)
