@@ -216,20 +216,20 @@ class Player(Main):
         self.player = ViewerObj(json_file)
         self.player.log_btn.clicked.connect(self._openLog)
 
-        for _n in self.nodes_all:
-            _dummy_dict = {"name": _n.name, "uuid": _n.uuid}
+        for _node_obj in self.nodes_all:
+            _dummy_dict = {"name": _node_obj.name, "uuid": _node_obj.uuid}
 
-            _node = nodeUtils.getObject(_dummy_dict, self.player.scene)
-            _msg = "\n".join(_n.messages)
-            _node.desc = _n.description
-            _node.setErrors(_n.getErrors())
+            _node_obj = nodeUtils.getObject(_dummy_dict, self.player.scene)
+            _msg = "\n".join(_node_obj.messages)
+            _node_obj.desc = _node_obj.description
+            _node_obj.setErrors(_node_obj.getErrors())
 
-            if _n.error:
-                _node.setDirty(state="error", msg=_msg)
-            elif _n.skip:
-                _node.setDirty(state="skip", msg=_msg)
+            if _node_obj.error:
+                _node_obj.setDirty(state="error", msg=_msg)
+            elif _node_obj.skip:
+                _node_obj.setDirty(state="skip", msg=_msg)
             else:
-                _node.setDirty()
+                _node_obj.setDirty()
 
         self.player.refresh()
         self.player.scene.setMode("player")
@@ -291,22 +291,22 @@ class Viewer(Main):
         _score_data = self.getDataFromJson(score_json)
 
         for _score in _score_data:
-            _node = nodeUtils.getObject(_score, self.player.scene)
+            _node_obj = nodeUtils.getObject(_score, self.player.scene)
 
-            if not _node:
+            if not _node_obj:
                 raise RuntimeError("Failed to find node pointer:",
                                    _score["name"],
                                    _score["uuid"])
 
             _msg = "\n".join(_score["messages"])
-            _node.setErrors(_score.get("errors", list()))
+            _node_obj.setErrors(_score.get("errors", list()))
 
             if _score["error"]:
-                _node.setDirty(state="error", msg=_msg)
+                _node_obj.setDirty(state="error", msg=_msg)
             elif _score["skip"]:
-                _node.setDirty(state="skip", msg=_msg)
+                _node_obj.setDirty(state="skip", msg=_msg)
             else:
-                _node.setDirty()
+                _node_obj.setDirty()
 
         self._app.exec_()
         # del self._app

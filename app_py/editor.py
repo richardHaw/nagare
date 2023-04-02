@@ -226,46 +226,52 @@ class Editor(object):
             if not os.path.isdir(mod_path):
                 raise RuntimeError("No module path: ".format(mod_path))
 
-        _catgory_count = 1
-        for _catgory_directory in self.modules_root:
-            _catgory = os.path.basename(_catgory_directory)
-            if not os.path.isdir(_catgory_directory) or _catgory.startswith("_"):
-                continue
+        _branch_count = 1
+        _branch_added = list()
+        _leaf_added = list()
 
-            _module_file = os.listdir(_catgory_directory)
-            if len(_module_file) < 1:
-                continue
+        for mod_path in self.modules_root:
+            _mod_name = os.path.basename(mod_path)
 
-            print(" {} ".format(_catgory).center(88, "="))
-            _tree_tit = "{}: {} nodes".format(str(_catgory_count).zfill(2), _catgory)
-            _branch = QTreeWidgetItem(self.ui.module_tree, [_tree_tit])
-            _branch.setExpanded(True)
-            _added = list()
-
-            for _leaf_file in _module_file:
-                _leaf_name = _leaf_file.split(".")[0]
-                _leaf_ext = _leaf_file.split(".")[-1]
-
-                if _leaf_file.startswith("_") or _leaf_name in _added:
+            for _branch in os.listdir(mod_path):
+                if _branch in _branch_added:
                     continue
 
-                if _leaf_ext not in ext_map[self.language]:
-                    continue
-                
-                _leaf_node = QTreeWidgetItem(_branch, [_leaf_name])
-                _leaf_path = os.path.abspath(os.path.join(_catgory_directory, _leaf_file))
-                _leaf_tt = nodeUtils.getDescription(_leaf_path)
+                _branch_path = os.path.join(mod_path, _branch)
 
-                _leaf_node.setToolTip(0, _leaf_tt)
-                _leaf_node.setWhatsThis(0, _leaf_path)
-                _branch.addChild(_leaf_node)
-                _added.append(_leaf_name)
-                print("- Loaded", _leaf_file)
-            _catgory_count += 1
+                if not os.path.isdir(_branch_path) or _branch.startswith("_"):
+                    continue
+
+                print(" {} ".format(_branch).center(88, "="))
+                _branch_files = os.listdir(_branch_path)
+                if len(_branch_files) < 1:
+                    continue
+
+                _branch_tit = "{}: {} ({})".format(str(_branch_count).zfill(2), _branch, _mod_name)
+                _branch_obj = QTreeWidgetItem(self.ui.module_tree, [_branch_tit])
+                _branch_obj.setExpanded(True)
+                _branch_added.append(_branch)
+
+                for _leaf_file in _branch_files:
+                    _leaf_name = _leaf_file.split(".")[0]
+
+                    if _leaf_file.startswith("_") or _leaf_name in _leaf_added:
+                        continue
+                    if _leaf_file.split(".")[-1] not in ext_map[self.language]:
+                        continue
+
+                    _leaf_obj = QTreeWidgetItem(_branch_obj, [_leaf_name])
+                    _leaf_path = os.path.abspath(os.path.join(_branch, _leaf_file))
+
+                    _leaf_obj.setToolTip(0, nodeUtils.getDescription(_leaf_path))
+                    _leaf_obj.setWhatsThis(0, _leaf_path)
+                    _branch_obj.addChild(_leaf_obj)
+                    _leaf_added.append(_leaf_name)
+                    print("- Loaded", _leaf_file)
+                _branch_count += 1
 
         self.ui.module_tree.itemClicked.connect(self._clicker)
-        _title = ["{} Modules".format(self.software).title()]
-        self.ui.module_tree.setHeaderLabels(_title)
+        self.ui.module_tree.setHeaderLabels(["{} Modules".format(self.software).title()])
 
     def show(self):
         self.ui.show()

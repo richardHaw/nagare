@@ -1,2 +1,0 @@
-Invoking Skip.
-Down-stream graph won't be calculated.

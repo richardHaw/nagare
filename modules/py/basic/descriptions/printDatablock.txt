@@ -1,2 +1,0 @@
-Prints data_block.
-Return data_block
