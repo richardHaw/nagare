@@ -124,10 +124,10 @@ class Viewer(QDialog):
 
         """
 
-        _b = sceneUtils.buildGraph(self.scene, json_file, datablock)
-        if isinstance(_b, str) or _b is None:
+        _tree = sceneUtils.buildGraph(self.scene, json_file, datablock)
+        if isinstance(_tree, str) or _tree is None:
             self.scene.resetToStarter()
-            print("Failed to build tree.")
+            print("Failed to build tree: {}".format(str(_tree)))
             return
 
     def feedback(self, msg):

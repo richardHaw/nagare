@@ -211,26 +211,15 @@ class Player(Main):
         self.propagate = int(config_obj.get("DETAILS", "propagate"))
 
         _copy_block = datablock.copy()
-        self.runJson(json_file, _copy_block)
         self.player = ViewerObj(json_file)
         self.player.log_btn.clicked.connect(self._openLog)
+        self.player.scene.setMode("player")
 
-        for _node_obj in self.nodes_all:
-            _dummy_dict = {"name": _node_obj.name, "uuid": _node_obj.uuid}
-            _node_obj = nodeUtils.getObject(_dummy_dict, self.player.scene)
-            _msg = "\n".join(_node_obj.messages)
-            _node_obj.description = _node_obj.description
-            _node_obj.setErrors(_node_obj.getErrors())
-
-            if _node_obj.error:
-                _node_obj.setDirty(state="error", msg=_msg)
-            elif _node_obj.skip:
-                _node_obj.setDirty(state="skip", msg=_msg)
-            else:
-                _node_obj.setDirty()
+        self.runJson(json_file, _copy_block)
+        nodeUtils.postProcessNodes(self.player.scene, self.nodes_all)
 
         self.player.refresh()
-        self.player.scene.setMode("player")
+        # self.player.scene.update()
         self.player.feedback("Ran: {}".format(json_file))
 
         self._app.exec_()
@@ -273,9 +262,9 @@ class Viewer(Main):
     """
 
     def __init__(self, graph_json, score_json):
-        for j in (graph_json, score_json):
-            if not os.path.exists(j):
-                raise IOError("Not found: {}".format(j))
+        for _json_file in (graph_json, score_json):
+            if not os.path.exists(_json_file):
+                raise IOError("Not found: {}".format(_json_file))
 
         self._app = None
         if not QApplication.instance():

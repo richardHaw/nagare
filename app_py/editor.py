@@ -454,23 +454,9 @@ class Editor(object):
         print("=" * 168)
         self.buildTree()
 
-        for _node in _dummy.nodes_all:
-            _dummy_dict = {"name": _node.name, "uuid": _node.uuid}
-            _dummy_obj = nodeUtils.getObject(_dummy_dict, self.ui.scene)
-            _msg = "\n".join(_node.messages)
-            _dummy_obj.description = _node.description
-            _dummy_obj.setErrors(_node.getErrors())
-
-            if _node.error:
-                _dummy_obj.setDirty(state="error", msg=_msg)
-            elif _node.skip:
-                _dummy_obj.setDirty(state="skip", msg=_msg)
-            else:
-                _dummy_obj.setDirty()
-
-            print("\n", "@", _msg)
-
+        nodeUtils.postProcessNodes(self.ui.scene, _dummy.nodes_all)
         del(_dummy)
+
         self.ui.scene.update()
         self._feedback("Ran: {}".format(self.tree_json))
 

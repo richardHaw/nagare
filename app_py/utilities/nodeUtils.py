@@ -288,3 +288,22 @@ def uniqueName(scene_obj, node_name):
             return False
 
     return True
+
+def postProcessNodes(scene_obj, nodes_list):
+    """
+
+    """
+
+    for _node in nodes_list:
+        _dummy_dict = {"name": _node.name, "uuid": _node.uuid}
+        _dummy_obj = getObject(_dummy_dict, scene_obj)
+        _msg = "\n".join(_node.messages)
+        _dummy_obj.description = _node.description
+        _dummy_obj.setErrors(_node.getErrors())
+
+        if _node.error:
+            _dummy_obj.setDirty(state="error", msg=_msg)
+        elif _node.skip:
+            _dummy_obj.setDirty(state="skip", msg=_msg)
+        else:
+            _dummy_obj.setDirty()

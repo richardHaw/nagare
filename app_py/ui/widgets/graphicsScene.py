@@ -61,7 +61,7 @@ class GraphicsScene(QGraphicsScene):
         self.setMode(mode)
 
     def setMode(self, mode):
-        _modes = ["editor", "player", "viewer"]
+        _modes = ("editor", "player", "viewer")
         if mode not in _modes:
             print("Valid modes: {}".format((",".join(_modes))))
             raise ValueError("Invalid mode: {}".format(mode))
@@ -79,22 +79,22 @@ class GraphicsScene(QGraphicsScene):
 
         # delete selected
         if event.key() in (Qt.Key_Delete, Qt.Key_Backspace):
-            for _w in self.selectedItems():
-                if isinstance(_w, ItemNode):
-                    for _out_w in _w.plug_out.out_wires:
-                        _w.scene.removeItem(_out_w)
+            for _selected_obj in self.selectedItems():
+                if isinstance(_selected_obj, ItemNode):
+                    for _out_w in _selected_obj.plug_out.out_wires:
+                        _selected_obj.scene.removeItem(_out_w)
 
-                    _in_wire = _w.plug_in.in_wire
+                    _in_wire = _selected_obj.plug_in.in_wire
                     if _in_wire:
-                        _in_wire.removeFromSocket(_w.scene, _in_wire, _in_wire.target)
-                    _w.scene.removeItem(_w)
-                elif isinstance(_w, GroupNode):
-                    _w.unparentChildren()
-                    _w.scene.removeItem(_w)
+                        _in_wire.removeFromSocket(_selected_obj.scene, _in_wire, _in_wire.target)
+                    _selected_obj.scene.removeItem(_selected_obj)
+                elif isinstance(_selected_obj, GroupNode):
+                    _selected_obj.unparentChildren()
+                    _selected_obj.scene.removeItem(_selected_obj)
                     self.clearSelection()
 
-                    for _it in _w.group_widgets:
-                        _it.setSelected(True)
+                    for _grouped in _selected_obj.group_widgets:
+                        _grouped.setSelected(True)
 
     def resetToStarter(self):
         """
