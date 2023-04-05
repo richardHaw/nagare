@@ -413,9 +413,7 @@ class Editor(object):
                                      "{}.log".format(logUtils.timeStamp(), self.software)
                                      )
 
-        logger = logUtils.getLogger(self.logger_name, self.log_file)
-        logger.propagate = True
-        return logger
+        logUtils.setupHandler(self.log_file)
 
     def buildTree(self):
         """

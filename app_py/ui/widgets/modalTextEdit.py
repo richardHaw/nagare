@@ -55,7 +55,10 @@ class ModalTextEdit(QDialog):
     def __str__(self):
         return __name__
 
-    def __init__(self, text_data=""):
+    def __init__(self, text_data=None):
+        if text_data is None:
+            text_data = ""
+
         super(ModalTextEdit, self).__init__()
 
         self.text_data = text_data

@@ -97,6 +97,8 @@ def timeStamp():
 
 
 def setupHandler(log_path=None):
+    kill()
+
     if log_path:
         log_full_path = os.path.join(config_obj.get("PATHS", "log_path"), log_path)
         if not os.path.isdir(os.path.dirname(log_full_path)):
@@ -107,7 +109,11 @@ def setupHandler(log_path=None):
         handler = logging.StreamHandler()
 
     handler.setFormatter(logging.Formatter("%(levelname)s %(asctime)s (%(module)s): %(message)s",
-                                           "%Y-%m-%d %H:%M:%S"))
+                                           "%H:%M:%S"))
+    if LOG_OBJ:
+        LOG_OBJ.addHandler(handler)
+        LOG_OBJ.propagate = True
+
     return handler
 
 

@@ -228,8 +228,8 @@ def printTree(node_obj):
     out_dict["icon"] = node_obj.icon_path
     out_dict["description"] = node_obj.description
     out_dict["command"] = node_obj.command
-    out_dict["x"] = node_obj.posX
-    out_dict["y"] = node_obj.posY
+    out_dict["x"] = node_obj.position_x
+    out_dict["y"] = node_obj.position_y
     out_dict["uuid"] = str(node_obj.uuid)
     out_dict["out_nodes"] = list()
     out_dict["in_node"] = node_obj.node_in
@@ -303,8 +303,8 @@ def postProcessNodes(scene_obj, nodes_list):
         _dummy_obj.setErrors(_node.getErrors())
 
         if _node.error:
-            _dummy_obj.setDirty(state="error", msg=_msg)
+            _dummy_obj.setDirty(state="error", message=_msg)
         elif _node.skip:
-            _dummy_obj.setDirty(state="skip", msg=_msg)
+            _dummy_obj.setDirty(state="skip", message=_msg)
         else:
             _dummy_obj.setDirty()

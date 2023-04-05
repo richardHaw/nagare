@@ -53,7 +53,10 @@ class GraphicsScene(QGraphicsScene):
         graphicsScene()
     """
 
-    def __init__(self, mode="editor"):
+    def __init__(self, mode=None):
+        if mode is None:
+            mode = "editor"
+
         super(GraphicsScene, self).__init__()
 
         _grid_color = QColor(25, 25, 25, 150)
@@ -78,23 +81,25 @@ class GraphicsScene(QGraphicsScene):
             return
 
         # delete selected
-        if event.key() in (Qt.Key_Delete, Qt.Key_Backspace):
-            for _selected_obj in self.selectedItems():
-                if isinstance(_selected_obj, ItemNode):
-                    for _out_w in _selected_obj.plug_out.out_wires:
-                        _selected_obj.scene.removeItem(_out_w)
+        if event.key() not in (Qt.Key_Delete, Qt.Key_Backspace):
+            return
 
-                    _in_wire = _selected_obj.plug_in.in_wire
-                    if _in_wire:
-                        _in_wire.removeFromSocket(_selected_obj.scene, _in_wire, _in_wire.target)
-                    _selected_obj.scene.removeItem(_selected_obj)
-                elif isinstance(_selected_obj, GroupNode):
-                    _selected_obj.unparentChildren()
-                    _selected_obj.scene.removeItem(_selected_obj)
-                    self.clearSelection()
+        for _selected_obj in self.selectedItems():
+            if isinstance(_selected_obj, ItemNode):
+                for _out_w in _selected_obj.plug_out.out_wires:
+                    _selected_obj.scene.removeItem(_out_w)
 
-                    for _grouped in _selected_obj.group_widgets:
-                        _grouped.setSelected(True)
+                _in_wire = _selected_obj.plug_in.in_wire
+                if _in_wire:
+                    _in_wire.removeFromSocket(_selected_obj.scene, _in_wire, _in_wire.target)
+                _selected_obj.scene.removeItem(_selected_obj)
+            elif isinstance(_selected_obj, GroupNode):
+                _selected_obj.unparentChildren()
+                _selected_obj.scene.removeItem(_selected_obj)
+                self.clearSelection()
+
+                for _grouped in _selected_obj.group_widgets:
+                    _grouped.setSelected(True)
 
     def resetToStarter(self):
         """

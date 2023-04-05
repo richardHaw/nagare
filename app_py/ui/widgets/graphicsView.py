@@ -28,7 +28,7 @@ from __future__ import division
 from __future__ import print_function
 
 from PySide2.QtCore import (Qt, QPoint)
-from .itemNode import ItemNode
+from itemNode import ItemNode
 from PySide2.QtWidgets import QGraphicsView
 
 

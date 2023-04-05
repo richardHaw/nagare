@@ -31,7 +31,10 @@ class ResultObj(object):
     def __str__(self):
         return __name__
 
-    def __init__(self, status="error"):
+    def __init__(self, status=None):
+        if status is None:
+            status = "error"
+
         self._errors = list()
         self._messages = list()
         self._status = ""
@@ -49,25 +52,25 @@ class ResultObj(object):
     def addError(self, new_err):
         try:
             self._errors.append(self._getErrorTuple(new_err))
-        except KeyError as e:
-            print(e, new_err)
+        except KeyError as _error:
+            print(_error, new_err)
 
     def appendErrors(self, new_errors):
-        for e in new_errors:
-            self.addError(e)
+        for _error in new_errors:
+            self.addError(_error)
 
     def getErrors(self):
         all_errs = list()
-        for e in self._errors:
-            all_errs.append(self._getErrorDict(e))
-        return all_errs
+        for _error in self._errors:
+            all_errs.append(self._getErrorDict(_error))
+        return tuple(all_errs)
 
     def addMessage(self, msg_str):
         self._messages.append(" - {}".format(str(msg_str)))
 
     def appendMessages(self, new_messages):
-        for m in new_messages:
-            self.addMessage(m)
+        for _message in new_messages:
+            self.addMessage(_message)
 
     def getMessages(self):
         return self._messages
@@ -84,7 +87,7 @@ class ResultObj(object):
 
     def _getErrorDict(self, err_tup):
         if len(err_tup) != 3:
-            raise ValueError("Must exactly be 3 items:", err_tup)
+            raise ValueError("Must exactly be 3 tuples:", err_tup)
 
         return {"item": err_tup[0],
                 "type": err_tup[1],

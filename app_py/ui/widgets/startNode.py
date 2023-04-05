@@ -32,18 +32,18 @@ from pprint import pprint
 
 from PySide2.QtCore import Qt
 
-from PySide2.QtGui import (QPen,
-                           QFont,
-                           QColor,
-                           QBrush,
-                           QPainter,
-                           QPainterPath)
+from PySide2.QtGui import QPen
+from PySide2.QtGui import QFont
+from PySide2.QtGui import QColor
+from PySide2.QtGui import QBrush
+from PySide2.QtGui import QPainter
+from PySide2.QtGui import QPainterPath
 
 from PySide2.QtWidgets import QGraphicsEllipseItem
 
-from .socketNode import SocketNode
-from .clickLabel import ClickLabel
-from .modalTextEdit import ModalTextEdit
+from socketNode import SocketNode
+from clickLabel import ClickLabel
+from modalTextEdit import ModalTextEdit
 
 
 class StartNode(QGraphicsEllipseItem):
@@ -59,11 +59,11 @@ class StartNode(QGraphicsEllipseItem):
     :param name: Name of the node.
     :type name: str
 
-    :param posX: X position.
-    :type posX: int
+    :param position_x: X position.
+    :type position_x: int
 
-    :param posY: X position.
-    :type posY: int
+    :param position_y: X position.
+    :type position_y: int
 
     :param scene: The pointer of the QGraphicsScene parent item.
     :type scene: object
@@ -76,14 +76,20 @@ class StartNode(QGraphicsEllipseItem):
     def __str__(self):
         return __name__
 
-    def __init__(self, name, posX=0, posY=0, scene=None):
+    def __init__(self, name, position_x=None, position_y=None, scene=None):
+        if position_x is None:
+            position_x = 0
+
+        if position_y is None:
+            position_y = 0
+
         super(StartNode, self).__init__()
         self.setAcceptHoverEvents(True)
         self.hovered = False
 
         self.name = name
-        self.posX = posX
-        self.posY = posY
+        self.position_x = position_x
+        self.position_y = position_y
         self.scene = scene
         self.description = "Starter Spawn"
         self.data_block = {}
@@ -148,8 +154,8 @@ class StartNode(QGraphicsEllipseItem):
         Retranslates the widget.
         """
 
-        self.setX(self.posX-self.width * 0.5)
-        self.setY(self.posY-self.width * 0.5)
+        self.setX(self.position_x-self.width * 0.5)
+        self.setY(self.position_y-self.width * 0.5)
 
     def paint(self, painter, QStyleOptionGraphicsItem, widget=None):
         """
@@ -163,12 +169,7 @@ class StartNode(QGraphicsEllipseItem):
                                True)
 
         path_outline = QPainterPath()
-
-        path_outline.addEllipse(-1,
-                                -1,
-                                self.width,
-                                self.width)
-
+        path_outline.addEllipse(-1, -1, self.width, self.width)
         painter.setBrush(Qt.NoBrush)
 
         if self.hovered:
@@ -220,10 +221,10 @@ class StartNode(QGraphicsEllipseItem):
 
         super(StartNode, self).mouseMoveEvent(event)
 
-        for _v in self.scene.views():
-            # if _v.zoom > 1.0:
-                # _v.update()
-            _v.update()
+        for _view in self.scene.views():
+            # if _view.zoom > 1.0:
+                # _view.update()
+            _view.update()
 
         self.drawMe()
 
@@ -233,10 +234,10 @@ class StartNode(QGraphicsEllipseItem):
         """
 
         super(StartNode, self).mouseReleaseEvent(event)
-        posi = event.pos()
-        posi = self.mapToScene(posi)
-        self.posX = posi.x()
-        self.posY = posi.y()
+        event_position = event.pos()
+        event_position = self.mapToScene(event_position)
+        self.position_x = event_position.x()
+        self.position_y = event_position.y()
 
     def mouseDoubleClickEvent(self, event):
         """

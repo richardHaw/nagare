@@ -29,7 +29,7 @@ from __future__ import print_function
 from PySide2.QtGui import (QFont, QColor)
 
 from PySide2.QtWidgets import QGraphicsTextItem
-from .inputText import InputText
+from inputText import InputText
 
 
 class ClickLabel(QGraphicsTextItem):

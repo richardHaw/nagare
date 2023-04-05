@@ -547,11 +547,11 @@ def alignTreeRecurse(node_obj):
         in_p_targets = [w.target.parentItem() for w in in_p.plug_out.out_wires if w.target]
         p_index = in_p_targets.index(node_obj)
 
-        node_obj.posX = in_p.posX + node_obj.width + 50
-        node_obj.posY = in_p.posY + (120 * p_index)
+        node_obj.position_x = in_p.position_x + node_obj.width + 50
+        node_obj.position_y = in_p.position_y + (120 * p_index)
 
         if node_obj.coveredBy():
-            node_obj.posY += 120
+            node_obj.position_y += 120
 
         update()
 

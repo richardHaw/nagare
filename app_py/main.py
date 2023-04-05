@@ -115,6 +115,7 @@ class Main(object):
             return
 
         _run_result = None
+        self.log.info("")
         self.log.info("=" * 88)
         _dummy = NodeDummy(node_data)
 

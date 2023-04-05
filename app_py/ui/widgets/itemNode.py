@@ -30,19 +30,19 @@ from __future__ import print_function
 import uuid
 from PySide2.QtCore import Qt
 
-from PySide2.QtGui import (QPen,
-                           QColor,
-                           QBrush,
-                           QPainter,
-                           QPainterPath)
+from PySide2.QtGui import QPen
+from PySide2.QtGui import QColor
+from PySide2.QtGui import QBrush
+from PySide2.QtGui import QPainter
+from PySide2.QtGui import QPainterPath
 
-from PySide2.QtWidgets import (QGraphicsRectItem,
-                               QGraphicsTextItem,
-                               QGraphicsPixmapItem)
+from PySide2.QtWidgets import QGraphicsRectItem
+from PySide2.QtWidgets import QGraphicsTextItem
+from PySide2.QtWidgets import QGraphicsPixmapItem
 
-from .resultsDialog import ResultsDialog
-from .clickLabel import ClickLabel
-from .socketNode import SocketNode
+from resultsDialog import ResultsDialog
+from clickLabel import ClickLabel
+from socketNode import SocketNode
 
 
 class ItemNode(QGraphicsRectItem):
@@ -56,16 +56,16 @@ class ItemNode(QGraphicsRectItem):
     :param name: Name of the node.
     :type name: str
 
-    :param posX: X position.
-    :type posX: int
+    :param position_x: X position.
+    :type position_x: int
 
-    :param posY: X position.
-    :type posY: int
+    :param position_y: Y position.
+    :type position_y: int
 
     :param scene: The pointer of the QGraphicsScene parent item.
     :type scene: object
 
-    :param description: Text description, defaults to def_desc if not set.
+    :param description: Text description, defaults to "Short description of your widget" if not set.
     :type description: str
 
     - Example::
@@ -73,18 +73,25 @@ class ItemNode(QGraphicsRectItem):
         itemNode("sample",10,20,self.scene,"Sample Spawn")
     """
 
-    def_desc = "Short description of your widget"
-
     def __str__(self):
         return __name__
 
     def __init__(self,
                  name,
-                 posX=0,
-                 posY=0,
+                 position_x=None,
+                 position_y=None,
                  scene=None,
-                 description=def_desc,
+                 description=None,
                  uuid_str=None):
+
+        if position_x is None:
+            position_x = 0
+
+        if position_y is None:
+            position_y = 0
+
+        if description is None:
+            description = "Short description of your widget"
 
         super(ItemNode, self).__init__()
 
@@ -92,8 +99,8 @@ class ItemNode(QGraphicsRectItem):
         self.hovered = False
 
         self.name = name
-        self.posX = posX
-        self.posY = posY
+        self.position_x = position_x
+        self.position_y = position_y
         self.scene = scene
         self.description = description
         self.data_block = dict()
@@ -108,7 +115,7 @@ class ItemNode(QGraphicsRectItem):
         self.plug_in = None
         self.nodes_out = list()
         self.node_in = None
-        self._errors_list = list()
+        self._errors_list = tuple()
         self.label = None
         self.state = "Ready"
         self.state_label = None
@@ -180,8 +187,8 @@ class ItemNode(QGraphicsRectItem):
         :meta private:
         """
 
-        self.setX(self.posX-self.width / 2)
-        self.setY(self.posY-self.height / 2)
+        self.setX(self.position_x - self.width / 2)
+        self.setY(self.position_y - self.height / 2)
 
     def paint(self, painter, QStyleOptionGraphicsItem, widget=None):
         """
@@ -256,7 +263,7 @@ class ItemNode(QGraphicsRectItem):
         self.messages = list()
 
     def setErrors(self, errors):
-        self._errors_list = errors
+        self._errors_list = tuple(errors)
 
     def getErrors(self):
         return self._errors_list
@@ -270,7 +277,7 @@ class ItemNode(QGraphicsRectItem):
         if not str(self.uuid) == new_uuid:
             raise AttributeError("Failed to set UUID: {}".format(self.name))
 
-    def setDirty(self, state="", msg="Processed"):
+    def setDirty(self, state=None, message=None):
         """
         Sets the node dirty, changes the tooltip.
 
@@ -279,9 +286,15 @@ class ItemNode(QGraphicsRectItem):
         :param state: state of the node.
         :type state: str
 
-        :param msg: error or any messages.
-        :type msg: str
+        :param message: error or any messages.
+        :type message: str
         """
+
+        if state is None:
+            state = ""
+
+        if message is None:
+            message = "Processed"
 
         if state == "error":
             self.error = True
@@ -293,7 +306,7 @@ class ItemNode(QGraphicsRectItem):
             self.dirty = True
             self.state = "Done"
 
-        self.messages.append(msg)
+        self.messages.append(message)
         self.state_label.setPlainText(self.state)
 
         self.setToolTip("{}\n{}\n{}".format(self.description,
@@ -363,8 +376,8 @@ class ItemNode(QGraphicsRectItem):
 
         posi = event.pos()
         posi = self.mapToScene(posi)
-        self.posX = posi.x()
-        self.posY = posi.y()
+        self.position_x = posi.x()
+        self.position_y = posi.y()
 
     def mouseDoubleClickEvent(self, event):
         """
@@ -375,7 +388,8 @@ class ItemNode(QGraphicsRectItem):
                             self.state,
                             self.description,
                             "\n".join(self.messages),
-                            self._errors_list)
+                            self._errors_list,
+                            self.command)
 
     def coveredBy(self):
         """
@@ -396,7 +410,7 @@ class ItemNode(QGraphicsRectItem):
             if "widgets.itemNode" not in _ni.__str__():
                 continue
 
-            if int(_ni.posX) == int(self.posX) and int(_ni.posY) == int(self.posY):
+            if int(_ni.position_x) == int(self.position_x) and int(_ni.position_y) == int(self.position_y):
                 return True
         return False
 
@@ -408,7 +422,4 @@ class ItemNode(QGraphicsRectItem):
         :rtype: dict
         """
 
-        out = {"name": self.name,
-               "uuid": self.uuid}
-
-        return out
+        return {"name": self.name, "uuid": self.uuid}

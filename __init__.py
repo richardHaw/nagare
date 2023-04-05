@@ -46,7 +46,7 @@ log_file = os.path.join(config_obj.get("PATHS", "log_path"),
 
 LOG = logUtils.getLogger(log_file)
 logUtils.setLogLevel()
-LOG.info("Starting Nagare...")
+LOG.info("Starting...")
 
 
 def setStrict(val=None):
@@ -297,9 +297,9 @@ class Viewer(Main):
             _node_obj.setErrors(_score.get("errors", list()))
 
             if _score["error"]:
-                _node_obj.setDirty(state="error", msg=_msg)
+                _node_obj.setDirty(state="error", message=_msg)
             elif _score["skip"]:
-                _node_obj.setDirty(state="skip", msg=_msg)
+                _node_obj.setDirty(state="skip", message=_msg)
             else:
                 _node_obj.setDirty()
 
@@ -314,5 +314,5 @@ if __name__ == "__main__":
     # Editor(language="jsx", graph_file="C:/repo/nagare/graphs/xxx.json")
     # Editor(graph_file=r"C:/repo/nagare/graphs/xxx.json")
     # Editor()
-    Player()
-    # Viewer(r"C:/repo/nagare/graphs/tester_jsx.json", r"C:\repo\_tmp\batman.json")
+    # Player()
+    Viewer(r"C:/repo/nagare/graphs/tester_jsx.json", r"C:\repo\_tmp\batman.json")

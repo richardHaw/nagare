@@ -26,21 +26,22 @@ SOFTWARE.
 
 import os
 
-from PySide2.QtWidgets import (QLabel,
-                               QDialog,
-                               QLineEdit,
-                               QSizePolicy,
-                               QHeaderView,
-                               QHBoxLayout,
-                               QVBoxLayout,
-                               QPushButton,
-                               QSpacerItem,
-                               QPlainTextEdit)
+from PySide2.QtWidgets import QLabel
+from PySide2.QtWidgets import QDialog
+from PySide2.QtWidgets import QLineEdit
+from PySide2.QtWidgets import QSizePolicy
+from PySide2.QtWidgets import QHeaderView
+from PySide2.QtWidgets import QHBoxLayout
+from PySide2.QtWidgets import QVBoxLayout
+from PySide2.QtWidgets import QPushButton
+from PySide2.QtWidgets import QSpacerItem
+from PySide2.QtWidgets import QPlainTextEdit
+
 from PySide2.QtCore import Qt
 
-from .tableModel import TableModel
-from .tableView import TableView
-from .collapseGroup import CollapseGroup
+from tableModel import TableModel
+from tableView import TableView
+from collapseGroup import CollapseGroup
 from app_py.configs import config_obj
 
 GLOBAL_CSS = config_obj.get("DETAILS", "global_css")
@@ -50,18 +51,31 @@ class ResultsDialog(QDialog):
     def __str__(self):
         return __name__
 
-    def __init__(self, node_name, status, description="none", msg="", errors_list=[]):
+    def __init__(self, node_name, status, description=None, message=None, errors=None, module_name=None):
+        if description is None:
+            description = "none"
+
+        if message is None:
+            message = ""
+
+        if errors is None:
+            errors = tuple()
+
+        if module_name is None:
+            module_name = "none"
+
         super(ResultsDialog, self).__init__()
 
         self.node_name = node_name
-        self.errors_list = self._processErrors(errors_list)
+        self.errors = self._processErrors(errors)
         self.message = ""
         self.status = status
+        self.module_name = module_name
         self.headers = ["Item", "Type", "Reason"]
         self._desc = ""
 
         self._setup()
-        self.setMessage(msg)
+        self.setMessage(message)
         self.setDesc(description)
         self.resize(600, 800)
         self.setStyleSheet(GLOBAL_CSS)
@@ -105,7 +119,7 @@ class ResultsDialog(QDialog):
         _module_lbl.setFixedWidth(85)
         _module_layout.addWidget(_module_lbl)
 
-        _module_txt = QLineEdit(self.node_name + ".py")
+        _module_txt = QLineEdit(self.module_name)
         _module_txt.setToolTip("Source absolute URI")
         _module_txt.setMinimumWidth(100)
         _module_layout.addWidget(_module_txt)
@@ -157,7 +171,7 @@ class ResultsDialog(QDialog):
         _main_layout.addWidget(_table_box)
 
         self.tableModel = TableModel(self,
-                                     self.errors_list,
+                                     self.errors,
                                      self.headers)
 
         self.tableView = TableView(self.tableModel)
@@ -229,22 +243,11 @@ if __name__ == "__main__":
     from PySide2.QtWidgets import QApplication
     top_app = QApplication(sys.argv)
 
-    GLOBAL_CSS = "QDialog {background-color: pink} "
-    GLOBAL_CSS += "QLineEdit {background-color: slate; color: silver; border: none} "
-    GLOBAL_CSS += "QToolButton {background-color: dimgrey; border: none} "
-    GLOBAL_CSS += "QToolButton::hover {background-color: slategrey; border: none} "
-    GLOBAL_CSS += "QMenuBar {border: none} "
-    GLOBAL_CSS += "QTreeWidget {background-color: #505050; color: silver; border: none} "
-    GLOBAL_CSS += "QTreeWidget::item:hover {background-color:slategrey;} "
-    GLOBAL_CSS += "QHeaderView::section {background-color: dimgrey; border: none} "
-    GLOBAL_CSS += "QGroupBox::indicator:unchecked {image: url(icons/group_collapse_close.png);} "
-    GLOBAL_CSS += "QGroupBox::indicator:checked {image: url(icons/group_collapse_open.png);} "
-
-    errs = [{"item": "babalu_layer_longName", "type": "LayerItem", "reason": "Not found"},
+    errs = ({"item": "babalu_layer_longName", "type": "LayerItem", "reason": "Not found"},
             {"item": "baba_comp", "type": "CompItem", "reason": "Incomplete items, missing layers"},
             {"item": "baba_foot", "type": "FootageItem", "reason": "File not found"},
-            {"item": "baba_folder", "type": "FolderItem",  "reason": "Japanese name, should be ASCII only"},
-            ]
+            {"item": "baba_folder", "type": "FolderItem",  "reason": "Japanese name, should be ASCII only"}
+            )
 
     sp = ResultsDialog("babalu", "error", "my description", "", errs)
     sys.exit(0)

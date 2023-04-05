@@ -28,16 +28,16 @@ from __future__ import division
 from __future__ import print_function
 from datetime import datetime
 
-from PySide2.QtCore import (Qt,
-                            QRect,
-                            QPointF)
+from PySide2.QtCore import Qt
+from PySide2.QtCore import QRect
+from PySide2.QtCore import QPointF
 
-from PySide2.QtGui import (QPen,
-                           QBrush,
-                           QColor,
-                           QPainter,
-                           QTransform,
-                           QPainterPath)
+from PySide2.QtGui import QPen
+from PySide2.QtGui import QBrush
+from PySide2.QtGui import QColor
+from PySide2.QtGui import QPainter
+from PySide2.QtGui import QTransform
+from PySide2.QtGui import QPainterPath
 
 from PySide2.QtWidgets import QGraphicsEllipseItem
 from .wireNode import WireNode
@@ -195,8 +195,8 @@ class SocketNode(QGraphicsEllipseItem):
         if self.socketType == "out":
             rect = self.boundingRect()
 
-            pointA = QPointF(rect.x()+rect.width() / 2,
-                             rect.y()+rect.height() / 2)
+            pointA = QPointF(rect.x() + rect.width() / 2,
+                             rect.y() + rect.height() / 2)
 
             pointA = self.mapToScene(pointA)
             pointB = self.mapToScene(event.pos())
@@ -215,7 +215,8 @@ class SocketNode(QGraphicsEllipseItem):
         if not self.scene().editable:
             return
 
-        self._item_under = self.scene().itemAt(event.scenePos().toPoint(), QTransform())
+        self._item_under = self.scene().itemAt(event.scenePos().toPoint(),
+                                               QTransform())
 
         if self.socketType == "out":
             pointB = self.mapToScene(event.pos())

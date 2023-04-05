@@ -25,8 +25,8 @@ SOFTWARE.
 """
 
 from PySide2.QtCore import Qt
-from PySide2.QtWidgets import (QTableView,
-                               QHeaderView)
+from PySide2.QtWidgets import QTableView
+from PySide2.QtWidgets import QHeaderView
 
 
 class TableView(QTableView):
@@ -34,7 +34,7 @@ class TableView(QTableView):
         super(TableView, self).__init__()
 
         self.model = model
-        self.sort_items = False
+        self.sort_items = sort_items
         self._setup()
 
     def _setup(self):

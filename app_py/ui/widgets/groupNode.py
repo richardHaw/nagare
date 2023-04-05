@@ -32,7 +32,7 @@ import uuid
 from PySide2.QtGui import (QColor, QBrush)
 from PySide2.QtCore import QRectF
 from PySide2.QtWidgets import QGraphicsRectItem
-from .clickLabel import ClickLabel
+from clickLabel import ClickLabel
 
 
 class GroupNode(QGraphicsRectItem):
@@ -56,7 +56,10 @@ class GroupNode(QGraphicsRectItem):
     def __str__(self):
         return __name__
 
-    def __init__(self, scene, group_widgets, name="New Group"):
+    def __init__(self, scene, group_widgets, name=None):
+        if name is None:
+            name = "New Group"
+
         super(GroupNode, self).__init__()
 
         self.scene = scene
@@ -106,17 +109,17 @@ class GroupNode(QGraphicsRectItem):
 
         """
 
-        for _wd in widgets_list:
-            _wd.setParentItem(self)
+        for _widget in widgets_list:
+            _widget.setParentItem(self)
 
     def unparentChildren(self):
         """
         Unparents all children.
         """
 
-        for _gp in self.group_widgets:
-            _gp.setParentItem(None)
-            _gp.drawMe()
+        for _group in self.group_widgets:
+            _group.setParentItem(None)
+            _group.drawMe()
 
     def setupBgColor(self, rgba_tuple):
         """
@@ -164,24 +167,24 @@ class GroupNode(QGraphicsRectItem):
         _counter = 0
 
         while _counter != _counter_max:
-            _wd1 = widgets_list[_counter]
+            _widget1 = widgets_list[_counter]
 
             try:
-                _wd2 = widgets_list[_counter + 1]
+                _widget2 = widgets_list[_counter + 1]
             except IndexError:
                 break
 
-            _bbx1 = QRectF(_wd1.x(),
-                           _wd1.y(),
-                           _wd1.width,
-                           _wd1.height)
+            _bounding1 = QRectF(_widget1.x(),
+                                _widget1.y(),
+                                _widget1.width,
+                                _widget1.height)
 
-            _bbx2 = QRectF(_wd2.x(),
-                           _wd2.y(),
-                           _wd2.width,
-                           _wd2.height)
+            _bounding2 = QRectF(_widget2.x(),
+                                _widget2.y(),
+                                _widget2.width,
+                                _widget2.height)
 
-            out = _bbx1.united(_bbx2)
+            out = _bounding1.united(_bounding2)
             _counter += 1
 
         return out

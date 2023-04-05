@@ -37,8 +37,8 @@ from PySide2.QtWidgets import QHBoxLayout
 from PySide2.QtWidgets import QVBoxLayout
 from PySide2.QtWidgets import QSystemTrayIcon
 
-from .ui import widgets
-from .utilities import sceneUtils
+from ui import widgets
+from utilities import sceneUtils
 from app_py.configs import config_obj
 
 
@@ -130,20 +130,20 @@ class Viewer(QDialog):
             print("Failed to build tree: {}".format(str(_tree)))
             return
 
-    def feedback(self, msg):
+    def feedback(self, message):
         """
         Updates the feedback text.
 
         **parameters**, **types**, **return** and **return types**
 
-        :param msg: The message text.
-        :type msg: str
+        :param message: The message text.
+        :type message: str
 
         """
 
-        self.info_txt.setText(msg)
+        self.info_txt.setText(message)
 
-    def notify(self, title, msg):
+    def notify(self, title, message):
         """
         Show a notification on the tray.
 
@@ -152,12 +152,12 @@ class Viewer(QDialog):
         :param title: The title text.
         :type title: str
 
-        :param msg: The message text.
-        :type msg: str
+        :param message: The message text.
+        :type message: str
 
         """
 
-        self.tray.showMessage(title, msg)
+        self.tray.showMessage(title, message)
 
     def refresh(self):
         """

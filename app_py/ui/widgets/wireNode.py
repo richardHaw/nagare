@@ -27,14 +27,14 @@ SOFTWARE.
 from __future__ import division
 from __future__ import print_function
 
-from PySide2.QtGui import (QPen,
-                           QColor,
-                           QPainter,
-                           QTransform,
-                           QPainterPath)
+from PySide2.QtGui import QPen
+from PySide2.QtGui import QColor
+from PySide2.QtGui import QPainter
+from PySide2.QtGui import QTransform
+from PySide2.QtGui import QPainterPath
 
-from PySide2.QtCore import (Qt,
-                            QPointF)
+from PySide2.QtCore import Qt
+from PySide2.QtCore import QPointF
 
 from PySide2.QtWidgets import QGraphicsPathItem
 
@@ -64,13 +64,16 @@ class WireNode(QGraphicsPathItem):
         self.new_line = wireNode(_a,_b)
     """
 
-    _defaultA = QPointF(0.0, 0.0)
-    _defaultB = QPointF(50.0, 50.0)
-
     def __str__(self):
         return __name__
 
-    def __init__(self, pointA=_defaultA, pointB=_defaultB):
+    def __init__(self, pointA=None, pointB=None):
+        if pointA is None:
+            pointA = QPointF(0.0, 0.0)
+
+        if pointB is None:
+            pointB = QPointF(50.0, 50.0)
+
         super(WireNode, self).__init__()
 
         self._pointA = pointA
