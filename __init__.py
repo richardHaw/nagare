@@ -37,8 +37,16 @@ from app_py.editor import Editor as EditorObj
 from app_py.viewer import Viewer as ViewerObj
 from app_py.utilities import nodeUtils
 from app_py.main import Main
+from app_py.utilities import logUtils
 
-print("Starting Nagare...")
+log_file = os.path.join(config_obj.get("PATHS", "log_path"),
+                        config_obj.get("DETAILS", "language"),
+                        "{}.log".format(logUtils.timeStamp(), config_obj.get("DETAILS", "language"))
+                        )
+
+LOG = logUtils.getLogger(log_file)
+logUtils.setLogLevel()
+LOG.info("Starting Nagare...")
 
 
 def setStrict(val=None):
@@ -192,7 +200,6 @@ class Player(Main):
     """
 
     def __init__(self, json_file=None, datablock=None):
-
         if json_file is None:
             json_file = config_obj.get("PATHS", "default_json")
 
@@ -212,6 +219,7 @@ class Player(Main):
 
         _copy_block = datablock.copy()
         self.player = ViewerObj(json_file)
+        self.player.setWindowTitle(config_obj.get("DETAILS", "player_title"))
         self.player.log_btn.clicked.connect(self._openLog)
         self.player.scene.setMode("player")
 
@@ -305,6 +313,6 @@ if __name__ == "__main__":
     # config_obj.set("PATHS", "mod_paths", [r"C:\repo\_dummy_jsx"])
     # Editor(language="jsx", graph_file="C:/repo/nagare/graphs/xxx.json")
     # Editor(graph_file=r"C:/repo/nagare/graphs/xxx.json")
-    Editor()
-    # Player()
+    # Editor()
+    Player()
     # Viewer(r"C:/repo/nagare/graphs/tester_jsx.json", r"C:\repo\_tmp\batman.json")

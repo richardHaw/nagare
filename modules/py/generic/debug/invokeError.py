@@ -1,8 +1,7 @@
 from __future__ import print_function
 
-import logging
 from app_py.resultObj import ResultObj
-from app_py.configs import config_obj
+from app_py.utilities.logUtils import LOG_OBJ
 
 
 def main(data_block={}):
@@ -11,10 +10,8 @@ def main(data_block={}):
     Return None
     """
 
-    _log = logging.getLogger(config_obj.get("DETAILS", "log_name"))
-    _log.propagate = True
-    _log.info(__name__)
-    _log.error("Simulating an Error")
+    LOG_OBJ.error("Simulating an Error")
+    LOG_OBJ.error("Creating an error object...")
 
     dummy_error = ResultObj()  # defaults to error
 
@@ -34,4 +31,5 @@ def main(data_block={}):
     dummy_error.addError({"item": "item_only_specified"})
 
     dummy_error.addMessage("You can use the errors for selection, repair, etc")
+
     return dummy_error

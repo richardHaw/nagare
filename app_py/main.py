@@ -51,8 +51,7 @@ class Main(object):
         self.nodes_all = list()
         self.strict = False
         self.propagate = True
-        self.log_obj = None
-        self.log_file = ""
+        self.log = logUtils.getLogger()
 
     def runJson(self, json_path, data_block):
         """
@@ -81,23 +80,17 @@ class Main(object):
             Spawn.runJson("C:/test/sample.json",test_block")
         """
 
-        self.log_file = os.path.join(config_obj.get("PATHS", "log_path"),
-                                     config_obj.get("DETAILS", "language"),
-                                     "{}.log".format(logUtils.timeStamp(), config_obj.get("DETAILS", "language"))
-                                     )
-
-        self.log_obj = logUtils.getLogger(config_obj.get("DETAILS", "log_name"), self.log_file)
-        self.log_obj.propagate = True
-        self.log_obj.info("Running JSON: {}".format(json_path))
+        self.log.propagate = True
+        self.log.info("Running JSON: {}".format(json_path))
         self.nodes_all = list()
 
         _datas = Main.getDataFromJson(json_path)
         _nodes_data = _datas.get("nodes", _datas)
         self._recurser(_nodes_data, data_block)
 
-        self.log_obj.info("Finished running JSON: {}".format(json_path))
-        logUtils.kill(self.log_obj)
-        self.log_obj = None
+        self.log.info("Finished running JSON: {}".format(json_path))
+        logUtils.kill()
+        self.log = None
 
     def _recurser(self, node_data, data_block):
         """
@@ -122,10 +115,10 @@ class Main(object):
             return
 
         _run_result = None
-        self.log_obj.info("=" * 88)
+        self.log.info("=" * 88)
         _dummy = NodeDummy(node_data)
 
-        self.log_obj.info("Running: {}".format(_dummy.name))
+        self.log.info("Running: {}".format(_dummy.name))
         _dummy.messages.append("{}'s report:".format(_dummy.name))
 
         # copy the data_block
@@ -148,15 +141,15 @@ class Main(object):
             _run_result = _proc_mod.main(_copy_block)
             del(_proc_mod)
         except Exception as err:
-            self.log_obj.info("=" * 88)
+            self.log.info("=" * 88)
             _err_msg = "Failed module import: {}".format(_dummy.command)
             _err_for = str(format_exc())
             _ex_msgs = [_err_msg]
             _ex_msgs.append(_err_for)
-            self.log_obj.error(_err_msg)
-            self.log_obj.error(_err_for)
-            self.log_obj.error(str(err))
-            self.log_obj.error("=" * 88)
+            self.log.error(_err_msg)
+            self.log.error(_err_for)
+            self.log.error(str(err))
+            self.log.error("=" * 88)
 
         # used for safety
         if "resultObj" not in repr(_run_result) and not isinstance(_run_result, dict) and _run_result is None:
@@ -178,11 +171,11 @@ class Main(object):
 
             if _run_result.getStatus() == "error":
                 _dummy.error = True
-                self.log_obj.error("Error running: {}".format(_dummy.name))
-                self.log_obj.error(pformat(_copy_block, indent=4))
+                self.log.error("Error running: {}".format(_dummy.name))
+                self.log.error(pformat(_copy_block, indent=4))
 
                 for dummy_msg in _dummy.messages:
-                    self.log_obj.error(dummy_msg)
+                    self.log.error(dummy_msg)
 
                 if self.strict:
                     _dummy.messages.append("Operation stopped")
@@ -192,7 +185,7 @@ class Main(object):
                 _dummy.messages.append("Skipped")
 
                 for _warning in _dummy.messages:
-                    self.log_obj.warning(_warning)
+                    self.log.warning(_warning)
 
             # don't run down-stream nodes
             return _dummy

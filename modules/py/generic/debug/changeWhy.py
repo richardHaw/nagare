@@ -4,8 +4,7 @@ from __future__ import print_function
 # from __future__ import absolute_import
 # from __future__ import unicode_literals
 
-import logging
-from app_py.configs import config_obj
+from app_py.utilities.logUtils import LOG_OBJ
 
 
 def main(data_block={}):
@@ -15,10 +14,6 @@ def main(data_block={}):
     """
 
     data_block["why"] = "Helping people bring out the best in themselves."
-
-    _log = logging.getLogger(config_obj.get("DETAILS", "log_name"))
-    _log.propagate = True
-    _log.info(__name__)
-    _log.info(data_block["why"])
+    LOG_OBJ.info(data_block["why"])
 
     return data_block

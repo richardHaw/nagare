@@ -1,8 +1,7 @@
 from __future__ import print_function
 
-import logging
 from app_py.resultObj import ResultObj
-from app_py.configs import config_obj
+from app_py.utilities.logUtils import LOG_OBJ
 
 
 def main(data_block={}):
@@ -12,10 +11,7 @@ def main(data_block={}):
     Return "skip"
     """
 
-    _log = logging.getLogger(config_obj.get("DETAILS", "log_name"))
-    _log.propagate = True
-    _log.info(__name__)
-    _log.warning("Simulating a skip...")
+    LOG_OBJ.warning("Simulating a skip...")
 
     skip_obj = ResultObj("skip")
     skip_obj.addMessage("This is an example skip node...")

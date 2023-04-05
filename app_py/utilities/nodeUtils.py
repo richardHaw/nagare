@@ -289,6 +289,7 @@ def uniqueName(scene_obj, node_name):
 
     return True
 
+
 def postProcessNodes(scene_obj, nodes_list):
     """
 

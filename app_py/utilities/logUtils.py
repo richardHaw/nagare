@@ -30,17 +30,18 @@ import os
 import logging
 from datetime import datetime
 from app_py.configs import config_obj
+LOG_OBJ = None
 
 
-def getLogger(name=None, log_name = None):
+def getLogger(log_path=None):
     """
     Use this to find a handler with specified name.
     Also sets the formatter.
 
     **parameters**, **types**, **return** and **return types**
 
-    :param name: Look for handlers with this name.
-    :type name: str
+    :param log_path: Output folder.
+    :type log_path: str
 
     :return: Log handler object.
     :rtype: pointer
@@ -50,28 +51,23 @@ def getLogger(name=None, log_name = None):
         logUtils.getLogger("nagare_logger")
     """
 
-    if name is None:
-        name = config_obj.get("DETAILS", "log_name")
+    global LOG_OBJ
 
-    formatter = logging.Formatter("%(levelname)s (%(module)s): %(message)s")
+    if LOG_OBJ:
+        return LOG_OBJ
 
-    if log_name:
-        log_path = os.path.join(config_obj.get("PATHS", "log_path"), log_name)
-        if not os.path.isdir(os.path.dirname(log_path)):
-            os.makedirs(os.path.dirname(log_path))
-        handler = logging.FileHandler(log_path)
-        print("Log:", log_path)
-    else:
-        handler = logging.StreamHandler()
+    handler = setupHandler(log_path)
 
-    handler.setFormatter(formatter)
+    LOG_OBJ = logging.getLogger()
+    LOG_OBJ.setLevel(logging.DEBUG)
+    LOG_OBJ.addHandler(handler)
+    LOG_OBJ.propagate = True
 
-    logger = logging.getLogger(name)
-    logger.setLevel(logging.DEBUG)
-    logger.addHandler(handler)
-    logger.propagate = True
+    if [h for h in LOG_OBJ.handlers if isinstance(h, logging.StreamHandler)]:
+        LOG_OBJ.addHandler(logging.StreamHandler())
 
-    return logger
+    LOG_OBJ.info("Log initiated...")
+    return LOG_OBJ
 
 
 def timeStamp():
@@ -100,6 +96,25 @@ def timeStamp():
     return out
 
 
+def setupHandler(log_path=None):
+    if log_path:
+        log_full_path = os.path.join(config_obj.get("PATHS", "log_path"), log_path)
+        if not os.path.isdir(os.path.dirname(log_full_path)):
+            os.makedirs(os.path.dirname(log_full_path))
+        handler = logging.FileHandler(log_full_path)
+        print("Log file: {}".format(log_full_path))
+    else:
+        handler = logging.StreamHandler()
+
+    handler.setFormatter(logging.Formatter("%(levelname)s %(asctime)s (%(module)s): %(message)s",
+                                           "%Y-%m-%d %H:%M:%S"))
+    return handler
+
+
+def setLogLevel():
+    LOG_OBJ.setLevel(logging.INFO)
+
+
 def getDatedName(filename):
     """
     Returns a name with a date stamp.
@@ -120,7 +135,8 @@ def getDatedName(filename):
     return "{}_{}_".format(filename, timeStamp())
 
 
-def kill(logger):
-    for handler in logger.handlers[:]:
-        logger.removeHandler(handler)
-        print("Log killed:", handler)
+def kill():
+    if LOG_OBJ:
+        for handler in LOG_OBJ.handlers:
+            LOG_OBJ.removeHandler(handler)
+            print("Log killed:", handler)
