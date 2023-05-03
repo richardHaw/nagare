@@ -145,8 +145,7 @@ class Main(object):
             self.log.info("=" * 88)
             _err_msg = "Failed module import: {}".format(_dummy.command)
             _err_for = str(format_exc())
-            _ex_msgs = [_err_msg]
-            _ex_msgs.append(_err_for)
+            _ex_msgs = [_err_msg, _err_for]
             self.log.error(_err_msg)
             self.log.error(_err_for)
             self.log.error(str(err))

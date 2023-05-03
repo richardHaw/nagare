@@ -118,7 +118,7 @@ def getIconPath(mod_path):
         if os.path.exists(_icn):
             return _icn
 
-    print("No icons found.")
+    LOGGER.info("No icons found.")
 
 
 def getObject(node_data, scene_obj):
@@ -186,10 +186,7 @@ def refresh(node_obj):
 
 def printTree(node_obj):
     """
-    Method to print out a node's.
-    Use this to run the graph or save it.
-    This can be set to recursive.
-
+    Use this to save the graph.
     When a module is executed this method will catch its return value.
 
     - A dict means that running the node was successful.
@@ -219,8 +216,7 @@ def printTree(node_obj):
     This WILL NOT parse nodes that are not connected by wire.
     """
 
-    # sleep(0.01)
-    print("printTree:", node_obj.name)
+    LOGGER.info("printTree:", node_obj.name)
 
     out_dict = dict()
     out_dict["name"] = node_obj.name
@@ -250,8 +246,8 @@ def printTree(node_obj):
         next_node = getObject(nd_out, node_obj.scene)
         if not next_node:
             e = " - Out-node not found", nd_out.get("name", "")
-            print(nd_out)
-            print(e)
+            LOGGER.info(nd_out)
+            LOGGER.info(e)
             raise AttributeError(e)
 
         out_dict["out_nodes"].append(printTree(next_node))
@@ -291,10 +287,6 @@ def uniqueName(scene_obj, node_name):
 
 
 def postProcessNodes(scene_obj, nodes_list):
-    """
-
-    """
-
     for _node in nodes_list:
         _dummy_dict = {"name": _node.name, "uuid": _node.uuid}
         _dummy_obj = getObject(_dummy_dict, scene_obj)
